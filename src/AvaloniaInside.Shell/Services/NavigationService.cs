@@ -19,8 +19,13 @@ public class NavigationService : INavigationService
 
 	public NavigationService()
 	{
-		CurrentUri = new Uri("app://" + (Application.Current?.Name ?? "default"));
+		CurrentUri = new Uri($"app://{GetAppName()}");
 	}
+
+	private static string GetAppName() =>
+		Application.Current?.Name is not { Length: > 0 } appName
+			? "default"
+			: appName.Replace(" ", "-").ToLower();
 
 	private Task NotifyAsync(Uri old, Uri newUri, object? argument, CancellationToken cancellationToken = default)
 	{

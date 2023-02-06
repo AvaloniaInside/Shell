@@ -7,11 +7,9 @@
                   x:Class="AvaloniaInside.Shell.Views.ShellView">
 	<TemplatedControl.Template>
 		<ControlTemplate>
-			<Grid>
-				<Grid Row="35,*">
-					<views:NavigationView Name="PART_NavigationView"/>
-					<views:StackContentView VerticalAlignment="Stretch" Name="PART_ContentView"></views:StackContentView>
-				</Grid>
+			<Grid RowDefinitions="35,*">
+				<views:NavigationView Name="PART_NavigationView"/>
+				<views:StackContentView VerticalAlignment="Stretch" Name="PART_ContentView" Grid.Row="1"></views:StackContentView>
 			</Grid>
 		</ControlTemplate>
 	</TemplatedControl.Template>

@@ -7,10 +7,10 @@
              x:Class="AvaloniaInside.Shell.Views.NavigationView">
 	<TemplatedControl.Template>
 		<ControlTemplate>
-			<StackLayout Orientation="Horizontal">
+			<StackPanel Orientation="Horizontal">
 				<Button Content="BACK"></Button>
-				<views:StackContentView x:Name="Header" HorizontalAlignment="Center" VerticalAlignment="Center" />
-			</StackLayout>
+				<views:StackContentView x:Name="PART_Header" HorizontalAlignment="Center" VerticalAlignment="Center" />
+			</StackPanel>
 		</ControlTemplate>
 	</TemplatedControl.Template>
 </TemplatedControl>

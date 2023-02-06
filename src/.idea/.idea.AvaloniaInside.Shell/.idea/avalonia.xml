@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AvaloniaProject">
+    <option name="projectPerEditor">
+      <map>
+        <entry key="AvaloniaInside.Shell/Views/NavigationView.axaml" value="Example/ShellExample/ShellExample.Desktop/ShellExample.Desktop.csproj" />
+        <entry key="AvaloniaInside.Shell/Views/ShellView.axaml" value="Example/ShellExample/ShellExample.Desktop/ShellExample.Desktop.csproj" />
+        <entry key="Example/ShellExample/ShellExample/App.axaml" value="Example/ShellExample/ShellExample.Desktop/ShellExample.Desktop.csproj" />
+        <entry key="Example/ShellExample/ShellExample/SecondView.axaml" value="Example/ShellExample/ShellExample.Desktop/ShellExample.Desktop.csproj" />
+        <entry key="Example/ShellExample/ShellExample/Views/HomePage.axaml" value="Example/ShellExample/ShellExample.Desktop/ShellExample.Desktop.csproj" />
+        <entry key="Example/ShellExample/ShellExample/Views/MainView.axaml" value="Example/ShellExample/ShellExample.Desktop/ShellExample.Desktop.csproj" />
+        <entry key="Example/ShellExample/ShellExample/Views/MainWindow.axaml" value="Example/ShellExample/ShellExample.Desktop/ShellExample.Desktop.csproj" />
+      </map>
+    </option>
+  </component>
+</project>

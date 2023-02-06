@@ -5,6 +5,24 @@ VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvaloniaInside.Shell", "AvaloniaInside.Shell\AvaloniaInside.Shell.csproj", "{35BD513E-5EE1-4B85-BEE3-FEC0C90B8571}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Example", "Example", "{A495BEFD-2260-489E-A8F3-003EF9603D43}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShellExample.Android", "Example\ShellExample\ShellExample.Android\ShellExample.Android.csproj", "{D77D24E0-7FF2-4DF9-BDAB-7703319D914E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShellExample.Desktop", "Example\ShellExample\ShellExample.Desktop\ShellExample.Desktop.csproj", "{D6718B53-49BD-4BF0-BE48-AAC29EA27DFC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShellExample.Web", "Example\ShellExample\ShellExample.Web\ShellExample.Web.csproj", "{721FC232-3B13-492D-A96B-C6784FEDB10C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShellExample", "Example\ShellExample\ShellExample\ShellExample.csproj", "{E2E23F24-CC66-4940-91EA-68C28DC04602}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShellExample.iOS", "Example\ShellExample\ShellExample.iOS\ShellExample.iOS.csproj", "{75883514-564B-4EBA-83D8-68FD9FDB0CB2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Files", "Files", "{50F7051E-1272-4015-A5C8-B6B1EF499EE3}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Build.props = Directory.Build.props
+		global.json = global.json
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +36,32 @@ Global
 		{35BD513E-5EE1-4B85-BEE3-FEC0C90B8571}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35BD513E-5EE1-4B85-BEE3-FEC0C90B8571}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{35BD513E-5EE1-4B85-BEE3-FEC0C90B8571}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D77D24E0-7FF2-4DF9-BDAB-7703319D914E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D77D24E0-7FF2-4DF9-BDAB-7703319D914E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D77D24E0-7FF2-4DF9-BDAB-7703319D914E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D77D24E0-7FF2-4DF9-BDAB-7703319D914E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6718B53-49BD-4BF0-BE48-AAC29EA27DFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6718B53-49BD-4BF0-BE48-AAC29EA27DFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6718B53-49BD-4BF0-BE48-AAC29EA27DFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6718B53-49BD-4BF0-BE48-AAC29EA27DFC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{721FC232-3B13-492D-A96B-C6784FEDB10C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{721FC232-3B13-492D-A96B-C6784FEDB10C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{721FC232-3B13-492D-A96B-C6784FEDB10C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{721FC232-3B13-492D-A96B-C6784FEDB10C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E2E23F24-CC66-4940-91EA-68C28DC04602}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E2E23F24-CC66-4940-91EA-68C28DC04602}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E2E23F24-CC66-4940-91EA-68C28DC04602}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E2E23F24-CC66-4940-91EA-68C28DC04602}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75883514-564B-4EBA-83D8-68FD9FDB0CB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75883514-564B-4EBA-83D8-68FD9FDB0CB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75883514-564B-4EBA-83D8-68FD9FDB0CB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75883514-564B-4EBA-83D8-68FD9FDB0CB2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D77D24E0-7FF2-4DF9-BDAB-7703319D914E} = {A495BEFD-2260-489E-A8F3-003EF9603D43}
+		{D6718B53-49BD-4BF0-BE48-AAC29EA27DFC} = {A495BEFD-2260-489E-A8F3-003EF9603D43}
+		{721FC232-3B13-492D-A96B-C6784FEDB10C} = {A495BEFD-2260-489E-A8F3-003EF9603D43}
+		{E2E23F24-CC66-4940-91EA-68C28DC04602} = {A495BEFD-2260-489E-A8F3-003EF9603D43}
+		{75883514-564B-4EBA-83D8-68FD9FDB0CB2} = {A495BEFD-2260-489E-A8F3-003EF9603D43}
 	EndGlobalSection
 EndGlobal
