@@ -13,6 +13,7 @@ public partial class App : Application
 	{
 		AvaloniaXamlLoader.Load(this);
 		AvaloniaLocator.CurrentMutable.Bind<INavigationService>().ToSingleton<NavigationService>();
+		AvaloniaLocator.CurrentMutable.Bind<INavigationViewLocator>().ToSingleton<DefaultNavigationViewLocator>();
 	}
 
 	public override void OnFrameworkInitializationCompleted()

@@ -9,6 +9,8 @@ public interface INavigationService
 	event EventHandler<NavigateEventArgs> Navigating;
 	event EventHandler<NavigateEventArgs> Navigate;
 
+	void RegisterRoute(string route, Type page, NavigationNodeType type);
+
 	Task NavigateAsync(string path, CancellationToken cancellationToken = default);
 	Task NavigateAsync(string path, object? argument, CancellationToken cancellationToken = default);
 	Task BackAsync(CancellationToken cancellationToken = default);

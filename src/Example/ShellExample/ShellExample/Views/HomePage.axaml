@@ -8,7 +8,7 @@
 	            VerticalAlignment="Center"
 	            Spacing="10">
 		<TextBlock Text="{Binding Greeting}" />
-		<Button HorizontalAlignment="Center" Content="Click on me"></Button>
+		<Button HorizontalAlignment="Center" Content="Click on me" Command="{Binding NavigateToSecondPage}"></Button>
 	</StackPanel>
 </UserControl>
 

@@ -60,9 +60,9 @@ public partial class ShellView : TemplatedControl
 			return;
 		}
 
-		if (_contentView.IsExistsInStack(view))
+		if (!_contentView.IsExistsInStack(view))
 		{
-			//_contentView.
+			_ = _contentView.PushViewAsync(view);
 		}
 	}
 
