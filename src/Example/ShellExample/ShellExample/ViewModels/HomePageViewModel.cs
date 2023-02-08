@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using System.Windows.Input;
-using AvaloniaInside.Shell.Services;
+using AvaloniaInside.Shell;
 using ReactiveUI;
 
 namespace ShellExample.ViewModels;

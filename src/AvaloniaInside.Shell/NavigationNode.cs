@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace AvaloniaInside.Shell.Services;
+namespace AvaloniaInside.Shell;
 
 public class NavigationNode
 {
@@ -43,16 +43,4 @@ public class NavigationNode
 		_nodes.Remove(node);
 		node.Parent = null;
 	}
-}
-
-public enum NavigationNodeType
-{
-	Page,
-	TabHost,
-	TabItem
-}
-
-public enum NavigationNodeLaunchMode
-{
-
 }

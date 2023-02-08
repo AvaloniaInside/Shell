@@ -1,8 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
-using AvaloniaInside.Shell.Services;
-using AvaloniaInside.Shell.Views;
+using AvaloniaInside.Shell;
 
 namespace ShellExample.Views;
 

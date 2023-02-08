@@ -8,7 +8,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Metadata;
 
-namespace AvaloniaInside.Shell.Views;
+namespace AvaloniaInside.Shell;
 
 public class StackContentView : TemplatedControl
 {

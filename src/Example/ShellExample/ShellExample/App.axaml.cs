@@ -1,7 +1,7 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using AvaloniaInside.Shell.Services;
+using AvaloniaInside.Shell;
 using ShellExample.ViewModels;
 using ShellExample.Views;
 

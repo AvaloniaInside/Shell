@@ -1,6 +1,6 @@
 using System;
 
-namespace AvaloniaInside.Shell.Views;
+namespace AvaloniaInside.Shell;
 
 public interface INavigation
 {

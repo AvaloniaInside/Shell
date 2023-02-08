@@ -18,4 +18,14 @@
 	<ItemGroup>
 	  <UpToDateCheckInput Remove="Assets\avalonia-logo.ico" />
 	</ItemGroup>
+	<ItemGroup>
+	  <Compile Update="NavigationView.axaml.cs">
+	    <DependentUpon>NavigationView.axaml</DependentUpon>
+	    <SubType>Code</SubType>
+	  </Compile>
+	  <Compile Update="ShellView.axaml.cs">
+	    <DependentUpon>ShellView.axaml</DependentUpon>
+	    <SubType>Code</SubType>
+	  </Compile>
+	</ItemGroup>
 </Project>

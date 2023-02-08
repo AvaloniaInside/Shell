@@ -3,6 +3,8 @@
   <component name="AvaloniaProject">
     <option name="projectPerEditor">
       <map>
+        <entry key="AvaloniaInside.Shell/NavigationView.axaml" value="Example/ShellExample/ShellExample.Desktop/ShellExample.Desktop.csproj" />
+        <entry key="AvaloniaInside.Shell/ShellView.axaml" value="Example/ShellExample/ShellExample.Desktop/ShellExample.Desktop.csproj" />
         <entry key="AvaloniaInside.Shell/Views/NavigationView.axaml" value="Example/ShellExample/ShellExample.Desktop/ShellExample.Desktop.csproj" />
         <entry key="AvaloniaInside.Shell/Views/ShellView.axaml" value="Example/ShellExample/ShellExample.Desktop/ShellExample.Desktop.csproj" />
         <entry key="Example/ShellExample/ShellExample/App.axaml" value="Example/ShellExample/ShellExample.Desktop/ShellExample.Desktop.csproj" />

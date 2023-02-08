@@ -1,6 +1,6 @@
 using System;
 
-namespace AvaloniaInside.Shell.Services;
+namespace AvaloniaInside.Shell;
 
 public class NavigateEventArgs : EventArgs
 {

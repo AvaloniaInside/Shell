@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace AvaloniaInside.Shell.Services;
+namespace AvaloniaInside.Shell;
 
 public interface INavigationService
 {

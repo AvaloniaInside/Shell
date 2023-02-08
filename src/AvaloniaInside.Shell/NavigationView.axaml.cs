@@ -5,7 +5,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Markup.Xaml;
 
-namespace AvaloniaInside.Shell.Views;
+namespace AvaloniaInside.Shell;
 
 public partial class NavigationView : TemplatedControl
 {

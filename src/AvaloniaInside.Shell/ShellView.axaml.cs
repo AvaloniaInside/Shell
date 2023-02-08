@@ -7,9 +7,8 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Markup.Xaml;
 using Avalonia.Metadata;
-using AvaloniaInside.Shell.Services;
 
-namespace AvaloniaInside.Shell.Views;
+namespace AvaloniaInside.Shell;
 
 public partial class ShellView : TemplatedControl
 {

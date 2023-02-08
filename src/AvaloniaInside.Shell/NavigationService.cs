@@ -4,9 +4,8 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia;
-using AvaloniaInside.Shell.Views;
 
-namespace AvaloniaInside.Shell.Services;
+namespace AvaloniaInside.Shell;
 
 public class NavigationService : INavigationService
 {
