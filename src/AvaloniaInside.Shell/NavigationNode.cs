@@ -7,16 +7,18 @@ public class NavigationNode
 {
 	private List<NavigationNode> _nodes = new();
 
-	public NavigationNode(string route, Type page, NavigationNodeType type)
+	public NavigationNode(string route, Type page, NavigationNodeType type, NavigateType navigate)
 	{
 		Route = route;
 		Page = page;
 		Type = type;
+		Navigate = navigate;
 	}
 
 	public string Route { get; }
 	public Type Page { get; }
 	public NavigationNodeType Type { get; }
+	public NavigateType Navigate { get; }
 	public NavigationNode? Parent { get; private set; }
 	public IReadOnlyList<NavigationNode> Nodes => _nodes.AsReadOnly();
 

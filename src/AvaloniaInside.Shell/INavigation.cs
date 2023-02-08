@@ -4,5 +4,5 @@ namespace AvaloniaInside.Shell;
 
 public interface INavigation
 {
-	public object Header { get; }
+	object Header { get; }
 }

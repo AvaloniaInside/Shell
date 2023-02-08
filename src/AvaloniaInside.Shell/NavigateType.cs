@@ -7,5 +7,6 @@ public enum NavigateType
 	Modal,
 	Replace,
 	Top,
-	Clear
+	Clear,
+	Pop
 }

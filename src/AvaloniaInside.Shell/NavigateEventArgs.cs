@@ -16,7 +16,7 @@ public class NavigateEventArgs : EventArgs
 	public Uri OldUri { get; }
 	public Uri Uri { get; }
 	public object? Argument { get; }
-	public bool Handled { get; set; } = false;
+	public bool Cancel { get; set; } = false;
 
 	public T? As<T>() => Argument is T argument ? argument : default;
 }

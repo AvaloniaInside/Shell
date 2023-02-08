@@ -9,15 +9,23 @@ namespace AvaloniaInside.Shell;
 
 public class NavigationService : INavigationService
 {
+	private readonly INavigationViewLocator _viewLocator;
+	private readonly INavigationUpdateStrategy _updateStrategy;
+	private readonly NavigationStack _stack = new();
+
+	public event EventHandler<object> Add;
+	public event EventHandler<object> Remove;
 	public event EventHandler<NavigateEventArgs> Navigating;
 	public event EventHandler<NavigateEventArgs> Navigate;
 
-	public Dictionary<string, NavigationNode> Navigations { get; } = new();
+	private Dictionary<string, NavigationNode> Navigations { get; } = new();
 	public Uri CurrentUri { get; private set; }
-	public NavigationNode CurrentItem { get; private set; }
+	public NavigationNode CurrentNode { get; private set; }
 
-	public NavigationService()
+	public NavigationService(INavigationViewLocator viewLocator, INavigationUpdateStrategy updateStrategy)
 	{
+		_viewLocator = viewLocator;
+		_updateStrategy = updateStrategy;
 		CurrentUri = new Uri($"app://{GetAppName()}");
 	}
 
@@ -26,7 +34,7 @@ public class NavigationService : INavigationService
 			? "default"
 			: appName.Replace(" ", "-").ToLower();
 
-	public void RegisterRoute(string route, Type page, NavigationNodeType type)
+	public void RegisterRoute(string route, Type page, NavigationNodeType type, NavigateType navigate)
 	{
 		route = route.ToLower();
 
@@ -41,7 +49,8 @@ public class NavigationService : INavigationService
 		var node = new NavigationNode(
 			newUri.AbsolutePath,
 			page,
-			type);
+			type,
+			navigate);
 
 		var parentUri = new Uri(newUri, "..");
 		if (parentUri.AbsolutePath != "/")
@@ -55,46 +64,64 @@ public class NavigationService : INavigationService
 		Navigations[newUri.AbsolutePath] = node;
 	}
 
-	private Task NotifyAsync(Uri old, Uri newUri, object? argument, CancellationToken cancellationToken = default)
+	private async Task NotifyAsync(
+		Uri old,
+		Uri newUri,
+		object? argument,
+		NavigateType? navigateType,
+		CancellationToken cancellationToken = default)
 	{
-		if (!Navigations.TryGetValue(newUri.AbsolutePath, out var navigationItem))
+		if (!Navigations.TryGetValue(newUri.AbsolutePath, out var node))
 		{
 			Debug.WriteLine("Warning: Cannot find the path");
-			return Task.CompletedTask;
+			return;
 		}
 
-		var navigate = new NavigateEventArgs(navigationItem, old, CurrentUri, argument);
+		var navigate = new NavigateEventArgs(node, old, CurrentUri, argument);
 
 		OnNavigating(navigate);
-		if (!navigate.Handled)
-		{
-			CurrentItem = navigationItem;
-			CurrentUri = newUri;
+		if (navigate.Cancel) return;
 
-			OnNavigate(navigate);
-		}
+		CurrentNode = node;
+		CurrentUri = newUri;
 
-		return Task.CompletedTask;
+		object? instance = null;
+		var stackChanges = _stack.Push(
+			node,
+			navigateType ?? node.Navigate,
+			() => instance = _viewLocator.GetView(node));
+
+		if (instance is INavigationLifecycle oldInstanceLifecycle)
+			await oldInstanceLifecycle.InitialiseAsync(cancellationToken);
+
+		await _updateStrategy.UpdateChangesAsync(
+			stackChanges,
+			argument,
+			cancellationToken);
+
+		OnNavigate(navigate);
 	}
 
 	public Task NavigateAsync(string path, CancellationToken cancellationToken = default) =>
-		NavigateAsync(path, null, cancellationToken);
-	public Task NavigateAsync(string path, object? argument, CancellationToken cancellationToken = default)
+		NavigateAsync(path, null, null, cancellationToken);
+
+	public Task NavigateAsync(string path, object? argument, CancellationToken cancellationToken = default) =>
+		NavigateAsync(path, null, argument, cancellationToken);
+
+	public Task NavigateAsync(string path, NavigateType? navigateType, object? argument, CancellationToken cancellationToken = default)
 	{
 		var newUri = new Uri(CurrentUri, path);
 		return CurrentUri.AbsolutePath == newUri.AbsolutePath
 			? Task.CompletedTask
-			: NotifyAsync(CurrentUri, newUri, argument, cancellationToken);
+			: NotifyAsync(CurrentUri, newUri, argument, navigateType, cancellationToken);
 	}
 
 	public Task BackAsync(CancellationToken cancellationToken = default) =>
 		BackAsync(null, cancellationToken);
-	public Task BackAsync(object? argument, CancellationToken cancellationToken = default)
-	{
-		return NavigateAsync("..", argument, cancellationToken);
-	}
+
+	public Task BackAsync(object? argument, CancellationToken cancellationToken = default) =>
+		NavigateAsync("..", NavigateType.Pop, argument, cancellationToken);
 
 	protected virtual void OnNavigating(NavigateEventArgs e) => Navigating?.Invoke(this, e);
 	protected virtual void OnNavigate(NavigateEventArgs e) => Navigate?.Invoke(this, e);
-
 }

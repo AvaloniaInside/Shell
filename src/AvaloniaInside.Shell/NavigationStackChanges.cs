@@ -4,6 +4,7 @@ namespace AvaloniaInside.Shell;
 
 public class NavigationStackChanges
 {
-	public IList<NavigationChain>? New { get; set; }
+	public NavigationChain? Previous { get; set; }
+	public NavigationChain? Front { get; set; }
 	public IList<NavigationChain>? Removed { get; set; }
 }
