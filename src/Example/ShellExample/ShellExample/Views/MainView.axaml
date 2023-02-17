@@ -9,13 +9,11 @@
              x:Class="ShellExample.Views.MainView"
              Foreground="White"
              Background="#171C2C">
-  <Design.DataContext>
-    <!-- This only sets the DataContext for the previewer in an IDE,
+	<Design.DataContext>
+		<!-- This only sets the DataContext for the previewer in an IDE,
          to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-    <viewModels:MainViewModel />
-  </Design.DataContext>
+		<viewModels:MainViewModel />
+	</Design.DataContext>
 
-	<views:ShellView HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-		<views1:HomePage />
-	</views:ShellView>
+	<views:ShellView HorizontalAlignment="Stretch" VerticalAlignment="Stretch" DefaultRoute="/home"></views:ShellView>
 </UserControl>

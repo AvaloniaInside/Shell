@@ -9,30 +9,30 @@ namespace AvaloniaInside.Shell;
 
 public class NavigationService : INavigationService
 {
-	private readonly INavigationViewLocator _viewLocator;
+	private readonly INavigateStrategy _navigateStrategy;
 	private readonly INavigationUpdateStrategy _updateStrategy;
+	private readonly INavigationViewLocator _viewLocator;
 	private readonly NavigationStack _stack = new();
 
-	public event EventHandler<object> Add;
-	public event EventHandler<object> Remove;
-	public event EventHandler<NavigateEventArgs> Navigating;
-	public event EventHandler<NavigateEventArgs> Navigate;
-
 	private Dictionary<string, NavigationNode> Navigations { get; } = new();
-	public Uri CurrentUri { get; private set; }
-	public NavigationNode CurrentNode { get; private set; }
+	public Uri CurrentUri => _stack.Current?.Uri ?? GetRootUri();
 
-	public NavigationService(INavigationViewLocator viewLocator, INavigationUpdateStrategy updateStrategy)
+	public NavigationService(INavigateStrategy navigateStrategy, INavigationUpdateStrategy updateStrategy, INavigationViewLocator viewLocator)
 	{
-		_viewLocator = viewLocator;
+		_navigateStrategy = navigateStrategy;
 		_updateStrategy = updateStrategy;
-		CurrentUri = new Uri($"app://{GetAppName()}");
+		_viewLocator = viewLocator;
 	}
 
 	private static string GetAppName() =>
 		Application.Current?.Name is not { Length: > 0 } appName
 			? "default"
 			: appName.Replace(" ", "-").ToLower();
+
+	private static Uri GetRootUri() =>
+		new Uri($"app://{GetAppName()}/");
+
+	public bool HasItemInStack() => _stack.Current?.Back != null;
 
 	public void RegisterRoute(string route, Type page, NavigationNodeType type, NavigateType navigate)
 	{
@@ -65,7 +65,6 @@ public class NavigationService : INavigationService
 	}
 
 	private async Task NotifyAsync(
-		Uri old,
 		Uri newUri,
 		object? argument,
 		NavigateType? navigateType,
@@ -77,18 +76,12 @@ public class NavigationService : INavigationService
 			return;
 		}
 
-		var navigate = new NavigateEventArgs(node, old, CurrentUri, argument);
-
-		OnNavigating(navigate);
-		if (navigate.Cancel) return;
-
-		CurrentNode = node;
-		CurrentUri = newUri;
-
 		object? instance = null;
+		var finalNavigateType = navigateType ?? node.Navigate;
 		var stackChanges = _stack.Push(
 			node,
-			navigateType ?? node.Navigate,
+			finalNavigateType,
+			newUri,
 			() => instance = _viewLocator.GetView(node));
 
 		if (instance is INavigationLifecycle oldInstanceLifecycle)
@@ -96,10 +89,9 @@ public class NavigationService : INavigationService
 
 		await _updateStrategy.UpdateChangesAsync(
 			stackChanges,
+			finalNavigateType,
 			argument,
 			cancellationToken);
-
-		OnNavigate(navigate);
 	}
 
 	public Task NavigateAsync(string path, CancellationToken cancellationToken = default) =>
@@ -113,15 +105,16 @@ public class NavigationService : INavigationService
 		var newUri = new Uri(CurrentUri, path);
 		return CurrentUri.AbsolutePath == newUri.AbsolutePath
 			? Task.CompletedTask
-			: NotifyAsync(CurrentUri, newUri, argument, navigateType, cancellationToken);
+			: NotifyAsync(newUri, argument, navigateType, cancellationToken);
 	}
 
 	public Task BackAsync(CancellationToken cancellationToken = default) =>
 		BackAsync(null, cancellationToken);
 
-	public Task BackAsync(object? argument, CancellationToken cancellationToken = default) =>
-		NavigateAsync("..", NavigateType.Pop, argument, cancellationToken);
-
-	protected virtual void OnNavigating(NavigateEventArgs e) => Navigating?.Invoke(this, e);
-	protected virtual void OnNavigate(NavigateEventArgs e) => Navigate?.Invoke(this, e);
+	public async Task BackAsync(object? argument, CancellationToken cancellationToken = default)
+	{
+		var newUri = await _navigateStrategy.BackAsync(_stack.Current, CurrentUri, cancellationToken);
+		if (newUri != null && CurrentUri.AbsolutePath != newUri.AbsolutePath)
+			await NotifyAsync(newUri, argument, NavigateType.Pop, cancellationToken);
+	}
 }

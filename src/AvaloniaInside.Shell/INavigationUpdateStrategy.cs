@@ -8,6 +8,7 @@ public interface INavigationUpdateStrategy
 {
 	Task UpdateChangesAsync(
 		NavigationStackChanges changes,
+		NavigateType navigateType,
 		object? argument,
 		CancellationToken cancellationToken);
 }

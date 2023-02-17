@@ -16,12 +16,7 @@ public partial class HomePage : UserControl, INavigation
 	private void InitializeComponent()
 	{
 		AvaloniaXamlLoader.Load(this);
-
-		var navigationService = AvaloniaLocator.CurrentMutable.GetService<INavigationService>();
-
-		navigationService.RegisterRoute("/home", typeof(HomePage), NavigationNodeType.Page);
-		navigationService.RegisterRoute("/second", typeof(SecondView), NavigationNodeType.Page);
 	}
 
-	public object Header => "Home page";
+	public object? Header => "Home page";
 }

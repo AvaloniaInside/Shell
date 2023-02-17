@@ -1,0 +1,41 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             VerticalAlignment="Center"
+             HorizontalAlignment="Center"
+             x:Class="ShellExample.Views.SimpleDialog">
+	<Border Background="White" CornerRadius="5">
+		<Grid RowDefinitions="40,*,50">
+			<TextBlock Text="Simple dialog!" FontSize="24" Foreground="Black" Margin="15"></TextBlock>
+			<Canvas Grid.Row="1" Background="#10000000" Width="400" Height="250">
+				<TextBlock Foreground="Black" TextWrapping="Wrap" Width="400" VerticalAlignment="Stretch" Margin="10">
+					Lorem ipsum dolor sit amet,
+					consectetur adipiscing elit,
+					sed do eiusmod tempor incididunt
+					ut labore et dolore magna aliqua.
+					Ut enim ad minim veniam,
+					quis nostrud exercitation ullamco
+					laboris nisi ut aliquip
+					ex ea commodo consequat.
+					Duis aute irure dolor in
+					reprehenderit in voluptate velit
+					esse cillum dolore eu
+					fugiat nulla pariatur.
+					Excepteur sint occaecat cupidatat
+					non proident, sunt in
+					culpa qui officia deserunt
+						mollit anim id est laborum.
+				</TextBlock>
+			</Canvas>
+			<Border Grid.Row="2" Background="#333333" VerticalAlignment="Bottom">
+				<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="8">
+					<Button Content="Close" Foreground="Red" Click="CancelButton_OnClick"></Button>
+					<Button Content=" OK " Click="OkButton_OnClick"></Button>
+				</StackPanel>
+			</Border>
+		</Grid>
+	</Border>
+</UserControl>
+

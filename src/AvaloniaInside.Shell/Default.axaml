@@ -1,0 +1,78 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:shell="clr-namespace:AvaloniaInside.Shell">
+	<Design.PreviewWith>
+		<Border Padding="20">
+			<!-- Add Controls for Previewer Here -->
+		</Border>
+	</Design.PreviewWith>
+
+	<Style Selector="shell|StackContentView">
+		<Setter Property="Template">
+			<ControlTemplate>
+				<ContentPresenter Name="PART_ContentPresenter"></ContentPresenter>
+			</ControlTemplate>
+		</Setter>
+	</Style>
+
+	<Style Selector="shell|NavigationView">
+		<Setter Property="Template">
+			<ControlTemplate>
+				<StackPanel Orientation="Horizontal">
+					<Button Name="PART_BackButton" Content=" Back "></Button>
+					<ContentPresenter Name="PART_Header" HorizontalAlignment="Center" VerticalAlignment="Center" />
+				</StackPanel>
+			</ControlTemplate>
+		</Setter>
+	</Style>
+
+	<Style Selector="shell|ShellView">
+		<Setter Property="Template">
+			<ControlTemplate>
+				<Grid RowDefinitions="35,*">
+					<shell:NavigationView Name="PART_NavigationView"/>
+					<shell:StackContentView VerticalAlignment="Stretch" Name="PART_ContentView" Grid.Row="1"></shell:StackContentView>
+
+					<Rectangle Grid.Row="0"
+					           Grid.RowSpan="2"
+					           IsVisible="{Binding ElementName=PART_Modal, Path=HasContent}">
+						<Rectangle.Fill>
+							<VisualBrush
+								TileMode="Tile"
+								SourceRect="0,0,8,8"
+								DestinationRect="0,0,8,8"
+								Stretch="UniformToFill"
+								Opacity="0.5">
+								<VisualBrush.Visual>
+									<Canvas Width="8" Height="8">
+										<Rectangle Fill="Black" Width="8" Height="8"></Rectangle>
+										<Line StartPoint="0,0" EndPoint="8,8" Stroke="#55555555" StrokeThickness="1" />
+										<Line StartPoint="0,8" EndPoint="8,0" Stroke="#55555555" StrokeThickness="1" />
+									</Canvas>
+								</VisualBrush.Visual>
+							</VisualBrush>
+						</Rectangle.Fill>
+					</Rectangle>
+
+					<shell:StackContentView Name="PART_Modal"
+					                        Grid.Row="0"
+					                        Grid.RowSpan="2"
+					                        IsVisible="{Binding ElementName=PART_Modal, Path=HasContent}">
+						<shell:StackContentView.Template>
+							<ControlTemplate>
+								<Panel VerticalAlignment="Center" HorizontalAlignment="Center">
+									<ContentPresenter Name="PART_ContentPresenter"
+									                  VerticalContentAlignment="Center"
+									                  HorizontalContentAlignment="Center"
+									                  VerticalAlignment="Center"
+									                  HorizontalAlignment="Center"></ContentPresenter>
+								</Panel>
+							</ControlTemplate>
+						</shell:StackContentView.Template>
+					</shell:StackContentView>
+				</Grid>
+			</ControlTemplate>
+		</Setter>
+	</Style>
+</Styles>
+

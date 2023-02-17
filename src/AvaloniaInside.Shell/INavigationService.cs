@@ -6,9 +6,7 @@ namespace AvaloniaInside.Shell;
 
 public interface INavigationService
 {
-	event EventHandler<NavigateEventArgs> Navigating;
-	event EventHandler<NavigateEventArgs> Navigate;
-
+	bool HasItemInStack();
 	void RegisterRoute(string route, Type page, NavigationNodeType type, NavigateType navigate);
 
 	Task NavigateAsync(string path, CancellationToken cancellationToken = default);

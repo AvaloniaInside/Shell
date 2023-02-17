@@ -8,5 +8,6 @@
 
     <Application.Styles>
         <FluentTheme />
+        <StyleInclude Source="avares://AvaloniaInside.Shell/Default.axaml"></StyleInclude>
     </Application.Styles>
 </Application>

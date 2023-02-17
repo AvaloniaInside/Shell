@@ -3,6 +3,7 @@
   <component name="AvaloniaProject">
     <option name="projectPerEditor">
       <map>
+        <entry key="AvaloniaInside.Shell/Default.axaml" value="Example/ShellExample/ShellExample.Desktop/ShellExample.Desktop.csproj" />
         <entry key="AvaloniaInside.Shell/NavigationView.axaml" value="Example/ShellExample/ShellExample.Desktop/ShellExample.Desktop.csproj" />
         <entry key="AvaloniaInside.Shell/ShellView.axaml" value="Example/ShellExample/ShellExample.Desktop/ShellExample.Desktop.csproj" />
         <entry key="AvaloniaInside.Shell/Views/NavigationView.axaml" value="Example/ShellExample/ShellExample.Desktop/ShellExample.Desktop.csproj" />
@@ -12,6 +13,8 @@
         <entry key="Example/ShellExample/ShellExample/Views/HomePage.axaml" value="Example/ShellExample/ShellExample.Desktop/ShellExample.Desktop.csproj" />
         <entry key="Example/ShellExample/ShellExample/Views/MainView.axaml" value="Example/ShellExample/ShellExample.Desktop/ShellExample.Desktop.csproj" />
         <entry key="Example/ShellExample/ShellExample/Views/MainWindow.axaml" value="Example/ShellExample/ShellExample.Desktop/ShellExample.Desktop.csproj" />
+        <entry key="Example/ShellExample/ShellExample/Views/SecondView.axaml" value="Example/ShellExample/ShellExample.Desktop/ShellExample.Desktop.csproj" />
+        <entry key="Example/ShellExample/ShellExample/Views/SimpleDialog.axaml" value="Example/ShellExample/ShellExample.Desktop/ShellExample.Desktop.csproj" />
       </map>
     </option>
   </component>

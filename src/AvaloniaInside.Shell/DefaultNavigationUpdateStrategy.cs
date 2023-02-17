@@ -15,16 +15,14 @@ public class DefaultNavigationUpdateStrategy : INavigationUpdateStrategy
 
 	public async Task UpdateChangesAsync(
 		NavigationStackChanges changes,
+		NavigateType navigateType,
 		object? argument,
 		CancellationToken cancellationToken)
 	{
-		var isSame = changes.Previous != changes.Front;
+		var isSame = changes.Previous == changes.Front;
 
 		if (changes.Previous?.Instance is INavigationLifecycle oldInstanceLifecycle && !isSame)
-		{
 			await oldInstanceLifecycle.StopAsync(cancellationToken);
-			_presenterProvider.Pop().Present(changes.Previous);
-		}
 
 		if (changes.Removed != null)
 			await InvokeRemoveAsync(changes.Removed, changes.Previous, cancellationToken);
@@ -37,6 +35,9 @@ public class DefaultNavigationUpdateStrategy : INavigationUpdateStrategy
 			if (argument != null)
 				await newInstanceLifecycle.ArgumentAsync(argument, cancellationToken);
 		}
+
+		if (!isSame && navigateType is not NavigateType.Pop && changes.Front != null)
+			await _presenterProvider.For(navigateType).PresentAsync(changes.Front, cancellationToken);
 	}
 
 	private async Task InvokeRemoveAsync(
@@ -48,8 +49,10 @@ public class DefaultNavigationUpdateStrategy : INavigationUpdateStrategy
 		foreach (var chain in removed)
 		{
 			cancellationToken.ThrowIfCancellationRequested();
-			if (previous != chain)
-				presenter.Present(chain);
+			if (previous == chain)
+				await _presenterProvider.Pop().PresentAsync(previous, cancellationToken);
+			else
+				await presenter.PresentAsync(chain, cancellationToken);
 
 			if (chain.Instance is INavigationLifecycle lifecycle)
 				await lifecycle.TerminateAsync(cancellationToken);

@@ -1,6 +1,9 @@
+using System.Threading;
+using System.Threading.Tasks;
+
 namespace AvaloniaInside.Shell;
 
 public interface IPresenter
 {
-	void Present(NavigationChain instance);
+	Task PresentAsync(NavigationChain chain, CancellationToken cancellationToken);
 }

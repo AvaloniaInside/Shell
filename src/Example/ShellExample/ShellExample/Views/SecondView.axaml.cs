@@ -16,6 +16,6 @@ public partial class SecondView : UserControl, INavigation
 		AvaloniaXamlLoader.Load(this);
 	}
 
-	public object Header => "Second page";
+	public object? Header => "Second page";
 }
 

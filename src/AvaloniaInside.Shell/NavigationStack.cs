@@ -7,55 +7,42 @@ public class NavigationStack
 {
 	public NavigationChain? Current { get; set; }
 
-	public NavigationStackChanges Push(NavigationNode node, NavigateType type, Func<object> instance) =>
-		type switch
+	public NavigationStackChanges Push(NavigationNode node, NavigateType type, Uri uri, Func<object> instance)
+	{
+		var chain = type switch
 		{
 			NavigateType.ReplaceRoot => PushReplaceRoot(node, type, instance),
 			NavigateType.Normal or NavigateType.Modal => PushNormal(node, type, instance),
 			NavigateType.Replace => PushReplace(node, type, instance),
 			NavigateType.Top => PushTop(node, type, instance),
 			NavigateType.Clear => PushClear(node, type, instance),
-			NavigateType.Pop => Pop(),
+			NavigateType.Pop => Pop(node, type, uri, instance),
 			_ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
 		};
 
-	public NavigationStackChanges Pop(int depth = 1)
+		if (chain.Front != null)
+			chain.Front.Uri = uri;
+
+		return chain;
+	}
+
+	private NavigationStackChanges Pop(NavigationNode node, NavigateType type, Uri uri, Func<object> getInstance)
 	{
-		if (depth < 1) throw new ArgumentOutOfRangeException(nameof(depth), "depth cannot be less than 1");
-		if (Current?.Back == null) return new NavigationStackChanges();
+		if (Current?.Back?.Uri != uri)
+			return PushTop(node, type, getInstance);
 
-		if (depth == 1)
+		var previous = Current;
+		var old = Current;
+		var list = new List<NavigationChain> { old };
+
+		(Current, old.Back) = (old.Back, null);
+
+		return new NavigationStackChanges
 		{
-			var old = Current;
-
-			old = old.Back;
-			old.Back = null;
-
-			return new NavigationStackChanges
-			{
-				Removed = new List<NavigationChain> { old }
-			};
-		}
-		else
-		{
-			var old = Current;
-			var list = new List<NavigationChain>();
-
-			for (var i = 0; i < depth; i++)
-			{
-				list.Add(old);
-				if (old.Back == null)
-					break;
-			}
-
-			foreach (var item in list)
-				item.Back = null;
-
-			return new NavigationStackChanges
-			{
-				Removed = list
-			};
-		}
+			Front = Current,
+			Removed = list,
+			Previous = previous
+		};
 	}
 
 	private NavigationStackChanges PushReplaceRoot(NavigationNode node, NavigateType type, Func<object> getInstance)
@@ -126,7 +113,8 @@ public class NavigationStack
 				current.Type = type;
 				return new NavigationStackChanges
 				{
-					Previous = previousChain
+					Previous = previousChain,
+					Front = Current
 				};
 			}
 
@@ -157,7 +145,7 @@ public class NavigationStack
 				{
 					previous.Back = current.Back;
 				}
-				else
+				else if (Current != null)
 				{
 					Current.Back = current.Back;
 				}
