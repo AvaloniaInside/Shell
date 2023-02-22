@@ -13,23 +13,28 @@ namespace AvaloniaInside.Shell;
 public class NavigationView : StackContentView
 {
 	private ContentPresenter? _header;
-	private Button? _backButton;
+	private Button? _actionButton;
+	private ContentPresenter? _itemsContentPresenter;
+
 	private object? _pendingHeader;
 
 	private readonly ICommand _backCommand;
+	private readonly ICommand _flyoutCommand;
 
 	public NavigationView()
 	{
 		_backCommand = ReactiveCommand.CreateFromTask(BackActionAsync);
+		_flyoutCommand = ReactiveCommand.CreateFromTask(FlyoutActionAsync);
 	}
 
 	protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
 	{
 		_header = e.NameScope.Find<ContentPresenter>("PART_Header") ?? throw new ArgumentNullException("PART_Header");
-		_backButton = e.NameScope.Find<Button>("PART_BackButton");
+		_actionButton = e.NameScope.Find<Button>("PART_ActionButton");
+		_itemsContentPresenter = e.NameScope.Find<ContentPresenter>("PART_Items");
 
-		if (_backButton != null)
-			_backButton.Command = _backCommand;
+		if (_actionButton != null)
+			_actionButton.Command = _backCommand;
 
 		if (_pendingHeader != null)
 			_ = UpdateAsync(_pendingHeader, CancellationToken.None);
@@ -49,10 +54,8 @@ public class NavigationView : StackContentView
 		if (_header != null)
 			_header.Content = GetTitle(view);
 
-		if (view is INavigation navigation)
-		{
-			//TODO: implement actions
-		}
+		if (_itemsContentPresenter != null)
+			UpdateItems(view, _itemsContentPresenter);
 
 		UpdateButtons();
 		return Task.CompletedTask;
@@ -72,8 +75,27 @@ public class NavigationView : StackContentView
 		var navService = AvaloniaLocator.CurrentMutable.GetService<INavigationService>();
 		var hasItem = navService?.HasItemInStack() ?? false;
 
-		if (_backButton != null)
-			_backButton.IsVisible = hasItem;
+		if (_actionButton == null) return;
+
+		_actionButton.Command = hasItem
+			? _backCommand
+			: _flyoutCommand;
+
+		if (hasItem)
+		{
+			_actionButton.Classes.Remove("FlyoutButton");
+			_actionButton.Classes.Add("BackButton");
+		}
+		else
+		{
+			_actionButton.Classes.Remove("BackButton");
+			_actionButton.Classes.Add("FlyoutButton");
+		}
+	}
+
+	protected virtual void UpdateItems(object view, ContentPresenter itemPresenter)
+	{
+		itemPresenter.Content = view is INavigation navigation ? navigation.Item : null;
 	}
 
 	protected virtual Task BackActionAsync(CancellationToken cancellationToken)
@@ -82,5 +104,9 @@ public class NavigationView : StackContentView
 			.GetService<INavigationService>()?
 			.BackAsync(cancellationToken) ?? Task.CompletedTask;
 	}
-}
 
+	private Task FlyoutActionAsync(CancellationToken cancellationToken)
+	{
+		return Task.CompletedTask;
+	}
+}

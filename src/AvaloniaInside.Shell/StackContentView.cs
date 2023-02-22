@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -7,8 +6,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
-using Avalonia.Controls.Templates;
-using Avalonia.Metadata;
 
 namespace AvaloniaInside.Shell;
 
@@ -16,7 +13,7 @@ public class StackContentView : TemplatedControl
 {
 	private readonly SemaphoreSlim _semaphoreSlim = new(1, 1);
 	private readonly List<object> _controls = new();
-	private ContentPresenter? _contentPresenter;
+	private IContentControl? _contentPresenter;
 	private object? _pendingView;
 
 	public static readonly StyledProperty<bool> HasContentProperty =
@@ -31,7 +28,7 @@ public class StackContentView : TemplatedControl
 	protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
 	{
 		base.OnApplyTemplate(e);
-		_contentPresenter = e.NameScope.Find<ContentPresenter>("PART_ContentPresenter");
+		_contentPresenter = e.NameScope.Find<IContentControl>("PART_ContentPresenter");
 		_contentPresenter!.Content = _pendingView;
 	}
 

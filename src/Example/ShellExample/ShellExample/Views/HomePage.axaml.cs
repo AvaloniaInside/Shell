@@ -19,4 +19,9 @@ public partial class HomePage : UserControl, INavigation
 	}
 
 	public object? Header => "Home page";
+
+	public object? Item { get; } = new Button()
+	{
+		Content = "Add"
+	};
 }

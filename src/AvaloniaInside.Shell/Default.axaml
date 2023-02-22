@@ -10,7 +10,7 @@
 	<Style Selector="shell|StackContentView">
 		<Setter Property="Template">
 			<ControlTemplate>
-				<ContentPresenter Name="PART_ContentPresenter"></ContentPresenter>
+				<TransitioningContentControl Name="PART_ContentPresenter"></TransitioningContentControl>
 			</ControlTemplate>
 		</Setter>
 	</Style>
@@ -18,10 +18,15 @@
 	<Style Selector="shell|NavigationView">
 		<Setter Property="Template">
 			<ControlTemplate>
-				<StackPanel Orientation="Horizontal">
-					<Button Name="PART_BackButton" Content=" Back "></Button>
-					<ContentPresenter Name="PART_Header" HorizontalAlignment="Center" VerticalAlignment="Center" />
-				</StackPanel>
+				<Grid ColumnDefinitions="35,*,Auto">
+					<Button Grid.Column="0"
+					        Name="PART_ActionButton"
+					        HorizontalContentAlignment="Center"
+					        VerticalContentAlignment="Center">
+					</Button>
+					<ContentPresenter Grid.Column="1" Name="PART_Header" HorizontalAlignment="Center" VerticalAlignment="Center" />
+					<ContentPresenter Grid.Column="2" Name="PART_Items" HorizontalAlignment="Right" VerticalAlignment="Center" />
+				</Grid>
 			</ControlTemplate>
 		</Setter>
 	</Style>
@@ -35,14 +40,13 @@
 
 					<Rectangle Grid.Row="0"
 					           Grid.RowSpan="2"
-					           IsVisible="{Binding ElementName=PART_Modal, Path=HasContent}">
+					           IsVisible="{Binding ElementName=PART_Modal, Path=HasContent}" Opacity="0.5">
 						<Rectangle.Fill>
 							<VisualBrush
 								TileMode="Tile"
 								SourceRect="0,0,8,8"
 								DestinationRect="0,0,8,8"
-								Stretch="UniformToFill"
-								Opacity="0.5">
+								Stretch="UniformToFill">
 								<VisualBrush.Visual>
 									<Canvas Width="8" Height="8">
 										<Rectangle Fill="Black" Width="8" Height="8"></Rectangle>
@@ -61,11 +65,11 @@
 						<shell:StackContentView.Template>
 							<ControlTemplate>
 								<Panel VerticalAlignment="Center" HorizontalAlignment="Center">
-									<ContentPresenter Name="PART_ContentPresenter"
-									                  VerticalContentAlignment="Center"
-									                  HorizontalContentAlignment="Center"
-									                  VerticalAlignment="Center"
-									                  HorizontalAlignment="Center"></ContentPresenter>
+									<TransitioningContentControl Name="PART_ContentPresenter"
+									                             VerticalContentAlignment="Center"
+									                             HorizontalContentAlignment="Center"
+									                             VerticalAlignment="Center"
+									                             HorizontalAlignment="Center"></TransitioningContentControl>
 								</Panel>
 							</ControlTemplate>
 						</shell:StackContentView.Template>
@@ -73,6 +77,41 @@
 				</Grid>
 			</ControlTemplate>
 		</Setter>
+	</Style>
+
+	<Style Selector="Button.BackButton">
+		<Setter Property="Template">
+			<ControlTemplate>
+				<Viewbox Stretch="UniformToFill">
+					<Border>
+						<Polyline Points="7,2 2,7 7,12" StrokeThickness="3" Stroke="White" Width="16" Height="16" Margin="5"/>
+					</Border>
+				</Viewbox>
+			</ControlTemplate>
+		</Setter>
+	</Style>
+	<Style Selector="Button.FlyoutButton">
+		<Setter Property="RenderTransform" Value="rotate(180deg)"/>
+		<Setter Property="Template">
+			<ControlTemplate>
+				<Viewbox Stretch="UniformToFill">
+					<Canvas Width="16" Height="16" Margin="5">
+						<Line StartPoint="1,4" EndPoint="15,4" StrokeThickness="3" Stroke="White"></Line>
+						<Line StartPoint="1,8" EndPoint="15,8" StrokeThickness="3" Stroke="White"></Line>
+						<Line StartPoint="1,12" EndPoint="15,12" StrokeThickness="3" Stroke="White"></Line>
+					</Canvas>
+				</Viewbox>
+			</ControlTemplate>
+		</Setter>
+			<!-- <Path> -->
+			<!-- 	<Path.Data> -->
+			<!-- 		<GeometryGroup> -->
+			<!-- 			<LineGeometry StartPoint="1,4" EndPoint="15,4"/> -->
+			<!-- 			<LineGeometry StartPoint="1,8" EndPoint="15,8"/> -->
+			<!-- 			<LineGeometry StartPoint="1,12" EndPoint="15,12"/> -->
+			<!-- 		</GeometryGroup> -->
+			<!-- 	</Path.Data> -->
+			<!-- </Path> -->
 	</Style>
 </Styles>
 

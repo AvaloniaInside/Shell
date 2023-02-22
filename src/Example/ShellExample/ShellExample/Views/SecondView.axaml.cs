@@ -17,5 +17,6 @@ public partial class SecondView : UserControl, INavigation
 	}
 
 	public object? Header => "Second page";
+	public object? Item { get; }
 }
 
