@@ -9,5 +9,6 @@
     <Application.Styles>
         <FluentTheme />
         <StyleInclude Source="avares://AvaloniaInside.Shell/Default.axaml"></StyleInclude>
+        <StyleInclude Source="Styles.axaml"></StyleInclude>
     </Application.Styles>
 </Application>

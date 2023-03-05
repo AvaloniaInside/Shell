@@ -1,11 +1,6 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:shell="clr-namespace:AvaloniaInside.Shell">
-	<Design.PreviewWith>
-		<Border Padding="20">
-			<!-- Add Controls for Previewer Here -->
-		</Border>
-	</Design.PreviewWith>
 
 	<Style Selector="shell|StackContentView">
 		<Setter Property="Template">
@@ -18,7 +13,7 @@
 	<Style Selector="shell|NavigationView">
 		<Setter Property="Template">
 			<ControlTemplate>
-				<Grid ColumnDefinitions="35,*,Auto">
+				<Grid ColumnDefinitions="35,*,Auto" Background="Black">
 					<Button Grid.Column="0"
 					        Name="PART_ActionButton"
 					        HorizontalContentAlignment="Center"
@@ -103,15 +98,6 @@
 				</Viewbox>
 			</ControlTemplate>
 		</Setter>
-			<!-- <Path> -->
-			<!-- 	<Path.Data> -->
-			<!-- 		<GeometryGroup> -->
-			<!-- 			<LineGeometry StartPoint="1,4" EndPoint="15,4"/> -->
-			<!-- 			<LineGeometry StartPoint="1,8" EndPoint="15,8"/> -->
-			<!-- 			<LineGeometry StartPoint="1,12" EndPoint="15,12"/> -->
-			<!-- 		</GeometryGroup> -->
-			<!-- 	</Path.Data> -->
-			<!-- </Path> -->
 	</Style>
 </Styles>
 

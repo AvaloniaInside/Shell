@@ -1,3 +1,4 @@
+using System;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
@@ -18,7 +19,9 @@ public partial class HomePage : UserControl, INavigation
 		AvaloniaXamlLoader.Load(this);
 	}
 
-	public object? Header => "Home page";
+	public string Icon => "fa-solid fa-house";
+
+	public object? Title => "Home";
 
 	public object? Item { get; } = new Button()
 	{

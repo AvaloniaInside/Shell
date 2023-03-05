@@ -3,66 +3,55 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
-using Avalonia;
 
 namespace AvaloniaInside.Shell;
 
 public class NavigationService : INavigationService
 {
+	private readonly INavigationRegistrar _navigationRegistrar;
 	private readonly INavigateStrategy _navigateStrategy;
 	private readonly INavigationUpdateStrategy _updateStrategy;
 	private readonly INavigationViewLocator _viewLocator;
 	private readonly NavigationStack _stack = new();
 
-	private Dictionary<string, NavigationNode> Navigations { get; } = new();
-	public Uri CurrentUri => _stack.Current?.Uri ?? GetRootUri();
+	private readonly SemaphoreSlim _semaphoreSlim = new(1, 1);
+	private bool _navigating;
 
-	public NavigationService(INavigateStrategy navigateStrategy, INavigationUpdateStrategy updateStrategy, INavigationViewLocator viewLocator)
+	public Uri CurrentUri => _stack.Current?.Uri ?? _navigationRegistrar.RootUri;
+
+	public NavigationService(
+		INavigationRegistrar navigationRegistrar,
+		INavigateStrategy navigateStrategy,
+		INavigationUpdateStrategy updateStrategy,
+		INavigationViewLocator viewLocator)
 	{
+		_navigationRegistrar = navigationRegistrar;
 		_navigateStrategy = navigateStrategy;
 		_updateStrategy = updateStrategy;
 		_viewLocator = viewLocator;
+
+		_updateStrategy.HostItemChanged += UpdateStrategyOnHostItemChanged;
 	}
 
-	private static string GetAppName() =>
-		Application.Current?.Name is not { Length: > 0 } appName
-			? "default"
-			: appName.Replace(" ", "-").ToLower();
-
-	private static Uri GetRootUri() =>
-		new Uri($"app://{GetAppName()}/");
-
-	public bool HasItemInStack() => _stack.Current?.Back != null;
-
-	public void RegisterRoute(string route, Type page, NavigationNodeType type, NavigateType navigate)
+	public bool HasItemInStack()
 	{
-		route = route.ToLower();
-
-		var rootUri = new Uri(CurrentUri, "/");
-		var newUri = new Uri(rootUri, route);
-
-		if (rootUri.AbsolutePath == newUri.AbsolutePath)
-			throw new ArgumentException("Cannot replace the root");
-		if (Navigations.ContainsKey(newUri.AbsolutePath))
-			throw new ArgumentException("route already exists");
-
-		var node = new NavigationNode(
-			newUri.AbsolutePath,
-			page,
-			type,
-			navigate);
-
-		var parentUri = new Uri(newUri, "..");
-		if (parentUri.AbsolutePath != "/")
+		var current = _stack.Current?.Back;
+		do
 		{
-			if (!Navigations.TryGetValue(parentUri.AbsolutePath, out var parent))
-				throw new ArgumentException("Cannot find the parent node");
+			if (current is not HostNavigationChain)
+				return true;
 
-			parent.AddNode(node);
-		}
+			current = current.Back;
+		} while (current != null);
 
-		Navigations[newUri.AbsolutePath] = node;
+		return false;
 	}
+
+	public void RegisterPage(string route, Type page, NavigateType navigate) =>
+		_navigationRegistrar.RegisterRoute(route, page, NavigationNodeType.Page, navigate, null);
+
+	public void RegisterHost(string route, Type page, string defaultPath, NavigateType navigate) =>
+		_navigationRegistrar.RegisterRoute(route, page, NavigationNodeType.Host, navigate, defaultPath);
 
 	private async Task NotifyAsync(
 		Uri newUri,
@@ -70,28 +59,47 @@ public class NavigationService : INavigationService
 		NavigateType? navigateType,
 		CancellationToken cancellationToken = default)
 	{
-		if (!Navigations.TryGetValue(newUri.AbsolutePath, out var node))
+		if (!_navigationRegistrar.TryGetNode(newUri.AbsolutePath, out var node))
 		{
 			Debug.WriteLine("Warning: Cannot find the path");
 			return;
 		}
 
-		object? instance = null;
+		_navigating = true;
+
+		var instances = new List<object>();
 		var finalNavigateType = navigateType ?? node.Navigate;
 		var stackChanges = _stack.Push(
 			node,
 			finalNavigateType,
 			newUri,
-			() => instance = _viewLocator.GetView(node));
-
-		if (instance is INavigationLifecycle oldInstanceLifecycle)
-			await oldInstanceLifecycle.InitialiseAsync(cancellationToken);
+			instanceFor =>
+			{
+				var instance = _viewLocator.GetView(instanceFor);
+				instances.Add(instance);
+				return instance;
+			});
 
 		await _updateStrategy.UpdateChangesAsync(
 			stackChanges,
+			instances,
 			finalNavigateType,
 			argument,
 			cancellationToken);
+
+		_navigating = false;
+	}
+
+	private async Task SwitchHostedItem(
+		NavigationChain old,
+		NavigationChain chain,
+		CancellationToken cancellationToken = default)
+	{
+		var newUri = await _navigateStrategy.NavigateAsync(_stack.Current, CurrentUri, chain.Uri.AbsolutePath, cancellationToken);
+		if (CurrentUri.AbsolutePath != newUri.AbsolutePath)
+		{
+			await NotifyAsync(newUri, null, NavigateType.HostedItemChange, cancellationToken);
+		}
 	}
 
 	public Task NavigateAsync(string path, CancellationToken cancellationToken = default) =>
@@ -100,12 +108,20 @@ public class NavigationService : INavigationService
 	public Task NavigateAsync(string path, object? argument, CancellationToken cancellationToken = default) =>
 		NavigateAsync(path, null, argument, cancellationToken);
 
-	public Task NavigateAsync(string path, NavigateType? navigateType, object? argument, CancellationToken cancellationToken = default)
+	public async Task NavigateAsync(string path, NavigateType? navigateType, object? argument,
+		CancellationToken cancellationToken = default)
 	{
-		var newUri = new Uri(CurrentUri, path);
-		return CurrentUri.AbsolutePath == newUri.AbsolutePath
-			? Task.CompletedTask
-			: NotifyAsync(newUri, argument, navigateType, cancellationToken);
+		await _semaphoreSlim.WaitAsync(cancellationToken);
+		try
+		{
+			var newUri = await _navigateStrategy.NavigateAsync(_stack.Current, CurrentUri, path, cancellationToken);
+			if (CurrentUri.AbsolutePath != newUri.AbsolutePath)
+				await NotifyAsync(newUri, argument, navigateType, cancellationToken);
+		}
+		finally
+		{
+			_semaphoreSlim.Release();
+		}
 	}
 
 	public Task BackAsync(CancellationToken cancellationToken = default) =>
@@ -113,8 +129,24 @@ public class NavigationService : INavigationService
 
 	public async Task BackAsync(object? argument, CancellationToken cancellationToken = default)
 	{
-		var newUri = await _navigateStrategy.BackAsync(_stack.Current, CurrentUri, cancellationToken);
-		if (newUri != null && CurrentUri.AbsolutePath != newUri.AbsolutePath)
-			await NotifyAsync(newUri, argument, NavigateType.Pop, cancellationToken);
+		await _semaphoreSlim.WaitAsync(cancellationToken);
+		try
+		{
+			var newUri = await _navigateStrategy.BackAsync(_stack.Current, CurrentUri, cancellationToken);
+			if (newUri != null && CurrentUri.AbsolutePath != newUri.AbsolutePath)
+				await NotifyAsync(newUri, argument, NavigateType.Pop, cancellationToken);
+		}
+		finally
+		{
+			_semaphoreSlim.Release();
+		}
+	}
+
+	private void UpdateStrategyOnHostItemChanged(object? sender, HostItemChangeEventArgs e)
+	{
+		if (e.OldChain != null && e.NewChain != e.OldChain && !_navigating)
+		{
+			_ = SwitchHostedItem(e.OldChain, e.NewChain);
+		}
 	}
 }

@@ -17,6 +17,7 @@
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
         <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="$(AvaloniaVersion)" />
         <PackageReference Include="XamlNameReferenceGenerator" Version="1.5.1" />
+		<PackageReference Include="Projektanker.Icons.Avalonia.FontAwesome" Version="6.5.0-preview5" />
     </ItemGroup>
 
     <ItemGroup>

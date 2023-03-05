@@ -1,12 +1,16 @@
+using System;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
-using AvaloniaInside.Shell;
+using Avalonia.Styling;
 
 namespace ShellExample.Views;
 
-public partial class SecondView : UserControl, INavigation
+public partial class MainTabControl : TabControl, IStyleable
 {
-	public SecondView()
+	public Type StyleKey => typeof(TabControl);
+
+	public MainTabControl()
 	{
 		InitializeComponent();
 	}
@@ -15,8 +19,5 @@ public partial class SecondView : UserControl, INavigation
 	{
 		AvaloniaXamlLoader.Load(this);
 	}
-
-	public object? Title => "Second page";
-	public object? Item { get; }
 }
 

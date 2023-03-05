@@ -13,10 +13,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Avalonia.iOS" Version="$(AvaloniaVersion)"/>
+        <PackageReference Include="Avalonia.iOS" Version="$(AvaloniaVersion)" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\ShellExample\ShellExample.csproj"/>
+        <ProjectReference Include="..\ShellExample\ShellExample.csproj" />
     </ItemGroup>
 </Project>

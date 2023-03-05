@@ -64,7 +64,7 @@ public class NavigationView : StackContentView
 	private object? GetTitle(object view) =>
 		view switch
 		{
-			INavigation navigation => navigation.Header,
+			INavigation navigation => navigation.Title,
 			Window window => window.Title,
 			Control control => control.Name,
 			_ => view.GetType().Name

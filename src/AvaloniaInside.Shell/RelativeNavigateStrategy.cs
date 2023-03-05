@@ -6,6 +6,16 @@ namespace AvaloniaInside.Shell;
 
 public class RelativeNavigateStrategy : NaturalNavigateStrategy
 {
-	public override Task<Uri?> BackAsync(NavigationChain chain, Uri currentUri, CancellationToken cancellationToken) =>
-		Task.FromResult(chain.Back?.Uri);
+	public RelativeNavigateStrategy(INavigationRegistrar navigationRegistrar) : base(navigationRegistrar)
+	{
+	}
+
+	public override Task<Uri?> BackAsync(NavigationChain chain, Uri currentUri, CancellationToken cancellationToken)
+	{
+		var current = chain.Back;
+		while (current is HostNavigationChain {} host)
+			current = host.Back;
+
+		return Task.FromResult(current?.Uri);
+	}
 }

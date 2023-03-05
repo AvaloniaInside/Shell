@@ -5,6 +5,12 @@ namespace AvaloniaInside.Shell.Presenters;
 
 public class NormalPresenter : PresenterBase
 {
-	public override Task PresentAsync(NavigationChain chain, CancellationToken cancellationToken) =>
-		CurrentShellView?.PushViewAsync(chain.Instance, cancellationToken) ?? Task.CompletedTask;
+	public override Task PresentAsync(NavigationChain chain, CancellationToken cancellationToken)
+	{
+		var hostControl = GetHostControl(chain);
+
+		return CurrentShellView?.PushViewAsync(
+			hostControl ?? chain.Instance,
+			cancellationToken) ?? Task.CompletedTask;
+	}
 }

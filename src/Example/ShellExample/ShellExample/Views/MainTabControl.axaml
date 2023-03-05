@@ -1,0 +1,27 @@
+<TabControl xmlns="https://github.com/avaloniaui"
+            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+            xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia"
+            mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+            x:Class="ShellExample.Views.MainTabControl"
+            TabStripPlacement="Bottom"
+            Classes="Center MainTab">
+
+	<TabControl.ItemTemplate>
+		<DataTemplate>
+			<Grid RowDefinitions="*,*" Width="80">
+				<i:Icon Value="{Binding Instance.Icon}" HorizontalAlignment="Center" />
+				<TextBlock Grid.Row="1"
+				           Text="{Binding Instance.Title}"
+				           FontSize="14"
+				           HorizontalAlignment="Center"></TextBlock>
+			</Grid>
+		</DataTemplate>
+	</TabControl.ItemTemplate>
+	<TabControl.ContentTemplate>
+		<DataTemplate>
+			<ContentPresenter Content="{Binding Instance}"></ContentPresenter>
+		</DataTemplate>
+	</TabControl.ContentTemplate>
+</TabControl>

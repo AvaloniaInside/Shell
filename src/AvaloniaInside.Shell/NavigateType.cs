@@ -8,5 +8,6 @@ public enum NavigateType
 	Replace,
 	Top,
 	Clear,
-	Pop
+	Pop,
+	HostedItemChange,
 }

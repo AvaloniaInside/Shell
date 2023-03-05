@@ -1,12 +1,13 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using AvaloniaInside.Shell;
 
 namespace ShellExample.Views;
 
-public partial class SecondView : UserControl, INavigation
+public partial class SettingView : UserControl, INavigation
 {
-	public SecondView()
+	public SettingView()
 	{
 		InitializeComponent();
 	}
@@ -16,7 +17,8 @@ public partial class SecondView : UserControl, INavigation
 		AvaloniaXamlLoader.Load(this);
 	}
 
-	public object? Title => "Second page";
+	public string Icon => "fa-solid fa-gear";
+	public object? Title => "Settings";
 	public object? Item { get; }
 }
 

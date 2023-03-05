@@ -22,7 +22,7 @@ public class HomePageViewModel : ViewModelBase
 
 	private Task ShowDialog(CancellationToken cancellationToken)
 	{
-		return _navigationService.NavigateAsync("/home/confirmation", cancellationToken);
+		return _navigationService.NavigateAsync("/main/home/confirmation", cancellationToken);
 	}
 
 	private Task Navigate()

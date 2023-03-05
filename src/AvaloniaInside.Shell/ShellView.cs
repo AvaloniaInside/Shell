@@ -14,6 +14,8 @@ public class ShellView : TemplatedControl
 
 	public static ShellView? Current { get; private set; }
 
+	public NavigationView NavigationView => _navigationView;
+
 	public static DirectProperty<ShellView, string?> DefaultRouteProperty = AvaloniaProperty
 		.RegisterDirect<ShellView, string?>(
 			nameof(DefaultRoute),
