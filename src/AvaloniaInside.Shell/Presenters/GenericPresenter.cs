@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace AvaloniaInside.Shell.Presenters;
 
-public class NormalPresenter : PresenterBase
+public class GenericPresenter : PresenterBase
 {
 	public override async Task PresentAsync(NavigationChain chain, CancellationToken cancellationToken)
 	{

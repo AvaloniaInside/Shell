@@ -9,7 +9,7 @@ public class PresenterProvider : IPresenterProvider
 		return type switch
 		{
 			NavigateType.Modal => new ModalPresenter(),
-			_ => new NormalPresenter()
+			_ => new GenericPresenter()
 		};
 	}
 
