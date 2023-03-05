@@ -9,11 +9,9 @@ public class PresenterProvider : IPresenterProvider
 		return type switch
 		{
 			NavigateType.Modal => new ModalPresenter(),
-			NavigateType.Pop => Pop(),
 			_ => new NormalPresenter()
 		};
 	}
 
 	public IPresenter Remove() => new RemovePresenter();
-	public IPresenter Pop() => new RemovePresenter();
 }

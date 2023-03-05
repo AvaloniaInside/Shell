@@ -49,8 +49,14 @@ public class NavigationView : StackContentView
 		return Task.CompletedTask;
 	}
 
-	private Task UpdateAsync(object view, CancellationToken cancellationToken)
+	public Task UpdateAsync(object view, CancellationToken cancellationToken)
 	{
+		if (_header == null && _itemsContentPresenter == null)
+		{
+			_pendingHeader = view;
+			return Task.CompletedTask;
+		}
+
 		if (_header != null)
 			_header.Content = GetTitle(view);
 
