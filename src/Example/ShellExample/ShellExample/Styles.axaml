@@ -10,6 +10,13 @@
 		<Setter Property="Background" Value="Black"></Setter>
 	</Style>
 
+	<Style Selector="TabControl.HeadTab /template/ Border > DockPanel > Border">
+		<Setter Property="Background" Value="#11FFFFFF"></Setter>
+		<Setter Property="HorizontalAlignment" Value="Center"></Setter>
+		<Setter Property="CornerRadius" Value="5"></Setter>
+		<Setter Property="Padding" Value="8"></Setter>
+	</Style>
+
 	<Style Selector="TabControl.Center">
 		<Setter Property="Template">
 			<ControlTemplate>
