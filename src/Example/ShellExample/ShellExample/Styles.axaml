@@ -1,10 +1,26 @@
 <Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia">
 	<Design.PreviewWith>
 		<Border Padding="20">
 			<!-- Add Controls for Previewer Here -->
 		</Border>
 	</Design.PreviewWith>
+
+	<Style Selector="TextBlock.SubTitle">
+		<Setter Property="Foreground" Value="Silver"></Setter>
+		<Setter Property="FontWeight" Value="Thin"></Setter>
+	</Style>
+
+	<Style Selector="TextBlock.SemiAttention">
+		<Setter Property="Foreground" Value="LightSkyBlue"></Setter>
+		<Setter Property="FontWeight" Value="DemiBold"></Setter>
+	</Style>
+
+	<Style Selector="i|Icon.SemiAttention">
+		<Setter Property="Foreground" Value="Red"></Setter>
+		<Setter Property="FontWeight" Value="DemiBold"></Setter>
+	</Style>
 
 	<Style Selector="TabControl.MainTab /template/ Border > DockPanel > Border">
 		<Setter Property="Background" Value="Black"></Setter>

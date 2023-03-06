@@ -1,0 +1,45 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="ShellExample.Views.ShopViews.ProductCatalogFilterView"
+             Width="300"
+             Height="400"
+             Background="#444444">
+	<Grid RowDefinitions="40,*,40">
+		<TextBlock Text="Select the category"
+		           VerticalAlignment="Center"
+		           HorizontalAlignment="Center"
+		           FontWeight="ExtraBlack">
+		</TextBlock>
+
+		<ListBox Grid.Row="1" Items="{Binding Categories}"
+		         SelectedItem="{Binding SelectedCategory}">
+			<ListBox.ItemTemplate>
+				<DataTemplate>
+					<StackPanel Orientation="Horizontal">
+						<i:Icon Value="fa-solid fa-check" Margin="0,0,4,0" />
+						<TextBlock Text="{Binding .}" />
+					</StackPanel>
+				</DataTemplate>
+			</ListBox.ItemTemplate>
+
+			<ListBox.Styles>
+				<Style Selector="ListBoxItem i|Icon">
+					<Setter Property="IsVisible" Value="False"></Setter>
+				</Style>
+				<Style Selector="ListBoxItem:selected i|Icon">
+					<Setter Property="IsVisible" Value="True"></Setter>
+				</Style>
+			</ListBox.Styles>
+		</ListBox>
+		<StackPanel Grid.Row="2">
+			<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="8">
+				<Button Content="Close" Command="{Binding CloseCommand}"></Button>
+				<Button Content="Clear filter" Foreground="Red" Command="{Binding ClearCommand}"></Button>
+			</StackPanel>
+		</StackPanel>
+	</Grid>
+</UserControl>

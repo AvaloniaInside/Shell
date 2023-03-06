@@ -6,6 +6,7 @@ using AvaloniaInside.Shell;
 using AvaloniaInside.Shell.Presenters;
 using ShellExample.ViewModels;
 using ShellExample.Views;
+using ShellExample.Views.ShopViews;
 
 namespace ShellExample;
 
@@ -40,8 +41,10 @@ public partial class App : Application
 		navigationService.RegisterHost("/main/pets", typeof(PetsTabControlView), "/main/pets/cat", NavigateType.Normal);
 		navigationService.RegisterPage("/main/pets/cat", typeof(CatView), NavigateType.Normal);
 		navigationService.RegisterPage("/main/pets/dog", typeof(DogView), NavigateType.Normal);
-		navigationService.RegisterPage("/main/profile", typeof(ProfileView), NavigateType.Normal);
+		navigationService.RegisterPage("/main/product", typeof(ProductCatalogView), NavigateType.Normal);
+		navigationService.RegisterPage("/main/product/filter", typeof(ProductCatalogFilterView), NavigateType.Modal);
 		navigationService.RegisterPage("/main/setting", typeof(SettingView), NavigateType.Normal);
+		navigationService.RegisterPage("/main/setting/profile", typeof(ProfileView), NavigateType.Normal);
 
 		navigationService.RegisterPage("/main/home/confirmation", typeof(SimpleDialog), NavigateType.Modal);
 

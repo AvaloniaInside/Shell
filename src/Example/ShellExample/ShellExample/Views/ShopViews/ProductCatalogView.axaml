@@ -1,0 +1,51 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:converters="clr-namespace:ShellExample.Converters"
+             xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="ShellExample.Views.ShopViews.ProductCatalogView">
+	<UserControl.Resources>
+		<converters:BitmapAssetValueConverter x:Key="variableImage"/>
+	</UserControl.Resources>
+	<ScrollViewer>
+		<ItemsControl Items="{Binding Products}">
+			<ItemsControl.ItemsPanel>
+				<ItemsPanelTemplate>
+					<VirtualizingStackPanel></VirtualizingStackPanel>
+				</ItemsPanelTemplate>
+			</ItemsControl.ItemsPanel>
+			<ItemsControl.ItemTemplate>
+				<DataTemplate>
+					<Border Background="#40000000" Margin="8" Padding="4" CornerRadius="6">
+						<Grid RowDefinitions="auto,auto,auto,auto,*" ColumnDefinitions="120,*">
+							<Border Grid.RowSpan="4" Background="White" Margin="5">
+								<Image Source="{Binding PictureUrl, Converter={StaticResource variableImage}}"></Image>
+							</Border>
+							<WrapPanel Grid.Row="0" Grid.Column="1">
+								<TextBlock Text="{Binding SupplierName}"></TextBlock>
+								<TextBlock Text=" - "></TextBlock>
+								<TextBlock Text="{Binding Name}"></TextBlock>
+							</WrapPanel>
+
+							<TextBlock Grid.Row="1" Grid.Column="1"
+							           Text="{Binding MainCategory}"
+							           Classes="SubTitle"></TextBlock>
+
+							<WrapPanel Grid.Row="2" Grid.Column="1">
+								<TextBlock Text="Price: " Classes="SubTitle"></TextBlock>
+								<TextBlock Text="{Binding Price, StringFormat={}{0:C}}" Classes="SemiAttention"></TextBlock>
+								<TextBlock Text="{Binding CurrencyCode}"></TextBlock>
+
+								<TextBlock Text=" XPress delivery"></TextBlock>
+								<i:Icon Value="fa-solid fa-truck" Classes="SemiAttention" />
+							</WrapPanel>
+							<TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding Price}"></TextBlock>
+						</Grid>
+					</Border>
+				</DataTemplate>
+			</ItemsControl.ItemTemplate>
+		</ItemsControl>
+	</ScrollViewer>
+</UserControl>
