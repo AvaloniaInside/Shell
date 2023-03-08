@@ -32,7 +32,7 @@
 				<Grid>
 					<SplitView Name="PART_SplitView" DisplayMode="Inline">
 						<SplitView.Pane>
-							<StackPanel Background="Gray"></StackPanel>
+							<shell:SideMenuView></shell:SideMenuView>
 						</SplitView.Pane>
 
 						<Grid RowDefinitions="35,*">
@@ -76,6 +76,20 @@
 							</ControlTemplate>
 						</shell:StackContentView.Template>
 					</shell:StackContentView>
+				</Grid>
+			</ControlTemplate>
+		</Setter>
+	</Style>
+
+	<Style Selector="shell|SideMenuView">
+		<Setter Property="Template">
+			<ControlTemplate>
+				<Grid RowDefinitions="Auto,*,Auto">
+					<ContentPresenter Name="PART_Header"></ContentPresenter>
+					<ScrollViewer Grid.Row="1">
+						<ListBox Name="PART_Items"></ListBox>
+					</ScrollViewer>
+					<ContentPresenter Grid.Row="2" Name="PART_Footer"></ContentPresenter>
 				</Grid>
 			</ControlTemplate>
 		</Setter>
