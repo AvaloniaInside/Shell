@@ -17,5 +17,14 @@
 
 	<views:ShellView HorizontalAlignment="Stretch"
 	                 VerticalAlignment="Stretch"
-	                 DefaultRoute="/main"></views:ShellView>
+	                 DefaultRoute="/main"
+
+	                 SmallScreenSideMenuMode="Overlay"
+	                 SmallScreenSideMenuBehave="Default"
+
+	                 MediumScreenSideMenuMode="CompactInline"
+	                 MediumScreenSideMenuBehave="Default"
+
+	                 LargeScreenSideMenuMode="Inline"
+	                 LargeScreenSideMenuBehave="Keep"></views:ShellView>
 </UserControl>

@@ -6,25 +6,66 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
-using ReactiveUI;
 
 namespace AvaloniaInside.Shell;
 
 public class NavigationView : StackContentView
 {
+	public static readonly DirectProperty<NavigationView, ICommand> SideMenuCommandProperty =
+		AvaloniaProperty.RegisterDirect<NavigationView, ICommand>(
+			nameof(SideMenuCommand),
+			o => o.SideMenuCommand,
+			(o, v) => o.SideMenuCommand = v);
+
+	public static readonly DirectProperty<NavigationView, ICommand> BackCommandProperty =
+		AvaloniaProperty.RegisterDirect<NavigationView, ICommand>(
+			nameof(BackCommand),
+			o => o.BackCommand,
+			(o, v) => o.BackCommand = v);
+
+	public static readonly DirectProperty<NavigationView, bool> HasSideMenuOptionProperty =
+		AvaloniaProperty.RegisterDirect<NavigationView, bool>(
+			nameof(HasSideMenuOption),
+			o => o.HasSideMenuOption,
+			(o, v) => o.HasSideMenuOption = v);
+
 	private ContentPresenter? _header;
 	private Button? _actionButton;
 	private ContentPresenter? _itemsContentPresenter;
 
 	private object? _pendingHeader;
 
-	private readonly ICommand _backCommand;
-	private readonly ICommand _flyoutCommand;
-
-	public NavigationView()
+	private ICommand _backCommand;
+	public ICommand BackCommand
 	{
-		_backCommand = ReactiveCommand.CreateFromTask(BackActionAsync);
-		_flyoutCommand = ReactiveCommand.CreateFromTask(FlyoutActionAsync);
+		get => _backCommand;
+		set
+		{
+			if (SetAndRaise(BackCommandProperty, ref _backCommand, value))
+				UpdateButtons();
+		}
+	}
+
+	private ICommand _sideMenuCommand;
+	public ICommand SideMenuCommand
+	{
+		get => _sideMenuCommand;
+		set
+		{
+			if (SetAndRaise(SideMenuCommandProperty, ref _sideMenuCommand, value))
+				UpdateButtons();
+		}
+	}
+
+	private bool _hasSideMenuOption = true;
+	public bool HasSideMenuOption
+	{
+		get => _hasSideMenuOption;
+		set
+		{
+			if (SetAndRaise(HasSideMenuOptionProperty, ref _hasSideMenuOption, value))
+				UpdateButtons();
+		}
 	}
 
 	protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
@@ -84,8 +125,8 @@ public class NavigationView : StackContentView
 		if (_actionButton == null) return;
 
 		_actionButton.Command = hasItem
-			? _backCommand
-			: _flyoutCommand;
+			? BackCommand
+			: SideMenuCommand;
 
 		if (hasItem)
 		{
@@ -96,23 +137,13 @@ public class NavigationView : StackContentView
 		{
 			_actionButton.Classes.Remove("BackButton");
 			_actionButton.Classes.Add("FlyoutButton");
+
+			_actionButton.IsVisible = HasSideMenuOption;
 		}
 	}
 
 	protected virtual void UpdateItems(object view, ContentPresenter itemPresenter)
 	{
 		itemPresenter.Content = view is INavigation navigation ? navigation.Item : null;
-	}
-
-	protected virtual Task BackActionAsync(CancellationToken cancellationToken)
-	{
-		return AvaloniaLocator.CurrentMutable
-			.GetService<INavigationService>()?
-			.BackAsync(cancellationToken) ?? Task.CompletedTask;
-	}
-
-	private Task FlyoutActionAsync(CancellationToken cancellationToken)
-	{
-		return Task.CompletedTask;
 	}
 }

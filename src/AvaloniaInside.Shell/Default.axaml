@@ -29,12 +29,19 @@
 	<Style Selector="shell|ShellView">
 		<Setter Property="Template">
 			<ControlTemplate>
-				<Grid RowDefinitions="35,*">
-					<shell:NavigationView Name="PART_NavigationView"/>
-					<shell:StackContentView VerticalAlignment="Stretch" Name="PART_ContentView" Grid.Row="1"></shell:StackContentView>
+				<Grid>
+					<SplitView Name="PART_SplitView" DisplayMode="Inline">
+						<SplitView.Pane>
+							<StackPanel Background="Gray"></StackPanel>
+						</SplitView.Pane>
+
+						<Grid RowDefinitions="35,*">
+							<shell:NavigationView Name="PART_NavigationView" />
+							<shell:StackContentView VerticalAlignment="Stretch" Name="PART_ContentView" Grid.Row="1"></shell:StackContentView>
+						</Grid>
+					</SplitView>
 
 					<Rectangle Grid.Row="0"
-					           Grid.RowSpan="2"
 					           IsVisible="{Binding ElementName=PART_Modal, Path=HasContent}" Opacity="0.5">
 						<Rectangle.Fill>
 							<VisualBrush
@@ -55,7 +62,6 @@
 
 					<shell:StackContentView Name="PART_Modal"
 					                        Grid.Row="0"
-					                        Grid.RowSpan="2"
 					                        IsVisible="{Binding ElementName=PART_Modal, Path=HasContent}">
 						<shell:StackContentView.Template>
 							<ControlTemplate>
@@ -64,7 +70,8 @@
 									                             VerticalContentAlignment="Center"
 									                             HorizontalContentAlignment="Center"
 									                             VerticalAlignment="Center"
-									                             HorizontalAlignment="Center"></TransitioningContentControl>
+									                             HorizontalAlignment="Center">
+									</TransitioningContentControl>
 								</Panel>
 							</ControlTemplate>
 						</shell:StackContentView.Template>
@@ -78,19 +85,19 @@
 		<Setter Property="Template">
 			<ControlTemplate>
 				<Viewbox Stretch="UniformToFill">
-					<Border>
-						<Polyline Points="7,2 2,7 7,12" StrokeThickness="3" Stroke="White" Width="16" Height="16" Margin="5"/>
+					<Border Background="#00000000">
+						<Polyline Points="7,2 2,7 7,12" StrokeThickness="3" Stroke="White" Width="16" Height="16" Margin="5" />
 					</Border>
 				</Viewbox>
 			</ControlTemplate>
 		</Setter>
 	</Style>
 	<Style Selector="Button.FlyoutButton">
-		<Setter Property="RenderTransform" Value="rotate(180deg)"/>
+		<Setter Property="RenderTransform" Value="rotate(180deg)" />
 		<Setter Property="Template">
 			<ControlTemplate>
 				<Viewbox Stretch="UniformToFill">
-					<Canvas Width="16" Height="16" Margin="5">
+					<Canvas Width="16" Height="16" Margin="5" Background="#00000000">
 						<Line StartPoint="1,4" EndPoint="15,4" StrokeThickness="3" Stroke="White"></Line>
 						<Line StartPoint="1,8" EndPoint="15,8" StrokeThickness="3" Stroke="White"></Line>
 						<Line StartPoint="1,12" EndPoint="15,12" StrokeThickness="3" Stroke="White"></Line>
@@ -100,4 +107,3 @@
 		</Setter>
 	</Style>
 </Styles>
-

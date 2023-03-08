@@ -10,7 +10,7 @@
 
 	<TabControl.ItemTemplate>
 		<DataTemplate>
-			<Grid RowDefinitions="*,*" Width="80">
+			<Grid RowDefinitions="*,*" Width="70">
 				<i:Icon Value="{Binding Instance.Icon}" HorizontalAlignment="Center" />
 				<TextBlock Grid.Row="1"
 				           Text="{Binding Instance.Title}"
