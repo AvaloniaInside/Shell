@@ -34,13 +34,19 @@ public class ProductCatalogViewModel : ViewModelBase
 		FilterCommand = ReactiveCommand.CreateFromTask(FilterAsync);
 	}
 
-	private Task FilterAsync(CancellationToken cancellationToken)
+	private async Task FilterAsync(CancellationToken cancellationToken)
 	{
-		return _navigationService.NavigateAsync("/main/product/filter", _selectedCategory, cancellationToken);
+		var result = await _navigationService
+			.NavigateAndWaitAsync("/main/product/filter", _selectedCategory, cancellationToken);
+
+		if (result.HasArgument)
+			UpdateSelectedCategory(result.As<string>());
 	}
 
-	public void UpdateSelectedCategory(string? selectedCategory)
+	private void UpdateSelectedCategory(string? selectedCategory)
 	{
+		if (selectedCategory == string.Empty) selectedCategory = null;
+
 		var filtered = selectedCategory == null
 			? DummyPlace.Products
 			: DummyPlace.Products.Where(w => w.MainCategory == selectedCategory);

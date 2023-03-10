@@ -14,6 +14,7 @@ public interface INavigationUpdateStrategy
 		List<object> newInstances,
 		NavigateType navigateType,
 		object? argument,
+		bool hasArgument,
 		CancellationToken cancellationToken);
 }
 

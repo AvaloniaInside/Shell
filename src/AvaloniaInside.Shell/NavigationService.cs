@@ -13,12 +13,13 @@ public class NavigationService : INavigationService
 	private readonly INavigationUpdateStrategy _updateStrategy;
 	private readonly INavigationViewLocator _viewLocator;
 	private readonly NavigationStack _stack = new();
+	private readonly Dictionary<NavigationChain, TaskCompletionSource<NavigateResult>> _waitingList = new();
 
 	private readonly SemaphoreSlim _semaphoreSlim = new(1, 1);
 	private bool _navigating;
 	private ShellView? _shellView;
 
-	public ShellView ShellView => _shellView ?? throw new ArgumentNullException(nameof (ShellView));
+	public ShellView ShellView => _shellView ?? throw new ArgumentNullException(nameof(ShellView));
 
 	public Uri CurrentUri => _stack.Current?.Uri ?? _navigationRegistrar.RootUri;
 
@@ -62,9 +63,9 @@ public class NavigationService : INavigationService
 	public void RegisterHost(string route, Type page, string defaultPath, NavigateType navigate) =>
 		_navigationRegistrar.RegisterRoute(route, page, NavigationNodeType.Host, navigate, defaultPath);
 
-	private async Task NotifyAsync(
-		Uri newUri,
+	private async Task NotifyAsync(Uri newUri,
 		object? argument,
+		bool hasArgument,
 		NavigateType? navigateType,
 		CancellationToken cancellationToken = default)
 	{
@@ -95,7 +96,10 @@ public class NavigationService : INavigationService
 			instances,
 			finalNavigateType,
 			argument,
+			hasArgument,
 			cancellationToken);
+
+		CheckWaitingList(stackChanges, argument, hasArgument);
 
 		_navigating = false;
 	}
@@ -105,20 +109,39 @@ public class NavigationService : INavigationService
 		NavigationChain chain,
 		CancellationToken cancellationToken = default)
 	{
-		var newUri = await _navigateStrategy.NavigateAsync(_stack.Current, CurrentUri, chain.Uri.AbsolutePath, cancellationToken);
+		var newUri =
+			await _navigateStrategy.NavigateAsync(_stack.Current, CurrentUri, chain.Uri.AbsolutePath,
+				cancellationToken);
 		if (CurrentUri.AbsolutePath != newUri.AbsolutePath)
 		{
-			await NotifyAsync(newUri, null, NavigateType.HostedItemChange, cancellationToken);
+			await NotifyAsync(newUri, null, false, NavigateType.HostedItemChange, cancellationToken);
 		}
 	}
 
 	public Task NavigateAsync(string path, CancellationToken cancellationToken = default) =>
-		NavigateAsync(path, null, null, cancellationToken);
+		NavigateAsync(path, null, null, false, cancellationToken);
 
 	public Task NavigateAsync(string path, object? argument, CancellationToken cancellationToken = default) =>
-		NavigateAsync(path, null, argument, cancellationToken);
+		NavigateAsync(path, null, argument, true, cancellationToken);
 
-	public async Task NavigateAsync(string path, NavigateType? navigateType, object? argument,
+	public Task NavigateAsync(
+		string path,
+		NavigateType? navigateType,
+		CancellationToken cancellationToken = default) =>
+		NavigateAsync(path, null, null, false, cancellationToken);
+
+	public Task NavigateAsync(
+		string path,
+		NavigateType? navigateType,
+		object? argument,
+		CancellationToken cancellationToken = default) =>
+		NavigateAsync(path, null, argument, true, cancellationToken);
+
+	private async Task NavigateAsync(
+		string path,
+		NavigateType? navigateType,
+		object? argument,
+		bool hasArgument,
 		CancellationToken cancellationToken = default)
 	{
 		await _semaphoreSlim.WaitAsync(cancellationToken);
@@ -126,7 +149,7 @@ public class NavigationService : INavigationService
 		{
 			var newUri = await _navigateStrategy.NavigateAsync(_stack.Current, CurrentUri, path, cancellationToken);
 			if (CurrentUri.AbsolutePath != newUri.AbsolutePath)
-				await NotifyAsync(newUri, argument, navigateType, cancellationToken);
+				await NotifyAsync(newUri, argument, hasArgument, navigateType, cancellationToken);
 		}
 		finally
 		{
@@ -135,20 +158,85 @@ public class NavigationService : INavigationService
 	}
 
 	public Task BackAsync(CancellationToken cancellationToken = default) =>
-		BackAsync(null, cancellationToken);
+		BackAsync(null, false, cancellationToken);
 
-	public async Task BackAsync(object? argument, CancellationToken cancellationToken = default)
+	public Task BackAsync(object? argument, CancellationToken cancellationToken = default) =>
+		BackAsync(argument, true, cancellationToken);
+
+	private async Task BackAsync(object? argument, bool hasArgument, CancellationToken cancellationToken = default)
 	{
 		await _semaphoreSlim.WaitAsync(cancellationToken);
 		try
 		{
 			var newUri = await _navigateStrategy.BackAsync(_stack.Current, CurrentUri, cancellationToken);
 			if (newUri != null && CurrentUri.AbsolutePath != newUri.AbsolutePath)
-				await NotifyAsync(newUri, argument, NavigateType.Pop, cancellationToken);
+				await NotifyAsync(newUri, argument, hasArgument, NavigateType.Pop, cancellationToken);
 		}
 		finally
 		{
 			_semaphoreSlim.Release();
+		}
+	}
+
+	public Task<NavigateResult> NavigateAndWaitAsync(string path, CancellationToken cancellationToken = default) =>
+		NavigateAndWaitAsync(path, null, null, false, cancellationToken);
+
+	public Task<NavigateResult> NavigateAndWaitAsync(
+		string path,
+		object? argument,
+		CancellationToken cancellationToken = default) =>
+		NavigateAndWaitAsync(path, null, argument, true, cancellationToken);
+
+	public Task<NavigateResult> NavigateAndWaitAsync(
+		string path,
+		NavigateType navigateType,
+		CancellationToken cancellationToken = default) =>
+		NavigateAndWaitAsync(path, navigateType, null, false, cancellationToken);
+
+	public Task<NavigateResult> NavigateAndWaitAsync(
+		string path,
+		object? argument,
+		NavigateType navigateType,
+		CancellationToken cancellationToken = default) =>
+		NavigateAndWaitAsync(path, navigateType, argument, true, cancellationToken);
+
+	private async Task<NavigateResult> NavigateAndWaitAsync(
+		string path,
+		NavigateType? navigateType,
+		object? argument,
+		bool hasArgument,
+		CancellationToken cancellationToken = default)
+	{
+		var newUri = await _navigateStrategy.NavigateAsync(_stack.Current, CurrentUri, path, cancellationToken);
+		if (CurrentUri.AbsolutePath == newUri.AbsolutePath)
+			return new NavigateResult(false, null); // Or maybe we should throw exception.
+
+		await NotifyAsync(newUri, argument, hasArgument, navigateType, cancellationToken);
+		var chain = _stack.Current;
+
+		if (!_waitingList.TryGetValue(chain, out var tcs))
+			_waitingList[chain] = tcs = new TaskCompletionSource<NavigateResult>();
+
+		try
+		{
+			return await tcs.Task;
+		}
+		finally
+		{
+			_waitingList.Remove(chain);
+		}
+	}
+
+	private void CheckWaitingList(
+		NavigationStackChanges navigationStackChanges,
+		object? argument,
+		bool hasArgument)
+	{
+		if (navigationStackChanges.Removed == null) return;
+		foreach (var chain in navigationStackChanges.Removed)
+		{
+			if (_waitingList.TryGetValue(chain, out var tcs))
+				tcs.TrySetResult(new NavigateResult(hasArgument, argument));
 		}
 	}
 

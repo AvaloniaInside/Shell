@@ -24,6 +24,7 @@ public class DefaultNavigationUpdateStrategy : INavigationUpdateStrategy
 		List<object> newInstances,
 		NavigateType navigateType,
 		object? argument,
+		bool hasArgument,
 		CancellationToken cancellationToken)
 	{
 		var isSame = changes.Previous == changes.Front;
@@ -47,7 +48,7 @@ public class DefaultNavigationUpdateStrategy : INavigationUpdateStrategy
 			if (!isSame)
 				await newInstanceLifecycle.StartAsync(cancellationToken);
 
-			if (argument != null)
+			if (hasArgument)
 				await newInstanceLifecycle.ArgumentAsync(argument, cancellationToken);
 		}
 

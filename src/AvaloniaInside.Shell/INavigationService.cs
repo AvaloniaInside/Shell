@@ -14,8 +14,31 @@ public interface INavigationService
 
 	Task NavigateAsync(string path, CancellationToken cancellationToken = default);
 	Task NavigateAsync(string path, object? argument, CancellationToken cancellationToken = default);
-	Task NavigateAsync(string path, NavigateType? navigateType, object? argument,
+	Task NavigateAsync(
+		string path,
+		NavigateType? navigateType,
 		CancellationToken cancellationToken = default);
+	Task NavigateAsync(
+		string path,
+		NavigateType? navigateType,
+		object? argument,
+		CancellationToken cancellationToken = default);
+
 	Task BackAsync(CancellationToken cancellationToken = default);
 	Task BackAsync(object? argument, CancellationToken cancellationToken = default);
+
+	Task<NavigateResult> NavigateAndWaitAsync(string path, CancellationToken cancellationToken = default);
+	Task<NavigateResult> NavigateAndWaitAsync(
+		string path,
+		object? argument,
+		CancellationToken cancellationToken = default);
+	Task<NavigateResult> NavigateAndWaitAsync(
+		string path,
+		NavigateType navigateType,
+		CancellationToken cancellationToken = default);
+	Task<NavigateResult> NavigateAndWaitAsync(
+		string path,
+		object? argument,
+		NavigateType navigateType,
+		CancellationToken cancellationToken = default);
 }

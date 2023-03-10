@@ -8,7 +8,7 @@ using ShellExample.ViewModels.ShopViewModels;
 
 namespace ShellExample.Views.ShopViews;
 
-public partial class ProductCatalogView : UserControl, INavigation, INavigationLifecycle
+public partial class ProductCatalogView : UserControl, INavigation
 {
 	public ProductCatalogView()
 	{
@@ -32,21 +32,5 @@ public partial class ProductCatalogView : UserControl, INavigation, INavigationL
 		Content = "Filter",
 		Command = ViewModel.FilterCommand
 	};
-
-	public Task InitialiseAsync(CancellationToken cancellationToken) => Task.CompletedTask;
-
-	public Task StartAsync(CancellationToken cancellationToken)=> Task.CompletedTask;
-
-	public Task StopAsync(CancellationToken cancellationToken)=> Task.CompletedTask;
-
-	public Task ArgumentAsync(object args, CancellationToken cancellationToken)
-	{
-		if (args is string selectedCategory)
-			ViewModel.UpdateSelectedCategory(selectedCategory == string.Empty ? null : selectedCategory);
-
-		return Task.CompletedTask;
-	}
-
-	public Task TerminateAsync(CancellationToken cancellationToken)=> Task.CompletedTask;
 }
 

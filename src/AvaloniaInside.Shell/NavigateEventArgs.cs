@@ -1,22 +1,15 @@
-using System;
-
 namespace AvaloniaInside.Shell;
 
-public class NavigateEventArgs : EventArgs
+public class NavigateResult
 {
-	public NavigateEventArgs(NavigationNode item, Uri old, Uri uri, object? argument)
+	internal NavigateResult(bool hasArgument, object? argument)
 	{
-		Node = item;
-		Uri = uri;
-		OldUri = old;
+		HasArgument = hasArgument;
 		Argument = argument;
 	}
 
-	public NavigationNode Node { get; }
-	public Uri OldUri { get; }
-	public Uri Uri { get; }
+	public bool HasArgument { get; }
 	public object? Argument { get; }
-	public bool Cancel { get; set; } = false;
 
-	public T? As<T>() => Argument is T argument ? argument : default;
+	public T? As<T>() => HasArgument && Argument is T argument ? argument : default;
 }
