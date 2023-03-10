@@ -15,6 +15,7 @@ namespace ShellExample.ViewModels.ShopViewModels;
 
 public class ProductCatalogViewModel : ViewModelBase
 {
+	private readonly INavigationService _navigationService;
 	private string? _selectedCategory;
 
 	public ObservableCollection<ProductDto> Products { get; }
@@ -26,17 +27,16 @@ public class ProductCatalogViewModel : ViewModelBase
 		set => this.RaiseAndSetIfChanged(ref _selectedCategory, value);
 	}
 
-	public ProductCatalogViewModel()
+	public ProductCatalogViewModel(INavigationService navigationService)
 	{
+		_navigationService = navigationService;
 		Products = new ObservableCollection<ProductDto>(DummyPlace.Products);
 		FilterCommand = ReactiveCommand.CreateFromTask(FilterAsync);
 	}
 
 	private Task FilterAsync(CancellationToken cancellationToken)
 	{
-		return AvaloniaLocator.CurrentMutable
-			.GetService<INavigationService>()?
-			.NavigateAsync("/main/product/filter", _selectedCategory, cancellationToken) ?? Task.CompletedTask;
+		return _navigationService.NavigateAsync("/main/product/filter", _selectedCategory, cancellationToken);
 	}
 
 	public void UpdateSelectedCategory(string? selectedCategory)

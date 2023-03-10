@@ -15,7 +15,8 @@
 		<viewModels:MainViewModel />
 	</Design.DataContext>
 
-	<views:ShellView HorizontalAlignment="Stretch"
+	<views:ShellView Name="ShellViewMain"
+	                 HorizontalAlignment="Stretch"
 	                 VerticalAlignment="Stretch"
 	                 DefaultRoute="/main"
 

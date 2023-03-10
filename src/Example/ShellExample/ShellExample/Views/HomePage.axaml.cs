@@ -11,7 +11,7 @@ public partial class HomePage : UserControl, INavigation
 	public HomePage()
 	{
 		InitializeComponent();
-		DataContext = new ViewModels.HomePageViewModel(AvaloniaLocator.CurrentMutable.GetService<INavigationService>());
+		DataContext = new ViewModels.HomePageViewModel(MainView.Current.ShellViewMain.Navigation);
 	}
 
 	private void InitializeComponent()

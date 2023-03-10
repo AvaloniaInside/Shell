@@ -13,13 +13,15 @@ namespace ShellExample.ViewModels.ShopViewModels;
 
 public class ProductCatalogFilterViewModel : ViewModelBase
 {
+	private readonly INavigationService _navigationService;
 	private string? _selectedCategory;
 
 	public ICommand CloseCommand { get; }
 	public ICommand ClearCommand { get; }
 
-	public ProductCatalogFilterViewModel()
+	public ProductCatalogFilterViewModel(INavigationService navigationService)
 	{
+		_navigationService = navigationService;
 		var items = DummyPlace.Products.Select(s => s.MainCategory)
 			.Distinct()
 			.Order();
@@ -31,16 +33,12 @@ public class ProductCatalogFilterViewModel : ViewModelBase
 
 	private Task CloseAsync(CancellationToken cancellationToken)
 	{
-		return AvaloniaLocator.CurrentMutable
-			.GetService<INavigationService>()?
-			.BackAsync(cancellationToken) ?? Task.CompletedTask;
+		return _navigationService.BackAsync(cancellationToken) ?? Task.CompletedTask;
 	}
 
 	private Task ClearAsync(CancellationToken cancellationToken)
 	{
-		return AvaloniaLocator.CurrentMutable
-			.GetService<INavigationService>()?
-			.BackAsync(string.Empty, cancellationToken) ?? Task.CompletedTask;
+		return _navigationService.BackAsync(string.Empty, cancellationToken);
 	}
 
 	public ObservableCollection<string> Categories { get; }
@@ -51,9 +49,7 @@ public class ProductCatalogFilterViewModel : ViewModelBase
 		set
 		{
 			this.RaiseAndSetIfChanged(ref _selectedCategory, value);
-			_ = AvaloniaLocator.CurrentMutable
-				.GetService<INavigationService>()?
-				.BackAsync(value) ?? Task.CompletedTask;
+			_ = _navigationService.BackAsync(value);
 		}
 	}
 

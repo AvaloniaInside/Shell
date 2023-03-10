@@ -19,6 +19,7 @@ public class DefaultNavigationUpdateStrategy : INavigationUpdateStrategy
 	public event EventHandler<HostItemChangeEventArgs>? HostItemChanged;
 
 	public async Task UpdateChangesAsync(
+		ShellView shellView,
 		NavigationStackChanges changes,
 		List<object> newInstances,
 		NavigateType navigateType,
@@ -39,7 +40,7 @@ public class DefaultNavigationUpdateStrategy : INavigationUpdateStrategy
 			await oldInstanceLifecycle.StopAsync(cancellationToken);
 
 		if (changes.Removed != null)
-			await InvokeRemoveAsync(changes.Removed, changes.Previous, cancellationToken);
+			await InvokeRemoveAsync(shellView, changes.Removed, changes.Previous, cancellationToken);
 
 		if (changes.Front?.Instance is INavigationLifecycle newInstanceLifecycle)
 		{
@@ -51,10 +52,11 @@ public class DefaultNavigationUpdateStrategy : INavigationUpdateStrategy
 		}
 
 		if (!isSame && changes.Front != null)
-			await _presenterProvider.For(navigateType).PresentAsync(changes.Front, cancellationToken);
+			await _presenterProvider.For(navigateType).PresentAsync(shellView, changes.Front, cancellationToken);
 	}
 
 	private async Task InvokeRemoveAsync(
+		ShellView shellView,
 		IList<NavigationChain> removed,
 		NavigationChain? previous,
 		CancellationToken cancellationToken)
@@ -64,9 +66,9 @@ public class DefaultNavigationUpdateStrategy : INavigationUpdateStrategy
 		{
 			cancellationToken.ThrowIfCancellationRequested();
 			if (previous == chain)
-				await _presenterProvider.Remove().PresentAsync(previous, cancellationToken);
+				await _presenterProvider.Remove().PresentAsync(shellView, previous, cancellationToken);
 			else
-				await presenter.PresentAsync(chain, cancellationToken);
+				await presenter.PresentAsync(shellView, chain, cancellationToken);
 
 			if (chain.Instance is INavigationLifecycle lifecycle)
 				await lifecycle.TerminateAsync(cancellationToken);

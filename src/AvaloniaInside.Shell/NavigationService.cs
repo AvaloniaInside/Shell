@@ -16,6 +16,9 @@ public class NavigationService : INavigationService
 
 	private readonly SemaphoreSlim _semaphoreSlim = new(1, 1);
 	private bool _navigating;
+	private ShellView? _shellView;
+
+	public ShellView ShellView => _shellView ?? throw new ArgumentNullException(nameof (ShellView));
 
 	public Uri CurrentUri => _stack.Current?.Uri ?? _navigationRegistrar.RootUri;
 
@@ -31,6 +34,12 @@ public class NavigationService : INavigationService
 		_viewLocator = viewLocator;
 
 		_updateStrategy.HostItemChanged += UpdateStrategyOnHostItemChanged;
+	}
+
+	public void RegisterShell(ShellView shellView)
+	{
+		if (_shellView != null) throw new ArgumentException("Register shell can call only once");
+		_shellView = shellView;
 	}
 
 	public bool HasItemInStack()
@@ -81,6 +90,7 @@ public class NavigationService : INavigationService
 			});
 
 		await _updateStrategy.UpdateChangesAsync(
+			ShellView,
 			stackChanges,
 			instances,
 			finalNavigateType,

@@ -5,5 +5,5 @@ namespace AvaloniaInside.Shell;
 
 public interface IPresenter
 {
-	Task PresentAsync(NavigationChain chain, CancellationToken cancellationToken);
+	Task PresentAsync(ShellView shellView, NavigationChain chain, CancellationToken cancellationToken);
 }

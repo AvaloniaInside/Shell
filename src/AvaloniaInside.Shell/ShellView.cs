@@ -7,7 +7,9 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Platform;
+using Microsoft.VisualBasic;
 using ReactiveUI;
+using Splat;
 
 namespace AvaloniaInside.Shell;
 
@@ -43,8 +45,6 @@ public partial class ShellView : TemplatedControl
 	#endregion
 
 	#region Properties
-
-	public static ShellView? Current { get; private set; }
 
 	public NavigationView NavigationView => _navigationView;
 
@@ -87,7 +87,10 @@ public partial class ShellView : TemplatedControl
 
 	public ShellView()
 	{
-		Current = this;
+		Navigation = Locator.Current
+			.GetService<INavigationService>() ?? throw new ArgumentException("Cannot find INavigationService");
+		Navigation.RegisterShell(this);
+
 		_isMobile = AvaloniaLocator.Current
 			.GetService<IRuntimePlatform>()?
 			.GetRuntimeInfo()
@@ -104,13 +107,17 @@ public partial class ShellView : TemplatedControl
 
 	protected override void OnLoaded()
 	{
-		Current = this;
 		base.OnLoaded();
 
 		if (TopLevel.GetTopLevel(this) is { } topLevel)
 		{
 			topLevel.BackRequested += TopLevelOnBackRequested;
 			topLevel.KeyUp += TopLevelOnKeyUp;
+		}
+
+		if (DefaultRoute != null)
+		{
+			_ = Navigation.NavigateAsync(DefaultRoute, CancellationToken.None);
 		}
 	}
 
@@ -124,12 +131,6 @@ public partial class ShellView : TemplatedControl
 
 		SetupUi();
 
-		if (DefaultRoute != null)
-		{
-			_ = AvaloniaLocator.CurrentMutable.GetService<INavigationService>()?
-				.NavigateAsync(DefaultRoute, CancellationToken.None);
-		}
-
 		if (_splitView != null)
 		{
 			_splitView.PaneClosing += SplitViewOnPaneClosing;
@@ -140,10 +141,17 @@ public partial class ShellView : TemplatedControl
 	{
 		if (_navigationView != null)
 		{
+			_navigationView.ShellView = this;
 			_navigationView.BackCommand = ReactiveCommand.CreateFromTask(BackActionAsync);
 			_navigationView.SideMenuCommand = ReactiveCommand.CreateFromTask(MenuActionAsync);
 		}
 	}
+
+	#endregion
+
+	#region Services and navigation
+
+	public INavigationService Navigation { get; }
 
 	#endregion
 
@@ -180,12 +188,9 @@ public partial class ShellView : TemplatedControl
 			return true;
 		}
 
-		if (AvaloniaLocator.CurrentMutable
-			    .GetService<INavigationService>() is not {} navService) return false;
-
-		var result = navService.HasItemInStack();
+		var result = Navigation.HasItemInStack();
 		if (result)
-			navService.BackAsync();
+			Navigation.BackAsync();
 
 		return result;
 	}
@@ -222,9 +227,7 @@ public partial class ShellView : TemplatedControl
 
 	protected virtual Task BackActionAsync(CancellationToken cancellationToken)
 	{
-		return AvaloniaLocator.CurrentMutable
-			.GetService<INavigationService>()?
-			.BackAsync(cancellationToken) ?? Task.CompletedTask;
+		return Navigation.BackAsync(cancellationToken);
 	}
 
 	#endregion

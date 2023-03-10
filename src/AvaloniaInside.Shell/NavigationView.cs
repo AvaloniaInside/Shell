@@ -35,6 +35,8 @@ public class NavigationView : StackContentView
 
 	private object? _pendingHeader;
 
+	public ShellView? ShellView { get; internal set; }
+
 	private ICommand _backCommand;
 	public ICommand BackCommand
 	{
@@ -119,7 +121,9 @@ public class NavigationView : StackContentView
 
 	protected virtual void UpdateButtons()
 	{
-		var navService = AvaloniaLocator.CurrentMutable.GetService<INavigationService>();
+		if (ShellView == null) return;
+
+		var navService = ShellView.Navigation;
 		var hasItem = navService?.HasItemInStack() ?? false;
 
 		if (_actionButton == null) return;

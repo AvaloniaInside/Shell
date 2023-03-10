@@ -145,7 +145,6 @@ public partial class ShellView
 
 	#endregion
 
-
 	#region Actions
 
 	protected virtual Task MenuActionAsync(CancellationToken cancellationToken)

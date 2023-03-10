@@ -17,6 +17,7 @@ public class SplashActivity : AvaloniaSplashActivity<App>
 	{
 		return base.CustomizeAppBuilder(builder)
 			.UseReactiveUI()
+			.UseShell()
 			.WithIcons(container => container
 				.Register<FontAwesomeIconProvider>());
 	}

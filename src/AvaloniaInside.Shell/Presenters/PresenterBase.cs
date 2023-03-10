@@ -10,8 +10,6 @@ namespace AvaloniaInside.Shell.Presenters;
 
 public abstract class PresenterBase : IPresenter
 {
-	protected ShellView? CurrentShellView => ShellView.Current;
-
 	protected object GetHostControl(NavigationChain chain)
 	{
 		if (!chain.Hosted)
@@ -49,5 +47,5 @@ public abstract class PresenterBase : IPresenter
 		return current?.Instance ?? chain.Instance;
 	}
 
-	public abstract Task PresentAsync(NavigationChain chain, CancellationToken cancellationToken);
+	public abstract Task PresentAsync(ShellView shellView, NavigationChain chain, CancellationToken cancellationToken);
 }

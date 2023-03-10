@@ -16,6 +16,7 @@ public partial class AppDelegate : AvaloniaAppDelegate<App>
 	protected override AppBuilder CustomizeAppBuilder(AppBuilder builder)
 	{
 		return builder.UseReactiveUI()
+			.UseShell()
 			.WithIcons(container => container
 				.Register<FontAwesomeIconProvider>());
 	}

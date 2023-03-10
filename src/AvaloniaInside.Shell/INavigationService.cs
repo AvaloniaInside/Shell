@@ -6,6 +6,8 @@ namespace AvaloniaInside.Shell;
 
 public interface INavigationService
 {
+	void RegisterShell(ShellView shellView);
+
 	bool HasItemInStack();
 	void RegisterPage(string route, Type page, NavigateType navigate);
 	void RegisterHost(string route, Type page, string defaultPath, NavigateType navigate);

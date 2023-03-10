@@ -13,7 +13,7 @@ public partial class ProductCatalogView : UserControl, INavigation, INavigationL
 	public ProductCatalogView()
 	{
 		InitializeComponent();
-		DataContext = ViewModel = new ProductCatalogViewModel();
+		DataContext = ViewModel = new ProductCatalogViewModel(MainView.Current.ShellViewMain.Navigation);
 	}
 
 	public ProductCatalogViewModel ViewModel { get; }

@@ -20,12 +20,12 @@ public partial class SimpleDialog : UserControl
 
 	private void OkButton_OnClick(object? sender, RoutedEventArgs e)
 	{
-		AvaloniaLocator.CurrentMutable.GetService<INavigationService>()?.BackAsync();
+		MainView.Current.ShellViewMain.Navigation.BackAsync();
 	}
 
 	private void CancelButton_OnClick(object? sender, RoutedEventArgs e)
 	{
-		AvaloniaLocator.CurrentMutable.GetService<INavigationService>()?.BackAsync();
+		MainView.Current.ShellViewMain.Navigation.BackAsync();
 	}
 }
 

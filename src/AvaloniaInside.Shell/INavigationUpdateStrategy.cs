@@ -9,6 +9,7 @@ public interface INavigationUpdateStrategy
 {
 	event EventHandler<HostItemChangeEventArgs> HostItemChanged;
 	Task UpdateChangesAsync(
+		ShellView shellView,
 		NavigationStackChanges changes,
 		List<object> newInstances,
 		NavigateType navigateType,
