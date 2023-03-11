@@ -5,6 +5,7 @@
              xmlns:viewModels="clr-namespace:ShellExample.ViewModels"
              xmlns:views="clr-namespace:AvaloniaInside.Shell;assembly=AvaloniaInside.Shell"
              xmlns:views1="clr-namespace:ShellExample.Views"
+             xmlns:widgets="clr-namespace:ShellExample.Views.Widgets"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="ShellExample.Views.MainView"
              Foreground="White"
@@ -23,9 +24,26 @@
 	                 SmallScreenSideMenuMode="Overlay"
 	                 SmallScreenSideMenuBehave="Default"
 
-	                 MediumScreenSideMenuMode="CompactInline"
+	                 MediumScreenSideMenuMode="Inline"
 	                 MediumScreenSideMenuBehave="Default"
 
 	                 LargeScreenSideMenuMode="Inline"
-	                 LargeScreenSideMenuBehave="Keep"></views:ShellView>
+	                 LargeScreenSideMenuBehave="Keep">
+		<views:ShellView.SideMenuHeader>
+			<widgets:UserProfileWidgetView></widgets:UserProfileWidgetView>
+		</views:ShellView.SideMenuHeader>
+		<views:ShellView.SideMenuFooter>
+			<Border Background="#11000000" Height="25">
+				<TextBlock Text="AvaloniaInside Shell 2023"
+				           FontWeight="Light"
+				           VerticalAlignment="Center"
+				           HorizontalAlignment="Center"></TextBlock>
+			</Border>
+		</views:ShellView.SideMenuFooter>
+
+		<views:ShellView.SideMenuContents>
+			<widgets:WeatherView Margin="0, 20, 0, 0" />
+			<widgets:CalendarWidgetView Margin="0, 20, 0, 0" />
+		</views:ShellView.SideMenuContents>
+	</views:ShellView>
 </UserControl>

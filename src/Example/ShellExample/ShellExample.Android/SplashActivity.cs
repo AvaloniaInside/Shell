@@ -5,6 +5,7 @@ using Application = Android.App.Application;
 using Avalonia;
 using Avalonia.Android;
 using Avalonia.ReactiveUI;
+using AvaloniaInside.Shell;
 using Projektanker.Icons.Avalonia;
 using Projektanker.Icons.Avalonia.FontAwesome;
 

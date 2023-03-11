@@ -24,6 +24,9 @@
         <entry key="Example/ShellExample/ShellExample/Views/ShopViews/ProductCatalogFilterView.axaml" value="Example/ShellExample/ShellExample.Desktop/ShellExample.Desktop.csproj" />
         <entry key="Example/ShellExample/ShellExample/Views/ShopViews/ProductCatalogView.axaml" value="Example/ShellExample/ShellExample.Desktop/ShellExample.Desktop.csproj" />
         <entry key="Example/ShellExample/ShellExample/Views/SimpleDialog.axaml" value="Example/ShellExample/ShellExample.Desktop/ShellExample.Desktop.csproj" />
+        <entry key="Example/ShellExample/ShellExample/Views/Widgets/CalendarWidgetView.axaml" value="Example/ShellExample/ShellExample.Desktop/ShellExample.Desktop.csproj" />
+        <entry key="Example/ShellExample/ShellExample/Views/Widgets/UserProfileWidgetView.axaml" value="Example/ShellExample/ShellExample.Desktop/ShellExample.Desktop.csproj" />
+        <entry key="Example/ShellExample/ShellExample/Views/Widgets/WeatherView.axaml" value="Example/ShellExample/ShellExample.Desktop/ShellExample.Desktop.csproj" />
       </map>
     </option>
   </component>

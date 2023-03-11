@@ -32,7 +32,14 @@
 				<Grid>
 					<SplitView Name="PART_SplitView" DisplayMode="Inline">
 						<SplitView.Pane>
-							<shell:SideMenuView></shell:SideMenuView>
+							<shell:SideMenuView Name="PART_SideMenuView"
+							                    SelectedItem="{TemplateBinding SideMenuSelectedItem, Mode=TwoWay}"
+							                    Header="{TemplateBinding SideMenuHeader}"
+							                    Footer="{TemplateBinding SideMenuFooter}"
+							                    Contents="{TemplateBinding SideMenuContents}"
+							                    ContentsTemplate="{TemplateBinding SideMenuContentsTemplate}">
+
+							</shell:SideMenuView>
 						</SplitView.Pane>
 
 						<Grid RowDefinitions="35,*">
@@ -79,17 +86,51 @@
 				</Grid>
 			</ControlTemplate>
 		</Setter>
+		<Setter Property="SideMenuContentsTemplate">
+			<DataTemplate>
+				<ContentPresenter Content="{Binding .}"></ContentPresenter>
+			</DataTemplate>
+		</Setter>
 	</Style>
 
 	<Style Selector="shell|SideMenuView">
 		<Setter Property="Template">
 			<ControlTemplate>
 				<Grid RowDefinitions="Auto,*,Auto">
-					<ContentPresenter Name="PART_Header"></ContentPresenter>
+					<ContentPresenter Name="PART_Header"
+					                  ContentTemplate="{TemplateBinding HeaderTemplate}"
+					                  Content="{TemplateBinding Header}"></ContentPresenter>
 					<ScrollViewer Grid.Row="1">
-						<ListBox Name="PART_Items"></ListBox>
+						<StackPanel Orientation="Vertical">
+							<ListBox Name="PART_Items"
+							         Items="{TemplateBinding Items}"
+							         SelectedItem="{TemplateBinding SelectedItem, Mode=TwoWay}">
+								<ListBox.ItemTemplate>
+									<DataTemplate>
+										<StackPanel Orientation="Horizontal" Height="22" Spacing="8">
+											<Image Source="{Binding IconSource}"
+											       IsVisible="{Binding !!IconSource}"
+											       VerticalAlignment="Center"></Image>
+											<Image Source="{Binding IconPath}"
+											       IsVisible="{Binding !!IconPath}"
+											       VerticalAlignment="Center"></Image>
+											<TextBlock Text="{Binding Title}"
+											           VerticalAlignment="Center"></TextBlock>
+										</StackPanel>
+									</DataTemplate>
+								</ListBox.ItemTemplate>
+							</ListBox>
+							<ItemsControl Name="PART_Contents"
+							              Items="{TemplateBinding Contents}"
+							              ItemTemplate="{TemplateBinding ContentsTemplate}">
+
+							</ItemsControl>
+						</StackPanel>
 					</ScrollViewer>
-					<ContentPresenter Grid.Row="2" Name="PART_Footer"></ContentPresenter>
+					<ContentPresenter Grid.Row="2"
+					                  Name="PART_Footer"
+					                  ContentTemplate="{TemplateBinding FooterTemplate}"
+					                  Content="{TemplateBinding Footer}"></ContentPresenter>
 				</Grid>
 			</ControlTemplate>
 		</Setter>

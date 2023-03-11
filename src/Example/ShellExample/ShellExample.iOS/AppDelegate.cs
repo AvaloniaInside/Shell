@@ -2,6 +2,7 @@ using Foundation;
 using Avalonia;
 using Avalonia.iOS;
 using Avalonia.ReactiveUI;
+using AvaloniaInside.Shell;
 using Projektanker.Icons.Avalonia;
 using Projektanker.Icons.Avalonia.FontAwesome;
 

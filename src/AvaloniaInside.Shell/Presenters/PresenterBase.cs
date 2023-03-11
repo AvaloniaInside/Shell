@@ -1,8 +1,8 @@
 using System.Collections;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 
@@ -22,7 +22,7 @@ public abstract class PresenterBase : IPresenter
 			{
 				if (itemsControl.Items is not IList collection)
 				{
-					itemsControl.Items = collection = new ObservableCollection<object>();
+					itemsControl.Items = collection = new AvaloniaList<object>();
 				}
 
 				foreach (var hostedChildChain in parent.Nodes.Where(hostedChildChain =>

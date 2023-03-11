@@ -1,5 +1,3 @@
-using System;
-
 namespace AvaloniaInside.Shell;
 
 public interface INavigation

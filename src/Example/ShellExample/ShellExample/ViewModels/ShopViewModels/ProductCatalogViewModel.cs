@@ -1,11 +1,8 @@
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Avalonia;
 using AvaloniaInside.Shell;
 using DynamicData;
 using ReactiveUI;

@@ -136,6 +136,8 @@ public class NavigationView : StackContentView
 		{
 			_actionButton.Classes.Remove("FlyoutButton");
 			_actionButton.Classes.Add("BackButton");
+
+			_actionButton.IsVisible = true;
 		}
 		else
 		{

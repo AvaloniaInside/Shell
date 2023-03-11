@@ -1,0 +1,32 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="ShellExample.Views.Widgets.WeatherView">
+	<Border Padding="14">
+		<Border.Background>
+			<LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+				<LinearGradientBrush.GradientStops>
+					<GradientStop Offset="0" Color="#00357d"/>
+					<GradientStop Offset="1" Color="#1f3149"/>
+				</LinearGradientBrush.GradientStops>
+			</LinearGradientBrush>
+		</Border.Background>
+		<StackPanel>
+			<TextBlock Text="Versailles" FontWeight="ExtraBlack"></TextBlock>
+			<WrapPanel>
+				<i:Icon Value="fa-solid fa-cloud-sun" FontSize="22" Foreground="White" />
+				<TextBlock Text="    Mostly Cloudy" FontWeight="Light"></TextBlock>
+			</WrapPanel>
+
+			<WrapPanel>
+				<TextBlock Text="3 ℃" FontWeight="ExtraBlack" FontSize="22"></TextBlock>
+				<TextBlock Text="    H: 7℃"></TextBlock>
+				<TextBlock Text="   L: 1℃"></TextBlock>
+			</WrapPanel>
+		</StackPanel>
+	</Border>
+</UserControl>
+

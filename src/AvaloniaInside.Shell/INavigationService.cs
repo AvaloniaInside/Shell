@@ -6,6 +6,8 @@ namespace AvaloniaInside.Shell;
 
 public interface INavigationService
 {
+	Uri CurrentUri { get; }
+
 	void RegisterShell(ShellView shellView);
 
 	bool HasItemInStack();

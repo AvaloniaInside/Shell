@@ -1,7 +1,5 @@
 using Avalonia;
-using Avalonia.ReactiveUI;
 using AvaloniaInside.Shell.Presenters;
-using ReactiveUI;
 using Splat;
 
 namespace AvaloniaInside.Shell;

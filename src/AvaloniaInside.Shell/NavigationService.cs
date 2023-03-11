@@ -128,14 +128,14 @@ public class NavigationService : INavigationService
 		string path,
 		NavigateType? navigateType,
 		CancellationToken cancellationToken = default) =>
-		NavigateAsync(path, null, null, false, cancellationToken);
+		NavigateAsync(path, navigateType, null, false, cancellationToken);
 
 	public Task NavigateAsync(
 		string path,
 		NavigateType? navigateType,
 		object? argument,
 		CancellationToken cancellationToken = default) =>
-		NavigateAsync(path, null, argument, true, cancellationToken);
+		NavigateAsync(path, navigateType, argument, true, cancellationToken);
 
 	private async Task NavigateAsync(
 		string path,

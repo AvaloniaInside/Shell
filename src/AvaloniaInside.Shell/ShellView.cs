@@ -7,7 +7,6 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Platform;
-using Microsoft.VisualBasic;
 using ReactiveUI;
 using Splat;
 
@@ -41,6 +40,7 @@ public partial class ShellView : TemplatedControl
 	private StackContentView? _contentView;
 	private NavigationView? _navigationView;
 	private StackContentView? _modalView;
+	private SideMenuView? _sideMenuView;
 
 	#endregion
 
@@ -128,12 +128,18 @@ public partial class ShellView : TemplatedControl
 		_contentView = e.NameScope.Find<StackContentView>("PART_ContentView");
 		_modalView = e.NameScope.Find<StackContentView>("PART_Modal");
 		_navigationView = e.NameScope.Find<NavigationView>("PART_NavigationView");
+		_sideMenuView = e.NameScope.Find<SideMenuView>("PART_SideMenuView");
 
 		SetupUi();
 
 		if (_splitView != null)
 		{
 			_splitView.PaneClosing += SplitViewOnPaneClosing;
+		}
+
+		if (_sideMenuView != null)
+		{
+			_sideMenuView.Items = _sideMenuItems;
 		}
 	}
 
@@ -161,6 +167,8 @@ public partial class ShellView : TemplatedControl
 	{
 		await (_contentView?.PushViewAsync(view, cancellationToken) ?? Task.CompletedTask);
 		await (_navigationView?.PushViewAsync(view, cancellationToken) ?? Task.CompletedTask);
+
+		SelectSideMenuItem();
 	}
 
 	public async Task RemoveViewAsync(object view, CancellationToken cancellationToken = default)
@@ -256,5 +264,4 @@ public partial class ShellView : TemplatedControl
 	}
 
 	#endregion
-
 }

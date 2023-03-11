@@ -1,15 +1,20 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia;
+using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
+using Avalonia.Media;
 
 namespace AvaloniaInside.Shell;
 
 public partial class ShellView
 {
 	public const double DefaultSideMenuSize = 250;
+
+	private readonly AvaloniaList<SideMenuItem> _sideMenuItems = new();
 
 	#region Properties
 
@@ -143,9 +148,86 @@ public partial class ShellView
 
 	#endregion
 
+	#region SideMenuHeader
+
+	public static readonly StyledProperty<object?> SideMenuHeaderProperty =
+		AvaloniaProperty.Register<SideMenuView, object?>(
+			nameof(SideMenuHeader));
+
+	public object? SideMenuHeader
+	{
+		get => GetValue(SideMenuHeaderProperty);
+		set => SetValue(SideMenuHeaderProperty, value);
+	}
+
 	#endregion
 
-	#region Actions
+	#region SideMenuFooter
+
+	public static readonly StyledProperty<object?> SideMenuFooterProperty =
+		AvaloniaProperty.Register<SideMenuView, object?>(
+			nameof(SideMenuFooter));
+
+	public object? SideMenuFooter
+	{
+		get => GetValue(SideMenuFooterProperty);
+		set => SetValue(SideMenuFooterProperty, value);
+	}
+
+	#endregion
+
+	#region SideMenuContentsTemplate
+
+	public static readonly StyledProperty<IDataTemplate> SideMenuContentsTemplateProperty =
+		AvaloniaProperty.Register<SideMenuView, IDataTemplate>(
+			nameof(SideMenuContentsTemplate));
+
+	public IDataTemplate SideMenuContentsTemplate
+	{
+		get => GetValue(SideMenuContentsTemplateProperty);
+		set => SetValue(SideMenuContentsTemplateProperty, value);
+	}
+
+	#endregion
+
+	#region SideMenuContents
+
+	public static readonly StyledProperty<AvaloniaList<object>> SideMenuContentsProperty =
+		AvaloniaProperty.Register<SideMenuView, AvaloniaList<object>>(
+			nameof(SideMenuContents),
+			defaultValue: new AvaloniaList<object>());
+
+	public AvaloniaList<object> SideMenuContents
+	{
+		get => GetValue(SideMenuContentsProperty);
+		set => SetValue(SideMenuContentsProperty, value);
+	}
+
+	#endregion
+
+	#region SideMenuSelectedItem
+
+	private SideMenuItem? _sideMenuSelectedItem;
+	public static readonly DirectProperty<ShellView, SideMenuItem?> SideMenuSelectedItemProperty =
+		AvaloniaProperty.RegisterDirect<ShellView, SideMenuItem?>(
+			nameof(SideMenuSelectedItem),
+			o => o.SideMenuSelectedItem,
+			(o, v) => o.SideMenuSelectedItem = v);
+	public SideMenuItem? SideMenuSelectedItem
+	{
+		get => _sideMenuSelectedItem;
+		set
+		{
+			if (SetAndRaise(SideMenuSelectedItemProperty, ref _sideMenuSelectedItem, value))
+				SideMenuItemChanged(value);
+		}
+	}
+
+	#endregion
+
+	#endregion
+
+	#region Behavior
 
 	protected virtual Task MenuActionAsync(CancellationToken cancellationToken)
 	{
@@ -183,6 +265,36 @@ public partial class ShellView
 			_splitView.IsPaneOpen = true;
 			_navigationView.HasSideMenuOption = true;
 		}
+	}
+
+	private bool _skipChanges = false;
+	protected virtual void SelectSideMenuItem()
+	{
+		if (_sideMenuView == null) return;
+		_skipChanges = true;
+		SideMenuSelectedItem = _sideMenuItems
+			.FirstOrDefault(f => f.Path == Navigation.CurrentUri.AbsolutePath);
+		_skipChanges = false;
+	}
+
+	private void SideMenuItemChanged(SideMenuItem item)
+	{
+		if (_skipChanges) return;
+		//_ = Navigation.NavigateAsync(item.Path, NavigateType.Top);
+	}
+
+	#endregion
+
+	#region Actions
+
+	public void AddSideMenuItem(string title, string path, string icon)
+	{
+		_sideMenuItems.Add(new SideMenuItem(title, path, icon));
+	}
+
+	public void AddSideMenuItem(string title, string path, IImage icon)
+	{
+		_sideMenuItems.Add(new SideMenuItem(title, path, icon));
 	}
 
 	#endregion
