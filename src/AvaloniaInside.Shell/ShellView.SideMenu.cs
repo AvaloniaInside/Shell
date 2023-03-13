@@ -16,6 +16,9 @@ public partial class ShellView
 
 	private readonly AvaloniaList<SideMenuItem> _sideMenuItems = new();
 
+	private bool _skipChanges = false;
+
+
 	#region Properties
 
 	public double SideMenuSize => ScreenSize == ScreenSizeType.Small ? DesiredSize.Width - 35 : DefaultSideMenuSize;
@@ -264,7 +267,6 @@ public partial class ShellView
 		}
 	}
 
-	private bool _skipChanges = false;
 	protected virtual void SelectSideMenuItem()
 	{
 		if (_sideMenuView == null) return;
@@ -277,7 +279,7 @@ public partial class ShellView
 	private void SideMenuItemChanged(SideMenuItem item)
 	{
 		if (_skipChanges) return;
-		//_ = Navigation.NavigateAsync(item.Path, NavigateType.Top);
+		_ = Navigation.NavigateAsync(item.Path, NavigateType.HostedItemChange);
 	}
 
 	#endregion

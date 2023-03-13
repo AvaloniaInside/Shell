@@ -31,24 +31,34 @@ public class NavigationStack
 		return chain;
 	}
 
-	private NavigationStackChanges Pop(NavigationNode node, NavigateType type, Uri uri,
+	private NavigationStackChanges Pop(
+		NavigationNode node,
+		NavigateType type,
+		Uri uri,
 		Func<NavigationNode, object> getInstance)
 	{
-		if (Current?.Back?.Uri != uri)
-			return PushTop(node, type, getInstance);
+		if (Current == null) return PushTop(node, type, getInstance);
 
 		var previous = Current;
-		var old = Current;
-		var list = new List<NavigationChain> { old };
+		var list = new List<NavigationChain>();
 
-		(Current, old.Back) = (old.Back, null);
-
-		return new NavigationStackChanges
+		foreach (var chain in Current.GetAscendingNodes())
 		{
-			Front = Current,
-			Removed = list,
-			Previous = previous
-		};
+			if (chain.Node == node)
+			{
+				Current = chain;
+				return new NavigationStackChanges
+				{
+					Front = chain,
+					Removed = list,
+					Previous = previous
+				};
+			}
+
+			list.Add(chain);
+		}
+
+		return PushTop(node, type, getInstance);
 	}
 
 	private NavigationStackChanges PushReplaceRoot(NavigationNode node, NavigateType type,
