@@ -16,7 +16,7 @@ public partial class CatView : UserControl, INavigation
 		AvaloniaXamlLoader.Load(this);
 	}
 
-	public string Icon => "fa-solid fa-cat";
+	public string Icon => "/Assets/Icons/cat-solid.png";
 	public object? Title => "Cat";
 	public object? Item { get; }
 }

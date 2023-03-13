@@ -3,9 +3,6 @@ using Avalonia;
 using Avalonia.iOS;
 using Avalonia.ReactiveUI;
 using AvaloniaInside.Shell;
-using Projektanker.Icons.Avalonia;
-using Projektanker.Icons.Avalonia.FontAwesome;
-
 namespace ShellExample.iOS;
 
 // The UIApplicationDelegate for the application. This class is responsible for launching the
@@ -17,8 +14,6 @@ public partial class AppDelegate : AvaloniaAppDelegate<App>
 	protected override AppBuilder CustomizeAppBuilder(AppBuilder builder)
 	{
 		return builder.UseReactiveUI()
-			.UseShell()
-			.WithIcons(container => container
-				.Register<FontAwesomeIconProvider>());
+			.UseShell();
 	}
 }

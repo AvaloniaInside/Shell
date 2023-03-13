@@ -2,8 +2,6 @@
 using Avalonia;
 using Avalonia.ReactiveUI;
 using AvaloniaInside.Shell;
-using Projektanker.Icons.Avalonia;
-using Projektanker.Icons.Avalonia.FontAwesome;
 
 namespace ShellExample.Desktop;
 
@@ -22,7 +20,5 @@ class Program
 			.UsePlatformDetect()
 			.LogToTrace()
 			.UseReactiveUI()
-			.UseShell()
-			.WithIcons(container => container
-				.Register<FontAwesomeIconProvider>());
+			.UseShell();
 }

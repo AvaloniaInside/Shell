@@ -16,7 +16,7 @@ public partial class SettingView : UserControl, INavigation
 		AvaloniaXamlLoader.Load(this);
 	}
 
-	public string Icon => "fa-solid fa-gear";
+	public string Icon => "/Assets/Icons/house-solid.png";
 	public object? Title => "Settings";
 	public object? Item { get; }
 }

@@ -16,7 +16,7 @@ public partial class DogView : UserControl, INavigation
 		AvaloniaXamlLoader.Load(this);
 	}
 
-	public string Icon => "fa-solid fa-dog";
+	public string Icon => "/Assets/Icons/dog-solid.png";
 	public object? Title => "Dog";
 	public object? Item { get; }
 }

@@ -2,7 +2,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="ShellExample.Views.Widgets.WeatherView">
 	<Border Padding="14">
@@ -17,7 +16,7 @@
 		<StackPanel>
 			<TextBlock Text="Versailles" FontWeight="ExtraBlack"></TextBlock>
 			<WrapPanel>
-				<i:Icon Value="fa-solid fa-cloud-sun" FontSize="22" Foreground="White" />
+				<Image Source="/Assets/Icons/cloud-sun-solid.png" Width="28" Stretch="Uniform" />
 				<TextBlock Text="    Mostly Cloudy" FontWeight="Light"></TextBlock>
 			</WrapPanel>
 

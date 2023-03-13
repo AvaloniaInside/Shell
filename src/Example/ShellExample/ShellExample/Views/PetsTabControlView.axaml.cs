@@ -20,7 +20,7 @@ public partial class PetsTabControlView : TabControl, IStyleable, INavigation
 		AvaloniaXamlLoader.Load(this);
 	}
 
-	public string Icon => "fa-paw";
+	public string Icon => "/Assets/Icons/paw-solid.png";
 	public object? Title => "Pets";
 	public object? Item { get; }
 }

@@ -3,7 +3,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:converters="clr-namespace:ShellExample.Converters"
-             xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="ShellExample.Views.ShopViews.ProductCatalogView">
 	<UserControl.Resources>
@@ -39,7 +38,7 @@
 								<TextBlock Text="{Binding CurrencyCode}"></TextBlock>
 
 								<TextBlock Text=" XPress delivery"></TextBlock>
-								<i:Icon Value="fa-solid fa-truck" Classes="SemiAttention" />
+								<Image Source="/Assets/Icons/truck-fast-solid.png" Width="18" Stretch="Uniform" Classes="SemiAttention" />
 							</WrapPanel>
 							<TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding Price}"></TextBlock>
 						</Grid>

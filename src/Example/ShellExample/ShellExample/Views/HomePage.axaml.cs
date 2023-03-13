@@ -1,5 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using Avalonia.Media;
+using Avalonia.Media.Imaging;
 using AvaloniaInside.Shell;
 
 namespace ShellExample.Views;
@@ -17,7 +19,7 @@ public partial class HomePage : UserControl, INavigation
 		AvaloniaXamlLoader.Load(this);
 	}
 
-	public string Icon => "fa-solid fa-house";
+	public string Icon => "/Assets/Icons/house-solid.png";
 
 	public object? Title => "Home";
 

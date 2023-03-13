@@ -20,7 +20,7 @@ public partial class ProductCatalogView : UserControl, INavigation
 		AvaloniaXamlLoader.Load(this);
 	}
 
-	public string Icon => "fa-solid fa-tag";
+	public string Icon => "/Assets/Icons/tag-solid.png";
 	public object? Title => string.IsNullOrEmpty(ViewModel.SelectedCategory)
 		? "Products"
 		: ViewModel.SelectedCategory;

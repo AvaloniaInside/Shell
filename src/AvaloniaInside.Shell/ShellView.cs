@@ -143,6 +143,19 @@ public partial class ShellView : TemplatedControl
 		}
 	}
 
+	protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+	{
+		base.OnPropertyChanged(change);
+		switch (change.Property.Name)
+		{
+			case nameof(LargeScreenSideMenuMode):
+			case nameof(MediumScreenSideMenuMode):
+			case nameof(SmallScreenSideMenuMode):
+				UpdateSideMenu();
+				break;
+		}
+	}
+
 	private void SetupUi()
 	{
 		if (_navigationView != null)
@@ -228,7 +241,7 @@ public partial class ShellView : TemplatedControl
 			Back();
 	}
 
-	private void SplitViewOnPaneClosing(object? sender, SplitViewPaneClosingEventArgs e)
+	private void SplitViewOnPaneClosing(object? sender, CancelRoutedEventArgs e)
 	{
 		SideMenuPresented = false;
 	}

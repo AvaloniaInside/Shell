@@ -8,6 +8,21 @@
         x:Class="ShellExample.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
         Title="ShellExample"
-        Width="450">
-        <views:MainView />
+        Width="450"
+        TransparencyLevelHint="AcrylicBlur"
+        Background="Transparent"
+        ExtendClientAreaToDecorationsHint="True">
+	<Panel>
+		<ExperimentalAcrylicBorder IsHitTestVisible="False">
+			<ExperimentalAcrylicBorder.Material>
+				<ExperimentalAcrylicMaterial
+					BackgroundSource="Digger"
+					TintColor="Black"
+					TintOpacity="1"
+					MaterialOpacity="0.65" />
+			</ExperimentalAcrylicBorder.Material>
+		</ExperimentalAcrylicBorder>
+
+		<views:MainView />
+	</Panel>
 </Window>

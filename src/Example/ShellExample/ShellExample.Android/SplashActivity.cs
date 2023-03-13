@@ -6,8 +6,6 @@ using Avalonia;
 using Avalonia.Android;
 using Avalonia.ReactiveUI;
 using AvaloniaInside.Shell;
-using Projektanker.Icons.Avalonia;
-using Projektanker.Icons.Avalonia.FontAwesome;
 
 namespace ShellExample.Android;
 
@@ -18,9 +16,7 @@ public class SplashActivity : AvaloniaSplashActivity<App>
 	{
 		return base.CustomizeAppBuilder(builder)
 			.UseReactiveUI()
-			.UseShell()
-			.WithIcons(container => container
-				.Register<FontAwesomeIconProvider>());
+			.UseShell();
 	}
 
 	protected override void OnCreate(Bundle? savedInstanceState)

@@ -1,7 +1,5 @@
 using Avalonia.Controls;
-using Avalonia.Media;
 using AvaloniaInside.Shell;
-using Projektanker.Icons.Avalonia;
 using ShellExample.Views.ShopViews;
 
 namespace ShellExample.Views;
@@ -31,21 +29,12 @@ public partial class MainView : UserControl
 
 		ShellViewMain.Navigation.RegisterPage("/second", typeof(SecondView), NavigateType.Normal);
 
-		ShellViewMain.AddSideMenuItem("Home", "/main/home", GetFAIcon("fa-solid fa-house"));
-		ShellViewMain.AddSideMenuItem("Cat", "/main/pets/cat", GetFAIcon("fa-solid fa-cat"));
-		ShellViewMain.AddSideMenuItem("Dog", "/main/pets/dog", GetFAIcon("fa-solid fa-dog"));
-		ShellViewMain.AddSideMenuItem("Products", "/main/product", GetFAIcon("fa-solid fa-tag"));
-		ShellViewMain.AddSideMenuItem("Settings", "/main/setting", GetFAIcon("fa-solid fa-gear"));
+		ShellViewMain.AddSideMenuItem("Home", "/main/home", "fa-solid fa-house");
+		ShellViewMain.AddSideMenuItem("Cat", "/main/pets/cat", "fa-solid fa-cat");
+		ShellViewMain.AddSideMenuItem("Dog", "/main/pets/dog", "fa-solid fa-dog");
+		ShellViewMain.AddSideMenuItem("Products", "/main/product", "fa-solid fa-tag");
+		ShellViewMain.AddSideMenuItem("Settings", "/main/setting", "fa-solid fa-gear");
 	}
-
-	private IImage GetFAIcon(string value) =>
-		new Icon
-		{
-			Value = value,
-			Foreground = Brushes.White,
-			FontSize = 14
-		}.DrawingImage;
-
 	protected override void OnLoaded()
 	{
 		Current = this;

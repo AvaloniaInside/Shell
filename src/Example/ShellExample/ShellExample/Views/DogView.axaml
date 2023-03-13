@@ -2,7 +2,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="ShellExample.Views.DogView">
 	<Grid>
@@ -13,7 +12,7 @@
 		        Opacity="0.2"
 		        CornerRadius="20"
 		        Background="Black">
-			<i:Icon Value="fa-dog" FontSize="150"/>
+			<Image Source="/Assets/Icons/dog-solid.png" Width="150" Stretch="Uniform" />
 		</Border>
 	</Grid>
 </UserControl>

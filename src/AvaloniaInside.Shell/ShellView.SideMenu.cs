@@ -105,8 +105,7 @@ public partial class ShellView
 	public static readonly StyledProperty<SplitViewDisplayMode> LargeScreenSideMenuModeProperty =
 		AvaloniaProperty.Register<ShellView, SplitViewDisplayMode>(
 			nameof(LargeScreenSideMenuMode),
-			defaultValue: SplitViewDisplayMode.Inline,
-			notifying: (o, b) => ((ShellView)o).UpdateSideMenu());
+			defaultValue: SplitViewDisplayMode.Inline);
 
 	public SplitViewDisplayMode LargeScreenSideMenuMode
 	{
@@ -121,8 +120,7 @@ public partial class ShellView
 	public static readonly StyledProperty<SplitViewDisplayMode> MediumScreenSideMenuModeProperty =
 		AvaloniaProperty.Register<ShellView, SplitViewDisplayMode>(
 			nameof(MediumScreenSideMenuMode),
-			defaultValue: SplitViewDisplayMode.CompactInline,
-			notifying: (o, b) => ((ShellView)o).UpdateSideMenu());
+			defaultValue: SplitViewDisplayMode.CompactInline);
 
 	public SplitViewDisplayMode MediumScreenSideMenuMode
 	{
@@ -137,8 +135,7 @@ public partial class ShellView
 	public static readonly StyledProperty<SplitViewDisplayMode> SmallScreenSideMenuModeProperty =
 		AvaloniaProperty.Register<ShellView, SplitViewDisplayMode>(
 			nameof(SmallScreenSideMenuMode),
-			defaultValue: SplitViewDisplayMode.Overlay,
-			notifying: (o, b) => ((ShellView)o).UpdateSideMenu());
+			defaultValue: SplitViewDisplayMode.Overlay);
 
 	public SplitViewDisplayMode SmallScreenSideMenuMode
 	{

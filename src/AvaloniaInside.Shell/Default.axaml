@@ -13,7 +13,7 @@
 	<Style Selector="shell|NavigationView">
 		<Setter Property="Template">
 			<ControlTemplate>
-				<Grid ColumnDefinitions="35,*,Auto" Background="Black">
+				<Grid ColumnDefinitions="35,*,Auto">
 					<Button Grid.Column="0"
 					        Name="PART_ActionButton"
 					        HorizontalContentAlignment="Center"
