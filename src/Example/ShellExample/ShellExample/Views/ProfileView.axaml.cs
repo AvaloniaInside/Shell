@@ -4,7 +4,7 @@ using AvaloniaInside.Shell;
 
 namespace ShellExample.Views;
 
-public partial class ProfileView : UserControl, INavigation
+public partial class ProfileView : UserControl
 {
 	public ProfileView()
 	{
@@ -17,7 +17,5 @@ public partial class ProfileView : UserControl, INavigation
 	}
 
 	public string Icon => "fa-solid fa-user";
-	public object? Title => "Profile";
-	public object? Item { get; }
 }
 

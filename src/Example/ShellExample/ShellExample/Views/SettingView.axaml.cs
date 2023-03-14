@@ -4,7 +4,7 @@ using AvaloniaInside.Shell;
 
 namespace ShellExample.Views;
 
-public partial class SettingView : UserControl, INavigation
+public partial class SettingView : UserControl
 {
 	public SettingView()
 	{
@@ -17,7 +17,5 @@ public partial class SettingView : UserControl, INavigation
 	}
 
 	public string Icon => "/Assets/Icons/house-solid.png";
-	public object? Title => "Settings";
-	public object? Item { get; }
 }
 

@@ -12,7 +12,7 @@ namespace ShellExample.ViewModels.ShopViewModels;
 
 public class ProductCatalogViewModel : ViewModelBase
 {
-	private readonly INavigationService _navigationService;
+	private readonly INavigator _navigationService;
 	private string? _selectedCategory;
 
 	public ObservableCollection<ProductDto> Products { get; }
@@ -21,10 +21,16 @@ public class ProductCatalogViewModel : ViewModelBase
 	public string? SelectedCategory
 	{
 		get => _selectedCategory;
-		set => this.RaiseAndSetIfChanged(ref _selectedCategory, value);
+		set
+		{
+			this.RaiseAndSetIfChanged(ref _selectedCategory, value);
+			this.RaisePropertyChanged(nameof(Title));
+		}
 	}
 
-	public ProductCatalogViewModel(INavigationService navigationService)
+	public string? Title => string.IsNullOrEmpty(SelectedCategory) ? "Products" : SelectedCategory;
+
+	public ProductCatalogViewModel(INavigator navigationService)
 	{
 		_navigationService = navigationService;
 		Products = new ObservableCollection<ProductDto>(DummyPlace.Products);

@@ -1,6 +1,5 @@
 ﻿using System.Runtime.Versioning;
 using Avalonia;
-using Avalonia.Web;
 using Avalonia.ReactiveUI;
 using ShellExample;
 

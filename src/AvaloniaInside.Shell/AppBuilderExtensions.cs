@@ -20,10 +20,10 @@ public static class AppBuilderExtensions
 			Locator.CurrentMutable.Register<INavigationUpdateStrategy>(() =>
 				new DefaultNavigationUpdateStrategy(Locator.Current.GetService<IPresenterProvider>()!));
 
-			Locator.CurrentMutable.Register<INavigationService>(() =>
+			Locator.CurrentMutable.Register<INavigator>(() =>
 			{
 				var registrar = Locator.Current.GetService<INavigationRegistrar>()!;
-				return new NavigationService(
+				return new Navigator(
 					registrar,
 					new RelativeNavigateStrategy(registrar),
 					Locator.Current.GetService<INavigationUpdateStrategy>()!,

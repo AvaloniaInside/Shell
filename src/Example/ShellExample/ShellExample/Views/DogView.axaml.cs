@@ -4,7 +4,7 @@ using AvaloniaInside.Shell;
 
 namespace ShellExample.Views;
 
-public partial class DogView : UserControl, INavigation
+public partial class DogView : UserControl
 {
 	public DogView()
 	{
@@ -17,7 +17,5 @@ public partial class DogView : UserControl, INavigation
 	}
 
 	public string Icon => "/Assets/Icons/dog-solid.png";
-	public object? Title => "Dog";
-	public object? Item { get; }
 }
 

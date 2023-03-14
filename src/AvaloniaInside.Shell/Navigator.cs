@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AvaloniaInside.Shell;
 
-public class NavigationService : INavigationService
+public class Navigator : INavigator
 {
 	private readonly INavigationRegistrar _navigationRegistrar;
 	private readonly INavigateStrategy _navigateStrategy;
@@ -23,7 +23,7 @@ public class NavigationService : INavigationService
 
 	public Uri CurrentUri => _stack.Current?.Uri ?? _navigationRegistrar.RootUri;
 
-	public NavigationService(
+	public Navigator(
 		INavigationRegistrar navigationRegistrar,
 		INavigateStrategy navigateStrategy,
 		INavigationUpdateStrategy updateStrategy,

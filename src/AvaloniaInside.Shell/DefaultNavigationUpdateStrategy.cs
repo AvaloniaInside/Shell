@@ -38,7 +38,7 @@ public class DefaultNavigationUpdateStrategy : INavigationUpdateStrategy
 		}
 
 		if (changes.Previous?.Instance is INavigationLifecycle oldInstanceLifecycle && !isSame)
-			await oldInstanceLifecycle.StopAsync(cancellationToken);
+			await oldInstanceLifecycle.DisappearAsync(cancellationToken);
 
 		if (changes.Removed != null)
 			await InvokeRemoveAsync(shellView, changes.Removed, changes.Previous, cancellationToken);
@@ -46,7 +46,7 @@ public class DefaultNavigationUpdateStrategy : INavigationUpdateStrategy
 		if (changes.Front?.Instance is INavigationLifecycle newInstanceLifecycle)
 		{
 			if (!isSame)
-				await newInstanceLifecycle.StartAsync(cancellationToken);
+				await newInstanceLifecycle.AppearAsync(cancellationToken);
 
 			if (hasArgument)
 				await newInstanceLifecycle.ArgumentAsync(argument, cancellationToken);

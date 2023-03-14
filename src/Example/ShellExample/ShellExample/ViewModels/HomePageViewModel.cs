@@ -8,12 +8,12 @@ namespace ShellExample.ViewModels;
 
 public class HomePageViewModel : ViewModelBase
 {
-	private readonly INavigationService _navigationService;
+	private readonly INavigator _navigationService;
 
 	public ICommand NavigateToSecondPage { get; set; }
 	public ICommand ShowDialogCommand { get; set; }
 
-	public HomePageViewModel(INavigationService navigationService)
+	public HomePageViewModel(INavigator navigationService)
 	{
 		_navigationService = navigationService;
 		NavigateToSecondPage = ReactiveCommand.CreateFromTask(Navigate);

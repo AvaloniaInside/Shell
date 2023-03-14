@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace AvaloniaInside.Shell;
 
-public interface INavigationService
+public interface INavigator
 {
 	Uri CurrentUri { get; }
 

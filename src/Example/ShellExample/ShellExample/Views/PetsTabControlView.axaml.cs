@@ -6,7 +6,7 @@ using AvaloniaInside.Shell;
 
 namespace ShellExample.Views;
 
-public partial class PetsTabControlView : TabControl, IStyleable, INavigation
+public partial class PetsTabControlView : TabControl, IStyleable
 {
 	public Type StyleKey => typeof(TabControl);
 
@@ -21,7 +21,5 @@ public partial class PetsTabControlView : TabControl, IStyleable, INavigation
 	}
 
 	public string Icon => "/Assets/Icons/paw-solid.png";
-	public object? Title => "Pets";
-	public object? Item { get; }
 }
 

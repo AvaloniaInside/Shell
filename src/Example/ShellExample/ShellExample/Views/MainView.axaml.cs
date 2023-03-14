@@ -34,6 +34,7 @@ public partial class MainView : UserControl
 		ShellViewMain.AddSideMenuItem("Dog", "/main/pets/dog", "fa-solid fa-dog");
 		ShellViewMain.AddSideMenuItem("Products", "/main/product", "fa-solid fa-tag");
 		ShellViewMain.AddSideMenuItem("Settings", "/main/setting", "fa-solid fa-gear");
+		ShellViewMain.AddSideMenuItem("Second Click", "/second", "fa-solid fa-gear");
 	}
 	protected override void OnLoaded()
 	{

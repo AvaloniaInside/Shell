@@ -11,13 +11,13 @@ namespace ShellExample.ViewModels.ShopViewModels;
 
 public class ProductCatalogFilterViewModel : ViewModelBase
 {
-	private readonly INavigationService _navigationService;
+	private readonly INavigator _navigationService;
 	private string? _selectedCategory;
 
 	public ICommand CloseCommand { get; }
 	public ICommand ClearCommand { get; }
 
-	public ProductCatalogFilterViewModel(INavigationService navigationService)
+	public ProductCatalogFilterViewModel(INavigator navigationService)
 	{
 		_navigationService = navigationService;
 		var items = DummyPlace.Products.Select(s => s.MainCategory)

@@ -27,12 +27,12 @@ public partial class ProductCatalogFilterView : UserControl, INavigationLifecycl
 		return Task.CompletedTask;
 	}
 
-	public Task StartAsync(CancellationToken cancellationToken)
+	public Task AppearAsync(CancellationToken cancellationToken)
 	{
 		return Task.CompletedTask;
 	}
 
-	public Task StopAsync(CancellationToken cancellationToken)
+	public Task DisappearAsync(CancellationToken cancellationToken)
 	{
 		return Task.CompletedTask;
 	}

@@ -88,7 +88,7 @@ public partial class ShellView : TemplatedControl
 	public ShellView()
 	{
 		Navigation = Locator.Current
-			.GetService<INavigationService>() ?? throw new ArgumentException("Cannot find INavigationService");
+			.GetService<INavigator>() ?? throw new ArgumentException("Cannot find INavigationService");
 		Navigation.RegisterShell(this);
 
 		_isMobile = AvaloniaLocator.Current
@@ -170,7 +170,7 @@ public partial class ShellView : TemplatedControl
 
 	#region Services and navigation
 
-	public INavigationService Navigation { get; }
+	public INavigator Navigation { get; }
 
 	#endregion
 

@@ -1,12 +1,11 @@
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
-using Avalonia.Media;
-using Avalonia.Media.Imaging;
 using AvaloniaInside.Shell;
 
 namespace ShellExample.Views;
 
-public partial class HomePage : UserControl, INavigation
+public partial class HomePage : UserControl
 {
 	public HomePage()
 	{
@@ -20,11 +19,4 @@ public partial class HomePage : UserControl, INavigation
 	}
 
 	public string Icon => "/Assets/Icons/house-solid.png";
-
-	public object? Title => "Home";
-
-	public object? Item { get; } = new Button()
-	{
-		Content = "Add"
-	};
 }
