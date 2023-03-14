@@ -1,10 +1,15 @@
 <Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:shell="clr-namespace:AvaloniaInside.Shell;assembly=AvaloniaInside.Shell">
 	<Design.PreviewWith>
 		<Border Padding="20">
 			<!-- Add Controls for Previewer Here -->
 		</Border>
 	</Design.PreviewWith>
+
+	<Style Selector="shell|NavigationBar">
+		<Setter Property="Background" Value="#44000000"></Setter>
+	</Style>
 
 	<Style Selector="TextBlock.SubTitle">
 		<Setter Property="Foreground" Value="Silver"></Setter>

@@ -18,12 +18,12 @@ public partial class SimpleDialog : UserControl
 
 	private void OkButton_OnClick(object? sender, RoutedEventArgs e)
 	{
-		MainView.Current.ShellViewMain.Navigation.BackAsync();
+		MainView.Current.ShellViewMain.Navigator.BackAsync();
 	}
 
 	private void CancelButton_OnClick(object? sender, RoutedEventArgs e)
 	{
-		MainView.Current.ShellViewMain.Navigation.BackAsync();
+		MainView.Current.ShellViewMain.Navigator.BackAsync();
 	}
 }
 

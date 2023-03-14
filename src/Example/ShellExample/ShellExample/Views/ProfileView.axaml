@@ -5,7 +5,7 @@
              xmlns:shell="clr-namespace:AvaloniaInside.Shell;assembly=AvaloniaInside.Shell"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="ShellExample.Views.ProfileView"
-             shell:NavigationView.Header="Profile">
+             shell:NavigationBar.Header="Profile">
 	Welcome to Avalonia!
 </UserControl>
 

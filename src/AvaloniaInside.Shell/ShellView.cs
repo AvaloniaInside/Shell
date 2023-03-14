@@ -3,7 +3,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
+using Avalonia.Controls.Templates;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Platform;
@@ -38,7 +40,7 @@ public partial class ShellView : TemplatedControl
 
 	private SplitView? _splitView;
 	private StackContentView? _contentView;
-	private NavigationView? _navigationView;
+	private NavigationBar? _navigationBar;
 	private StackContentView? _modalView;
 	private SideMenuView? _sideMenuView;
 
@@ -46,7 +48,7 @@ public partial class ShellView : TemplatedControl
 
 	#region Properties
 
-	public NavigationView NavigationView => _navigationView;
+	public NavigationBar NavigationBar => _navigationBar;
 
 	#region ScreenSize
 
@@ -81,15 +83,28 @@ public partial class ShellView : TemplatedControl
 
 	#endregion
 
+	#region NavigationTemplate
+
+	public static readonly StyledProperty<IControlTemplate?> NavigationTemplateProperty =
+		AvaloniaProperty.Register<ShellView, IControlTemplate?>(nameof(NavigationTemplate));
+
+	public IControlTemplate? NavigationTemplate
+	{
+		get => GetValue(NavigationTemplateProperty);
+		set => SetValue(NavigationTemplateProperty, value);
+	}
+
+	#endregion
+
 	#endregion
 
 	#region Ctor and loading
 
 	public ShellView()
 	{
-		Navigation = Locator.Current
+		Navigator = Locator.Current
 			.GetService<INavigator>() ?? throw new ArgumentException("Cannot find INavigationService");
-		Navigation.RegisterShell(this);
+		Navigator.RegisterShell(this);
 
 		_isMobile = AvaloniaLocator.Current
 			.GetService<IRuntimePlatform>()?
@@ -117,7 +132,7 @@ public partial class ShellView : TemplatedControl
 
 		if (DefaultRoute != null)
 		{
-			_ = Navigation.NavigateAsync(DefaultRoute, CancellationToken.None);
+			_ = Navigator.NavigateAsync(DefaultRoute, CancellationToken.None);
 		}
 	}
 
@@ -127,7 +142,7 @@ public partial class ShellView : TemplatedControl
 		_splitView = e.NameScope.Find<SplitView>("PART_SplitView");
 		_contentView = e.NameScope.Find<StackContentView>("PART_ContentView");
 		_modalView = e.NameScope.Find<StackContentView>("PART_Modal");
-		_navigationView = e.NameScope.Find<NavigationView>("PART_NavigationView");
+		_navigationBar = e.NameScope.Find<NavigationBar>("PART_NavigationBar");
 		_sideMenuView = e.NameScope.Find<SideMenuView>("PART_SideMenuView");
 
 		SetupUi();
@@ -158,11 +173,11 @@ public partial class ShellView : TemplatedControl
 
 	private void SetupUi()
 	{
-		if (_navigationView != null)
+		if (_navigationBar != null)
 		{
-			_navigationView.ShellView = this;
-			_navigationView.BackCommand = ReactiveCommand.CreateFromTask(BackActionAsync);
-			_navigationView.SideMenuCommand = ReactiveCommand.CreateFromTask(MenuActionAsync);
+			_navigationBar.ShellView = this;
+			_navigationBar.BackCommand = ReactiveCommand.CreateFromTask(BackActionAsync);
+			_navigationBar.SideMenuCommand = ReactiveCommand.CreateFromTask(MenuActionAsync);
 		}
 	}
 
@@ -170,7 +185,7 @@ public partial class ShellView : TemplatedControl
 
 	#region Services and navigation
 
-	public INavigator Navigation { get; }
+	public INavigator Navigator { get; }
 
 	#endregion
 
@@ -179,22 +194,18 @@ public partial class ShellView : TemplatedControl
 	public async Task PushViewAsync(object view, CancellationToken cancellationToken = default)
 	{
 		await (_contentView?.PushViewAsync(view, cancellationToken) ?? Task.CompletedTask);
-		await (_navigationView?.PushViewAsync(view, cancellationToken) ?? Task.CompletedTask);
-
 		SelectSideMenuItem();
 	}
 
 	public async Task RemoveViewAsync(object view, CancellationToken cancellationToken = default)
 	{
 		await (_contentView?.RemoveViewAsync(view, cancellationToken) ?? Task.CompletedTask);
-		await (_navigationView?.RemoveViewAsync(view, cancellationToken) ?? Task.CompletedTask);
 		await (_modalView?.RemoveViewAsync(view, cancellationToken) ?? Task.CompletedTask);
 	}
 
 	public async Task ClearStackAsync(CancellationToken cancellationToken)
 	{
 		await (_contentView?.ClearStackAsync(cancellationToken) ?? Task.CompletedTask);
-		await (_navigationView?.ClearStackAsync(cancellationToken) ?? Task.CompletedTask);
 		await (_modalView?.ClearStackAsync(cancellationToken) ?? Task.CompletedTask);
 	}
 
@@ -209,9 +220,9 @@ public partial class ShellView : TemplatedControl
 			return true;
 		}
 
-		var result = Navigation.HasItemInStack();
+		var result = Navigator.HasItemInStack();
 		if (result)
-			Navigation.BackAsync();
+			Navigator.BackAsync();
 
 		return result;
 	}
@@ -248,7 +259,7 @@ public partial class ShellView : TemplatedControl
 
 	protected virtual Task BackActionAsync(CancellationToken cancellationToken)
 	{
-		return Navigation.BackAsync(cancellationToken);
+		return Navigator.BackAsync(cancellationToken);
 	}
 
 	#endregion

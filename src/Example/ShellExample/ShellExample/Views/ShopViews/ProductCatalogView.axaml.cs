@@ -9,7 +9,7 @@ public partial class ProductCatalogView : UserControl
 	public ProductCatalogView()
 	{
 		InitializeComponent();
-		DataContext = ViewModel = new ProductCatalogViewModel(MainView.Current.ShellViewMain.Navigation);
+		DataContext = ViewModel = new ProductCatalogViewModel(MainView.Current.ShellViewMain.Navigator);
 	}
 
 	public ProductCatalogViewModel ViewModel { get; }

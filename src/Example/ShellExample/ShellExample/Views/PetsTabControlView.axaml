@@ -8,7 +8,7 @@
             x:Class="ShellExample.Views.PetsTabControlView"
             TabStripPlacement="Top"
             Classes="Center HeadTab"
-            shell:NavigationView.Header="Pets">
+            shell:NavigationBar.Header="Pets">
 	<TabControl.Resources>
 		<converters:BitmapAssetValueConverter x:Key="variableImage"/>
 	</TabControl.Resources>
@@ -22,7 +22,7 @@
 				       Margin="2"/>
 				<TextBlock Grid.Row="1"
 				           DataContext="{Binding Instance}"
-				           Text="{Binding Path=(shell:NavigationView.Header)}"
+				           Text="{Binding Path=(shell:NavigationBar.Header)}"
 				           FontSize="14"
 				           HorizontalAlignment="Center"></TextBlock>
 			</Grid>

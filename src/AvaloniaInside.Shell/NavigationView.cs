@@ -6,33 +6,32 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
-using Avalonia.Data;
 
 namespace AvaloniaInside.Shell;
 
-public class NavigationView : StackContentView
+public class NavigationBar : TemplatedControl
 {
-	public static readonly DirectProperty<NavigationView, ICommand> SideMenuCommandProperty =
-		AvaloniaProperty.RegisterDirect<NavigationView, ICommand>(
+	public static readonly DirectProperty<NavigationBar, ICommand> SideMenuCommandProperty =
+		AvaloniaProperty.RegisterDirect<NavigationBar, ICommand>(
 			nameof(SideMenuCommand),
 			o => o.SideMenuCommand,
 			(o, v) => o.SideMenuCommand = v);
 
-	public static readonly DirectProperty<NavigationView, ICommand> BackCommandProperty =
-		AvaloniaProperty.RegisterDirect<NavigationView, ICommand>(
+	public static readonly DirectProperty<NavigationBar, ICommand> BackCommandProperty =
+		AvaloniaProperty.RegisterDirect<NavigationBar, ICommand>(
 			nameof(BackCommand),
 			o => o.BackCommand,
 			(o, v) => o.BackCommand = v);
 
-	public static readonly DirectProperty<NavigationView, bool> HasSideMenuOptionProperty =
-		AvaloniaProperty.RegisterDirect<NavigationView, bool>(
+	public static readonly DirectProperty<NavigationBar, bool> HasSideMenuOptionProperty =
+		AvaloniaProperty.RegisterDirect<NavigationBar, bool>(
 			nameof(HasSideMenuOption),
 			o => o.HasSideMenuOption,
 			(o, v) => o.HasSideMenuOption = v);
 
-	private ContentPresenter? _header;
+	private ContentControl? _header;
 	private Button? _actionButton;
-	private ContentPresenter? _itemsContentPresenter;
+	private ContentControl? _items;
 
 	private object? _pendingHeader;
 
@@ -75,7 +74,7 @@ public class NavigationView : StackContentView
 	}
 
 	public static readonly AttachedProperty<object> ItemProperty =
-		AvaloniaProperty.RegisterAttached<NavigationView, AvaloniaObject, object>("Item");
+		AvaloniaProperty.RegisterAttached<NavigationBar, AvaloniaObject, object>("Item");
 
 	public static object GetItem(AvaloniaObject element) =>
 		element.GetValue(ItemProperty);
@@ -84,7 +83,7 @@ public class NavigationView : StackContentView
 		element.SetValue(ItemProperty, parameter);
 
 	public static readonly AttachedProperty<object> HeaderProperty =
-		AvaloniaProperty.RegisterAttached<NavigationView, AvaloniaObject, object>("Header");
+		AvaloniaProperty.RegisterAttached<NavigationBar, AvaloniaObject, object>("Header");
 
 	public static object GetHeader(AvaloniaObject element) =>
 		element.GetValue(HeaderProperty);
@@ -94,9 +93,9 @@ public class NavigationView : StackContentView
 
 	protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
 	{
-		_header = e.NameScope.Find<ContentPresenter>("PART_Header") ?? throw new ArgumentNullException("PART_Header");
+		_header = e.NameScope.Find<ContentControl>("PART_Header") ?? throw new ArgumentNullException("PART_Header");
 		_actionButton = e.NameScope.Find<Button>("PART_ActionButton");
-		_itemsContentPresenter = e.NameScope.Find<ContentPresenter>("PART_Items");
+		_items = e.NameScope.Find<ContentControl>("PART_Items");
 
 		if (_actionButton != null)
 			_actionButton.Command = _backCommand;
@@ -105,18 +104,9 @@ public class NavigationView : StackContentView
 			_ = UpdateAsync(_pendingHeader, CancellationToken.None);
 	}
 
-	protected override Task OnContentUpdateAsync(object? view, CancellationToken cancellationToken)
-	{
-		if (_header != null && view != null)
-			return UpdateAsync(view, cancellationToken);
-
-		_pendingHeader = view;
-		return Task.CompletedTask;
-	}
-
 	public Task UpdateAsync(object view, CancellationToken cancellationToken)
 	{
-		if (_header == null && _itemsContentPresenter == null)
+		if (_header == null && _items == null)
 		{
 			_pendingHeader = view;
 			return Task.CompletedTask;
@@ -125,8 +115,8 @@ public class NavigationView : StackContentView
 		if (_header != null)
 			UpdateHeader(view, _header);
 
-		if (_itemsContentPresenter != null)
-			UpdateItems(view, _itemsContentPresenter);
+		if (_items != null)
+			UpdateItems(view, _items);
 
 		UpdateButtons();
 		return Task.CompletedTask;
@@ -136,7 +126,7 @@ public class NavigationView : StackContentView
 	{
 		if (ShellView == null) return;
 
-		var navService = ShellView.Navigation;
+		var navService = ShellView.Navigator;
 		var hasItem = navService?.HasItemInStack() ?? false;
 
 		if (_actionButton == null) return;
@@ -161,7 +151,7 @@ public class NavigationView : StackContentView
 		}
 	}
 
-	protected virtual void UpdateItems(object view, ContentPresenter itemPresenter)
+	protected virtual void UpdateItems(object view, ContentControl itemPresenter)
 	{
 		if (view is not AvaloniaObject)
 		{
@@ -172,7 +162,7 @@ public class NavigationView : StackContentView
 
 		if (view is StyledElement element)
 		{
-			itemPresenter[!ContentPresenter.ContentProperty] = element[!ItemProperty];
+			itemPresenter[!ContentControl.ContentProperty] = element[!ItemProperty];
 			itemPresenter.DataContext = element.DataContext ?? element;
 			return;
 		}
@@ -180,7 +170,7 @@ public class NavigationView : StackContentView
 		itemPresenter.Content = view;
 	}
 
-	protected virtual void UpdateHeader(object view, ContentPresenter itemPresenter)
+	protected virtual void UpdateHeader(object view, ContentControl itemPresenter)
 	{
 		if (view is not AvaloniaObject)
 		{
@@ -192,7 +182,7 @@ public class NavigationView : StackContentView
 		if (view is StyledElement element)
 		{
 			itemPresenter.DataContext = element.DataContext ?? element;
-			itemPresenter[!ContentPresenter.ContentProperty] = element[!HeaderProperty];
+			itemPresenter[!ContentControl.ContentProperty] = element[!HeaderProperty];
 			return;
 		}
 

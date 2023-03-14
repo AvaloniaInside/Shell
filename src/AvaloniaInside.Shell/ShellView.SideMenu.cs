@@ -237,34 +237,37 @@ public partial class ShellView
 
 	protected virtual void UpdateSideMenu()
 	{
-		if (_splitView == null || _navigationView == null) return;
+		if (_splitView == null || _navigationBar == null) return;
 
-		var behave = ScreenSize switch
+		switch (GetCurrentBehave())
+		{
+			case SideMenuBehaveType.Default:
+				_splitView.OpenPaneLength = SideMenuPresented ? SideMenuSize : 0;
+				_splitView.IsPaneOpen = SideMenuPresented;
+				_navigationBar.HasSideMenuOption = true;
+				break;
+			case SideMenuBehaveType.Keep:
+				_splitView.OpenPaneLength = SideMenuSize;
+				_splitView.IsPaneOpen = true;
+				_navigationBar.HasSideMenuOption = false;
+				break;
+			case SideMenuBehaveType.Closed:
+				_splitView.OpenPaneLength = 0;
+				_splitView.IsPaneOpen = true;
+				_navigationBar.HasSideMenuOption = true;
+				break;
+		}
+	}
+
+	private SideMenuBehaveType GetCurrentBehave()
+	{
+		return ScreenSize switch
 		{
 			ScreenSizeType.Small => SmallScreenSideMenuBehave,
 			ScreenSizeType.Medium => MediumScreenSideMenuBehave,
 			ScreenSizeType.Large => LargeScreenSideMenuBehave,
 			_ => throw new ArgumentOutOfRangeException()
 		};
-
-		if (behave == SideMenuBehaveType.Default)
-		{
-			_splitView.OpenPaneLength = SideMenuPresented ? SideMenuSize : 0;
-			_splitView.IsPaneOpen = SideMenuPresented;
-			_navigationView.HasSideMenuOption = true;
-		}
-		else if (behave == SideMenuBehaveType.Keep)
-		{
-			_splitView.OpenPaneLength = SideMenuSize;
-			_splitView.IsPaneOpen = true;
-			_navigationView.HasSideMenuOption = false;
-		}
-		else if (behave == SideMenuBehaveType.Closed)
-		{
-			_splitView.OpenPaneLength = 0;
-			_splitView.IsPaneOpen = true;
-			_navigationView.HasSideMenuOption = true;
-		}
 	}
 
 	protected virtual void SelectSideMenuItem()
@@ -272,14 +275,17 @@ public partial class ShellView
 		if (_sideMenuView == null) return;
 		_skipChanges = true;
 		SideMenuSelectedItem = _sideMenuItems
-			.FirstOrDefault(f => f.Path == Navigation.CurrentUri.AbsolutePath);
+			.FirstOrDefault(f => f.Path == Navigator.CurrentUri.AbsolutePath);
 		_skipChanges = false;
 	}
 
 	private void SideMenuItemChanged(SideMenuItem item)
 	{
 		if (_skipChanges) return;
-		_ = Navigation.NavigateAsync(item.Path, NavigateType.HostedItemChange);
+		_ = Navigator.NavigateAsync(item.Path, NavigateType.HostedItemChange);
+
+		if (GetCurrentBehave() != SideMenuBehaveType.Keep)
+			SideMenuPresented = false;
 	}
 
 	#endregion

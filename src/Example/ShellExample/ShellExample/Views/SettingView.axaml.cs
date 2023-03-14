@@ -16,6 +16,6 @@ public partial class SettingView : UserControl
 		AvaloniaXamlLoader.Load(this);
 	}
 
-	public string Icon => "/Assets/Icons/house-solid.png";
+	public string Icon => "/Assets/Icons/user-solid.png";
 }
 

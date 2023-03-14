@@ -10,7 +10,7 @@ public partial class HomePage : UserControl
 	public HomePage()
 	{
 		InitializeComponent();
-		DataContext = new ViewModels.HomePageViewModel(MainView.Current.ShellViewMain.Navigation);
+		DataContext = new ViewModels.HomePageViewModel(MainView.Current.ShellViewMain.Navigator);
 	}
 
 	private void InitializeComponent()

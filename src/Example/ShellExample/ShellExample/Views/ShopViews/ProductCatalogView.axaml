@@ -6,15 +6,15 @@
              xmlns:shell="clr-namespace:AvaloniaInside.Shell;assembly=AvaloniaInside.Shell"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="ShellExample.Views.ShopViews.ProductCatalogView"
-             shell:NavigationView.Header="{Binding Title}">
+             shell:NavigationBar.Header="{Binding Title}">
 	<UserControl.Resources>
 		<converters:BitmapAssetValueConverter x:Key="variableImage"/>
 	</UserControl.Resources>
-	<shell:NavigationView.Item>
+	<shell:NavigationBar.Item>
 		<Button Content="Filter"
 		        Command="{Binding FilterCommand}"
 		        Background="#00000000"></Button>
-	</shell:NavigationView.Item>
+	</shell:NavigationBar.Item>
 	<ScrollViewer>
 		<ItemsControl Items="{Binding Products}">
 			<ItemsControl.ItemsPanel>

@@ -5,7 +5,7 @@
              xmlns:shell="clr-namespace:AvaloniaInside.Shell;assembly=AvaloniaInside.Shell"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="ShellExample.Views.CatView"
-             shell:NavigationView.Header="Home">
+             shell:NavigationBar.Header="Cats">
 	<Grid>
 		<Border HorizontalAlignment="Center"
 		        VerticalAlignment="Center"

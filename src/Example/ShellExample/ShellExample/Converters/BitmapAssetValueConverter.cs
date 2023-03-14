@@ -4,6 +4,7 @@ using Avalonia;
 using Avalonia.Data.Converters;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
+using ShellExample.Helpers;
 
 namespace ShellExample.Converters;
 
@@ -18,23 +19,7 @@ public class BitmapAssetValueConverter : IValueConverter
 
 		if (value is string rawUri && targetType.IsAssignableFrom(typeof(Bitmap)))
 		{
-			Uri uri;
-
-			// Allow for assembly overrides
-			if (rawUri.StartsWith("avares://"))
-			{
-				uri = new Uri(rawUri);
-			}
-			else
-			{
-				string assemblyName = GetType().Assembly.GetName().Name;
-				uri = new Uri($"avares://{assemblyName}/{rawUri.TrimStart('/')}");
-			}
-
-			var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
-			var asset = assets.Open(uri);
-
-			return new Bitmap(asset);
+			return rawUri.GetBitmapFromAssets();
 		}
 
 		throw new NotSupportedException();

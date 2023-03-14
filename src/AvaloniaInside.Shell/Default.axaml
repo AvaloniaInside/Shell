@@ -10,18 +10,20 @@
 		</Setter>
 	</Style>
 
-	<Style Selector="shell|NavigationView">
-		<Setter Property="Template">
+	<Style Selector="shell|ShellView">
+		<Setter Property="NavigationTemplate">
 			<ControlTemplate>
-				<Grid ColumnDefinitions="35,*,Auto">
-					<Button Grid.Column="0"
-					        Name="PART_ActionButton"
+				<Panel Background="{TemplateBinding Background}">
+					<Button Name="PART_ActionButton"
+					        HorizontalAlignment="Left"
+					        VerticalAlignment="Center"
 					        HorizontalContentAlignment="Center"
-					        VerticalContentAlignment="Center">
+					        VerticalContentAlignment="Center"
+					        Width="35">
 					</Button>
-					<ContentPresenter Grid.Column="1" Name="PART_Header" HorizontalAlignment="Center" VerticalAlignment="Center" />
-					<ContentPresenter Grid.Column="2" Name="PART_Items" HorizontalAlignment="Right" VerticalAlignment="Center" />
-				</Grid>
+					<TransitioningContentControl Name="PART_Header" HorizontalAlignment="Center" VerticalAlignment="Center" />
+					<TransitioningContentControl Name="PART_Items" HorizontalAlignment="Right" VerticalAlignment="Center" />
+				</Panel>
 			</ControlTemplate>
 		</Setter>
 	</Style>
@@ -43,7 +45,8 @@
 						</SplitView.Pane>
 
 						<Grid RowDefinitions="35,*">
-							<shell:NavigationView Name="PART_NavigationView" />
+							<shell:NavigationBar Name="PART_NavigationBar"
+							                      Template="{TemplateBinding NavigationTemplate}"/>
 							<shell:StackContentView VerticalAlignment="Stretch" Name="PART_ContentView" Grid.Row="1"></shell:StackContentView>
 						</Grid>
 					</SplitView>

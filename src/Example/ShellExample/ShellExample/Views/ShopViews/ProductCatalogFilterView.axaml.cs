@@ -14,7 +14,7 @@ public partial class ProductCatalogFilterView : UserControl, INavigationLifecycl
 	public ProductCatalogFilterView()
 	{
 		InitializeComponent();
-		DataContext = ViewModel = new ProductCatalogFilterViewModel(MainView.Current.ShellViewMain.Navigation);
+		DataContext = ViewModel = new ProductCatalogFilterViewModel(MainView.Current.ShellViewMain.Navigator);
 	}
 
 	private void InitializeComponent()
