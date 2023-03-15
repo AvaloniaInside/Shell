@@ -42,7 +42,7 @@ public partial class ShellView : TemplatedControl
 	private StackContentView? _contentView;
 	private NavigationBar? _navigationBar;
 	private StackContentView? _modalView;
-	private SideMenuView? _sideMenuView;
+	private SideMenu? _sideMenu;
 
 	#endregion
 
@@ -143,7 +143,7 @@ public partial class ShellView : TemplatedControl
 		_contentView = e.NameScope.Find<StackContentView>("PART_ContentView");
 		_modalView = e.NameScope.Find<StackContentView>("PART_Modal");
 		_navigationBar = e.NameScope.Find<NavigationBar>("PART_NavigationBar");
-		_sideMenuView = e.NameScope.Find<SideMenuView>("PART_SideMenuView");
+		_sideMenu = e.NameScope.Find<SideMenu>("PART_SideMenu");
 
 		SetupUi();
 
@@ -152,9 +152,9 @@ public partial class ShellView : TemplatedControl
 			_splitView.PaneClosing += SplitViewOnPaneClosing;
 		}
 
-		if (_sideMenuView != null)
+		if (_sideMenu != null)
 		{
-			_sideMenuView.Items = _sideMenuItems;
+			_sideMenu.Items = _sideMenuItems;
 		}
 	}
 

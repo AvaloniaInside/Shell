@@ -151,7 +151,7 @@ public partial class ShellView
 	#region SideMenuHeader
 
 	public static readonly StyledProperty<object?> SideMenuHeaderProperty =
-		AvaloniaProperty.Register<SideMenuView, object?>(
+		AvaloniaProperty.Register<SideMenu, object?>(
 			nameof(SideMenuHeader));
 
 	public object? SideMenuHeader
@@ -165,7 +165,7 @@ public partial class ShellView
 	#region SideMenuFooter
 
 	public static readonly StyledProperty<object?> SideMenuFooterProperty =
-		AvaloniaProperty.Register<SideMenuView, object?>(
+		AvaloniaProperty.Register<SideMenu, object?>(
 			nameof(SideMenuFooter));
 
 	public object? SideMenuFooter
@@ -179,7 +179,7 @@ public partial class ShellView
 	#region SideMenuContentsTemplate
 
 	public static readonly StyledProperty<IDataTemplate> SideMenuContentsTemplateProperty =
-		AvaloniaProperty.Register<SideMenuView, IDataTemplate>(
+		AvaloniaProperty.Register<SideMenu, IDataTemplate>(
 			nameof(SideMenuContentsTemplate));
 
 	public IDataTemplate SideMenuContentsTemplate
@@ -193,7 +193,7 @@ public partial class ShellView
 	#region SideMenuContents
 
 	public static readonly StyledProperty<AvaloniaList<object>> SideMenuContentsProperty =
-		AvaloniaProperty.Register<SideMenuView, AvaloniaList<object>>(
+		AvaloniaProperty.Register<SideMenu, AvaloniaList<object>>(
 			nameof(SideMenuContents),
 			defaultValue: new AvaloniaList<object>());
 
@@ -272,7 +272,7 @@ public partial class ShellView
 
 	protected virtual void SelectSideMenuItem()
 	{
-		if (_sideMenuView == null) return;
+		if (_sideMenu == null) return;
 		_skipChanges = true;
 		SideMenuSelectedItem = _sideMenuItems
 			.FirstOrDefault(f => f.Path == Navigator.CurrentUri.AbsolutePath);

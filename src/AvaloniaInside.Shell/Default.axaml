@@ -34,14 +34,14 @@
 				<Grid>
 					<SplitView Name="PART_SplitView" DisplayMode="Inline">
 						<SplitView.Pane>
-							<shell:SideMenuView Name="PART_SideMenuView"
+							<shell:SideMenu Name="PART_SideMenu"
 							                    SelectedItem="{TemplateBinding SideMenuSelectedItem, Mode=TwoWay}"
 							                    Header="{TemplateBinding SideMenuHeader}"
 							                    Footer="{TemplateBinding SideMenuFooter}"
 							                    Contents="{TemplateBinding SideMenuContents}"
 							                    ContentsTemplate="{TemplateBinding SideMenuContentsTemplate}">
 
-							</shell:SideMenuView>
+							</shell:SideMenu>
 						</SplitView.Pane>
 
 						<Grid RowDefinitions="35,*">
@@ -96,7 +96,7 @@
 		</Setter>
 	</Style>
 
-	<Style Selector="shell|SideMenuView">
+	<Style Selector="shell|SideMenu">
 		<Setter Property="Template">
 			<ControlTemplate>
 				<Grid RowDefinitions="Auto,*,Auto">

@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
 
 namespace AvaloniaInside.Shell;
@@ -162,8 +161,8 @@ public class NavigationBar : TemplatedControl
 
 		if (view is StyledElement element)
 		{
-			itemPresenter[!ContentControl.ContentProperty] = element[!ItemProperty];
 			itemPresenter.DataContext = element.DataContext ?? element;
+			itemPresenter[!ContentControl.ContentProperty] = element[!ItemProperty];
 			return;
 		}
 

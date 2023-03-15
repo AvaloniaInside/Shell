@@ -9,14 +9,14 @@ using Avalonia.Controls.Templates;
 
 namespace AvaloniaInside.Shell;
 
-public class SideMenuView : TemplatedControl
+public class SideMenu : TemplatedControl
 {
 	private ListBox _listBox;
 
 	#region HeaderTemplate
 
 	public static readonly StyledProperty<IDataTemplate> HeaderTemplateProperty =
-		AvaloniaProperty.Register<SideMenuView, IDataTemplate>(
+		AvaloniaProperty.Register<SideMenu, IDataTemplate>(
 			nameof(HeaderTemplate));
 
 	public IDataTemplate HeaderTemplate
@@ -30,7 +30,7 @@ public class SideMenuView : TemplatedControl
 	#region Header
 
 	public static readonly StyledProperty<object?> HeaderProperty =
-		AvaloniaProperty.Register<SideMenuView, object?>(
+		AvaloniaProperty.Register<SideMenu, object?>(
 			nameof(Header));
 
 	public object? Header
@@ -44,7 +44,7 @@ public class SideMenuView : TemplatedControl
 	#region FooterTemplate
 
 	public static readonly StyledProperty<IDataTemplate> FooterTemplateProperty =
-		AvaloniaProperty.Register<SideMenuView, IDataTemplate>(
+		AvaloniaProperty.Register<SideMenu, IDataTemplate>(
 			nameof(FooterTemplate));
 
 	public IDataTemplate FooterTemplate
@@ -58,7 +58,7 @@ public class SideMenuView : TemplatedControl
 	#region Footer
 
 	public static readonly StyledProperty<object?> FooterProperty =
-		AvaloniaProperty.Register<SideMenuView, object?>(
+		AvaloniaProperty.Register<SideMenu, object?>(
 			nameof(Footer));
 
 	public object? Footer
@@ -72,8 +72,8 @@ public class SideMenuView : TemplatedControl
 	#region Items
 
 	private IList<SideMenuItem> _items;
-	public static readonly DirectProperty<SideMenuView, IList<SideMenuItem>> ItemsProperty =
-		AvaloniaProperty.RegisterDirect<SideMenuView, IList<SideMenuItem>>(
+	public static readonly DirectProperty<SideMenu, IList<SideMenuItem>> ItemsProperty =
+		AvaloniaProperty.RegisterDirect<SideMenu, IList<SideMenuItem>>(
 			nameof(Items),
 			o => o.Items,
 			(o, v) => o.Items = v);
@@ -88,8 +88,8 @@ public class SideMenuView : TemplatedControl
 	#region SelectedItem
 
 	private SideMenuItem? _selectedItem;
-	public static readonly DirectProperty<SideMenuView, SideMenuItem?> SelectedItemProperty =
-		AvaloniaProperty.RegisterDirect<SideMenuView, SideMenuItem?>(
+	public static readonly DirectProperty<SideMenu, SideMenuItem?> SelectedItemProperty =
+		AvaloniaProperty.RegisterDirect<SideMenu, SideMenuItem?>(
 			nameof(SelectedItem),
 			o => o.SelectedItem,
 			(o, v) => o.SelectedItem = v);
@@ -104,7 +104,7 @@ public class SideMenuView : TemplatedControl
 	#region ContentsTemplate
 
 	public static readonly StyledProperty<IDataTemplate> ContentsTemplateProperty =
-		AvaloniaProperty.Register<SideMenuView, IDataTemplate>(
+		AvaloniaProperty.Register<SideMenu, IDataTemplate>(
 			nameof(ContentsTemplate));
 
 	public IDataTemplate ContentsTemplate
@@ -118,7 +118,7 @@ public class SideMenuView : TemplatedControl
 	#region Contents
 
 	public static readonly StyledProperty<IList> ContentsProperty =
-		AvaloniaProperty.Register<SideMenuView, IList>(
+		AvaloniaProperty.Register<SideMenu, IList>(
 			nameof(Contents));
 
 	public IList Contents
@@ -133,7 +133,7 @@ public class SideMenuView : TemplatedControl
 	{
 		base.OnApplyTemplate(e);
 		_listBox = e.NameScope.Find<ListBox>("PART_Items")
-		           ?? throw new KeyNotFoundException("PART_Items not found in SideMenuView template");
+		           ?? throw new KeyNotFoundException("PART_Items not found in SideMenu template");
 
 		SetupUi();
 	}

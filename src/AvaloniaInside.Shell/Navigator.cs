@@ -8,7 +8,6 @@ namespace AvaloniaInside.Shell;
 
 public class Navigator : INavigator
 {
-	private readonly INavigationRegistrar _navigationRegistrar;
 	private readonly INavigateStrategy _navigateStrategy;
 	private readonly INavigationUpdateStrategy _updateStrategy;
 	private readonly INavigationViewLocator _viewLocator;
@@ -21,7 +20,9 @@ public class Navigator : INavigator
 
 	public ShellView ShellView => _shellView ?? throw new ArgumentNullException(nameof(ShellView));
 
-	public Uri CurrentUri => _stack.Current?.Uri ?? _navigationRegistrar.RootUri;
+	public Uri CurrentUri => _stack.Current?.Uri ?? Registrar.RootUri;
+
+	public INavigationRegistrar Registrar { get; }
 
 	public Navigator(
 		INavigationRegistrar navigationRegistrar,
@@ -29,7 +30,7 @@ public class Navigator : INavigator
 		INavigationUpdateStrategy updateStrategy,
 		INavigationViewLocator viewLocator)
 	{
-		_navigationRegistrar = navigationRegistrar;
+		Registrar = navigationRegistrar;
 		_navigateStrategy = navigateStrategy;
 		_updateStrategy = updateStrategy;
 		_viewLocator = viewLocator;
@@ -58,10 +59,10 @@ public class Navigator : INavigator
 	}
 
 	public void RegisterPage(string route, Type page, NavigateType navigate) =>
-		_navigationRegistrar.RegisterRoute(route, page, NavigationNodeType.Page, navigate, null);
+		Registrar.RegisterRoute(route, page, NavigationNodeType.Page, navigate, null);
 
 	public void RegisterHost(string route, Type page, string defaultPath, NavigateType navigate) =>
-		_navigationRegistrar.RegisterRoute(route, page, NavigationNodeType.Host, navigate, defaultPath);
+		Registrar.RegisterRoute(route, page, NavigationNodeType.Host, navigate, defaultPath);
 
 	private async Task NotifyAsync(Uri newUri,
 		object? argument,
@@ -69,7 +70,7 @@ public class Navigator : INavigator
 		NavigateType? navigateType,
 		CancellationToken cancellationToken = default)
 	{
-		if (!_navigationRegistrar.TryGetNode(newUri.AbsolutePath, out var node))
+		if (!Registrar.TryGetNode(newUri.AbsolutePath, out var node))
 		{
 			Debug.WriteLine("Warning: Cannot find the path");
 			return;

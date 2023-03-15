@@ -8,6 +8,8 @@ public interface INavigator
 {
 	Uri CurrentUri { get; }
 
+	INavigationRegistrar Registrar { get; }
+
 	void RegisterShell(ShellView shellView);
 
 	bool HasItemInStack();
