@@ -3,18 +3,17 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:converters="clr-namespace:ShellExample.Converters"
-             xmlns:shell="clr-namespace:AvaloniaInside.Shell;assembly=AvaloniaInside.Shell"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="ShellExample.Views.ShopViews.ProductCatalogView"
-             shell:NavigationBar.Header="{Binding Title}">
+             NavigationBar.Header="{Binding Title}">
 	<UserControl.Resources>
 		<converters:BitmapAssetValueConverter x:Key="variableImage"/>
 	</UserControl.Resources>
-	<shell:NavigationBar.Item>
+	<NavigationBar.Item>
 		<Button Content="Filter"
 		        Command="{Binding FilterCommand}"
 		        Background="#00000000"></Button>
-	</shell:NavigationBar.Item>
+	</NavigationBar.Item>
 	<ScrollViewer>
 		<ItemsControl Items="{Binding Products}">
 			<ItemsControl.ItemsPanel>

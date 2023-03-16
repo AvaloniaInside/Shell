@@ -47,13 +47,13 @@ public class Navigator : INavigator
 	public bool HasItemInStack()
 	{
 		var current = _stack.Current?.Back;
-		do
+		while (current != null)
 		{
 			if (current is not HostNavigationChain)
 				return true;
 
 			current = current.Back;
-		} while (current != null);
+		}
 
 		return false;
 	}

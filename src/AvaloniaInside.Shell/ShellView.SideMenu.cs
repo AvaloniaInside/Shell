@@ -6,7 +6,7 @@ using Avalonia;
 using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
-using Avalonia.Media;
+using AvaloniaInside.Shell.Data;
 
 namespace AvaloniaInside.Shell;
 
@@ -286,20 +286,6 @@ public partial class ShellView
 
 		if (GetCurrentBehave() != SideMenuBehaveType.Keep)
 			SideMenuPresented = false;
-	}
-
-	#endregion
-
-	#region Actions
-
-	public void AddSideMenuItem(string title, string path, string icon)
-	{
-		_sideMenuItems.Add(new SideMenuItem(title, path, icon));
-	}
-
-	public void AddSideMenuItem(string title, string path, IImage icon)
-	{
-		_sideMenuItems.Add(new SideMenuItem(title, path, icon));
 	}
 
 	#endregion

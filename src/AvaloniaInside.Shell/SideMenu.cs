@@ -6,6 +6,7 @@ using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
+using AvaloniaInside.Shell.Data;
 
 namespace AvaloniaInside.Shell;
 

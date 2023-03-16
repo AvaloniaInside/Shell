@@ -3,12 +3,11 @@
             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
             xmlns:converters="clr-namespace:ShellExample.Converters"
-            xmlns:shell="clr-namespace:AvaloniaInside.Shell;assembly=AvaloniaInside.Shell"
             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
             x:Class="ShellExample.Views.PetsTabControlView"
             TabStripPlacement="Top"
             Classes="Center HeadTab"
-            shell:NavigationBar.Header="Pets">
+            NavigationBar.Header="Pets">
 	<TabControl.Resources>
 		<converters:BitmapAssetValueConverter x:Key="variableImage"/>
 	</TabControl.Resources>
@@ -22,7 +21,7 @@
 				       Margin="2"/>
 				<TextBlock Grid.Row="1"
 				           DataContext="{Binding Instance}"
-				           Text="{Binding Path=(shell:NavigationBar.Header)}"
+				           Text="{Binding Path=(NavigationBar.Header)}"
 				           FontSize="14"
 				           HorizontalAlignment="Center"></TextBlock>
 			</Grid>

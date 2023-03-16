@@ -1,6 +1,5 @@
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
-using AvaloniaInside.Shell;
 
 namespace ShellExample.Views;
 

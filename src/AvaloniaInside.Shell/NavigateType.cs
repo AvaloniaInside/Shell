@@ -2,8 +2,8 @@ namespace AvaloniaInside.Shell;
 
 public enum NavigateType
 {
-	ReplaceRoot,
 	Normal,
+	ReplaceRoot,
 	Modal,
 	Replace,
 	Top,

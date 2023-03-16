@@ -1,8 +1,7 @@
 <Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:shell="clr-namespace:AvaloniaInside.Shell">
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-	<Style Selector="shell|StackContentView">
+	<Style Selector="StackContentView">
 		<Setter Property="Template">
 			<ControlTemplate>
 				<TransitioningContentControl Name="PART_ContentPresenter"></TransitioningContentControl>
@@ -10,7 +9,7 @@
 		</Setter>
 	</Style>
 
-	<Style Selector="shell|ShellView">
+	<Style Selector="ShellView">
 		<Setter Property="NavigationTemplate">
 			<ControlTemplate>
 				<Panel Background="{TemplateBinding Background}">
@@ -28,26 +27,26 @@
 		</Setter>
 	</Style>
 
-	<Style Selector="shell|ShellView">
+	<Style Selector="ShellView">
 		<Setter Property="Template">
 			<ControlTemplate>
 				<Grid>
 					<SplitView Name="PART_SplitView" DisplayMode="Inline">
 						<SplitView.Pane>
-							<shell:SideMenu Name="PART_SideMenu"
+							<SideMenu Name="PART_SideMenu"
 							                    SelectedItem="{TemplateBinding SideMenuSelectedItem, Mode=TwoWay}"
 							                    Header="{TemplateBinding SideMenuHeader}"
 							                    Footer="{TemplateBinding SideMenuFooter}"
 							                    Contents="{TemplateBinding SideMenuContents}"
 							                    ContentsTemplate="{TemplateBinding SideMenuContentsTemplate}">
 
-							</shell:SideMenu>
+							</SideMenu>
 						</SplitView.Pane>
 
 						<Grid RowDefinitions="35,*">
-							<shell:NavigationBar Name="PART_NavigationBar"
+							<NavigationBar Name="PART_NavigationBar"
 							                      Template="{TemplateBinding NavigationTemplate}"/>
-							<shell:StackContentView VerticalAlignment="Stretch" Name="PART_ContentView" Grid.Row="1"></shell:StackContentView>
+							<StackContentView VerticalAlignment="Stretch" Name="PART_ContentView" Grid.Row="1"></StackContentView>
 						</Grid>
 					</SplitView>
 
@@ -70,10 +69,10 @@
 						</Rectangle.Fill>
 					</Rectangle>
 
-					<shell:StackContentView Name="PART_Modal"
+					<StackContentView Name="PART_Modal"
 					                        Grid.Row="0"
 					                        IsVisible="{Binding ElementName=PART_Modal, Path=HasContent}">
-						<shell:StackContentView.Template>
+						<StackContentView.Template>
 							<ControlTemplate>
 								<Panel VerticalAlignment="Center" HorizontalAlignment="Center">
 									<TransitioningContentControl Name="PART_ContentPresenter"
@@ -84,8 +83,8 @@
 									</TransitioningContentControl>
 								</Panel>
 							</ControlTemplate>
-						</shell:StackContentView.Template>
-					</shell:StackContentView>
+						</StackContentView.Template>
+					</StackContentView>
 				</Grid>
 			</ControlTemplate>
 		</Setter>
@@ -96,7 +95,7 @@
 		</Setter>
 	</Style>
 
-	<Style Selector="shell|SideMenu">
+	<Style Selector="SideMenu">
 		<Setter Property="Template">
 			<ControlTemplate>
 				<Grid RowDefinitions="Auto,*,Auto">
@@ -111,11 +110,8 @@
 								<ListBox.ItemTemplate>
 									<DataTemplate>
 										<StackPanel Orientation="Horizontal" Height="22" Spacing="8">
-											<Image Source="{Binding IconSource}"
-											       IsVisible="{Binding !!IconSource}"
-											       VerticalAlignment="Center"></Image>
-											<Image Source="{Binding IconPath}"
-											       IsVisible="{Binding !!IconPath}"
+											<Image Source="{Binding Icon}"
+											       IsVisible="{Binding !!Icon}"
 											       VerticalAlignment="Center"></Image>
 											<TextBlock Text="{Binding Title}"
 											           VerticalAlignment="Center"></TextBlock>

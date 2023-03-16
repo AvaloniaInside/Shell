@@ -3,9 +3,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:ShellExample.ViewModels"
-             xmlns:views="clr-namespace:AvaloniaInside.Shell;assembly=AvaloniaInside.Shell"
-             xmlns:views1="clr-namespace:ShellExample.Views"
              xmlns:widgets="clr-namespace:ShellExample.Views.Widgets"
+             xmlns:views="clr-namespace:ShellExample.Views"
+             xmlns:shopViews="clr-namespace:ShellExample.Views.ShopViews"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="ShellExample.Views.MainView"
              Foreground="White"
@@ -16,8 +16,8 @@
 		<viewModels:MainViewModel />
 	</Design.DataContext>
 
-	<views:ShellView Name="ShellViewMain"
-	                 HorizontalAlignment="Stretch"
+	<ShellView Name="ShellViewMain"
+	           HorizontalAlignment="Stretch"
 	                 VerticalAlignment="Stretch"
 	                 DefaultRoute="/main"
 
@@ -29,21 +29,49 @@
 
 	                 LargeScreenSideMenuMode="Inline"
 	                 LargeScreenSideMenuBehave="Keep">
-		<views:ShellView.SideMenuHeader>
+
+
+		<Host Path="main" Page="views:MainTabControl">
+			<Route Path="home" Page="views:HomePage">
+				<Route Path="confirmation" Page="views:SimpleDialog" Type="Modal"></Route>
+			</Route>
+			<Host Path="pets" Page="views:PetsTabControlView" Default="cat">
+				<Route Path="cat" Page="views:CatView"></Route>
+				<Route Path="dog" Page="views:DogView"></Route>
+			</Host>
+			<Route Path="product" Page="shopViews:ProductCatalogView">
+				<Route Path="filter" Page="shopViews:ProductCatalogFilterView" Type="Modal"></Route>
+			</Route>
+			<Route Path="setting" Page="views:SettingView">
+				<Route Path="profile" Page="views:ProfileView"></Route>
+			</Route>
+		</Host>
+
+		<Route Path="second" Page="views:SecondView"></Route>
+
+		<SideMenuItem Path="/main/home" Title="Home" Icon="/Assets/Icons/house-solid.png"></SideMenuItem>
+		<SideMenuItem Path="/main/pets/cat" Title="Cat" Icon="/Assets/Icons/cat-solid.png"></SideMenuItem>
+		<SideMenuItem Path="/main/pets/dog" Title="Dog" Icon="/Assets/Icons/dog-solid.png"></SideMenuItem>
+		<SideMenuItem Path="/main/product" Title="Products" Icon="/Assets/Icons/tag-solid.png"></SideMenuItem>
+		<SideMenuItem Path="/main/setting" Title="Settings" Icon="/Assets/Icons/user-solid.png"></SideMenuItem>
+		<SideMenuItem Path="/second" Title="Second Click" Icon="/Assets/Icons/check-solid.png"></SideMenuItem>
+
+
+		<ShellView.SideMenuHeader>
 			<widgets:UserProfileWidgetView></widgets:UserProfileWidgetView>
-		</views:ShellView.SideMenuHeader>
-		<views:ShellView.SideMenuFooter>
+		</ShellView.SideMenuHeader>
+		<ShellView.SideMenuFooter>
 			<Border Background="#11000000" Height="25">
 				<TextBlock Text="AvaloniaInside Shell 2023"
 				           FontWeight="Light"
 				           VerticalAlignment="Center"
 				           HorizontalAlignment="Center"></TextBlock>
 			</Border>
-		</views:ShellView.SideMenuFooter>
+		</ShellView.SideMenuFooter>
 
-		<views:ShellView.SideMenuContents>
+		<ShellView.SideMenuContents>
 			<widgets:WeatherView Margin="0, 20, 0, 0" />
 			<widgets:CalendarWidgetView Margin="0, 20, 0, 0" />
-		</views:ShellView.SideMenuContents>
-	</views:ShellView>
+		</ShellView.SideMenuContents>
+	</ShellView>
 </UserControl>

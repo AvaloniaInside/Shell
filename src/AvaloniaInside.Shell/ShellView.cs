@@ -1,9 +1,9 @@
 using System;
+using System.Collections.Specialized;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Input;
@@ -118,6 +118,7 @@ public partial class ShellView : TemplatedControl
 		}
 
 		SizeChanged += OnSizeChanged;
+		Items.CollectionChanged += ItemsOnCollectionChanged;
 	}
 
 	protected override void OnLoaded()
