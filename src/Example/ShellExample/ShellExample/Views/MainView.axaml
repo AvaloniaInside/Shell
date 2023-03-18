@@ -18,17 +18,17 @@
 
 	<ShellView Name="ShellViewMain"
 	           HorizontalAlignment="Stretch"
-	                 VerticalAlignment="Stretch"
-	                 DefaultRoute="/main"
+	           VerticalAlignment="Stretch"
+	           DefaultRoute="/main"
 
-	                 SmallScreenSideMenuMode="Overlay"
-	                 SmallScreenSideMenuBehave="Default"
+	           SmallScreenSideMenuMode="Overlay"
+	           SmallScreenSideMenuBehave="Default"
 
-	                 MediumScreenSideMenuMode="Inline"
-	                 MediumScreenSideMenuBehave="Default"
+	           MediumScreenSideMenuMode="Inline"
+	           MediumScreenSideMenuBehave="Default"
 
-	                 LargeScreenSideMenuMode="Inline"
-	                 LargeScreenSideMenuBehave="Keep">
+	           LargeScreenSideMenuMode="Inline"
+	           LargeScreenSideMenuBehave="Keep">
 
 
 		<Host Path="main" Page="views:MainTabControl">
@@ -65,7 +65,8 @@
 				<TextBlock Text="AvaloniaInside Shell 2023"
 				           FontWeight="Light"
 				           VerticalAlignment="Center"
-				           HorizontalAlignment="Center"></TextBlock>
+				           HorizontalAlignment="Center">
+				</TextBlock>
 			</Border>
 		</ShellView.SideMenuFooter>
 

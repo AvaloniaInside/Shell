@@ -6,7 +6,8 @@
             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
             x:Class="ShellExample.Views.MainTabControl"
             TabStripPlacement="Bottom"
-            Classes="Center MainTab">
+            Classes="Center MainTab"
+            ShellView.EnableSafeAreaForBottom="False">
 	<TabControl.Resources>
 		<converters:BitmapAssetValueConverter x:Key="variableImage"/>
 	</TabControl.Resources>
@@ -31,4 +32,10 @@
 			<ContentPresenter Content="{Binding Instance}"></ContentPresenter>
 		</DataTemplate>
 	</TabControl.ContentTemplate>
+	<TabControl.Styles>
+		<Style Selector="TabControl.MainTab /template/ Border > DockPanel > Border">
+			<Setter Property="Padding"
+			        Value="{Binding BottomSafePadding, RelativeSource={RelativeSource AncestorType={x:Type ShellView}}}"></Setter>
+		</Style>
+	</TabControl.Styles>
 </TabControl>

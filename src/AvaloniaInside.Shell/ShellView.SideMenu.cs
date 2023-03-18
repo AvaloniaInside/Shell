@@ -18,7 +18,6 @@ public partial class ShellView
 
 	private bool _skipChanges = false;
 
-
 	#region Properties
 
 	public double SideMenuSize => ScreenSize == ScreenSizeType.Small ? DesiredSize.Width - 35 : DefaultSideMenuSize;

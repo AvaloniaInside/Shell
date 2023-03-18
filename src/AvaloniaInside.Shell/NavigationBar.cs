@@ -72,6 +72,49 @@ public class NavigationBar : TemplatedControl
 		}
 	}
 
+	#region TopSafeSpace
+
+	public static readonly StyledProperty<double> TopSafeSpaceProperty =
+		AvaloniaProperty.Register<NavigationBar, double>(nameof(TopSafeSpace));
+
+	public double TopSafeSpace
+	{
+		get => GetValue(TopSafeSpaceProperty);
+		set => SetValue(TopSafeSpaceProperty, value);
+	}
+
+	#endregion
+
+	#region TopSafePadding
+
+	public static readonly StyledProperty<Thickness> TopSafePaddingProperty =
+		AvaloniaProperty.Register<NavigationBar, Thickness>(nameof(TopSafePadding));
+
+	public Thickness TopSafePadding
+	{
+		get => GetValue(TopSafePaddingProperty);
+		set => SetValue(TopSafePaddingProperty, value);
+	}
+
+	#endregion
+
+	#region ApplyTopSafePadding
+
+	public static readonly StyledProperty<bool> ApplyTopSafePaddingProperty =
+		AvaloniaProperty.Register<NavigationBar, bool>(nameof(ApplyTopSafePadding), defaultValue: true);
+
+	public bool ApplyTopSafePadding
+	{
+		get => GetValue(ApplyTopSafePaddingProperty);
+		set => SetValue(ApplyTopSafePaddingProperty, value);
+	}
+
+	#endregion
+
+	#region Attached properties
+
+	#region Item
+
 	public static readonly AttachedProperty<object> ItemProperty =
 		AvaloniaProperty.RegisterAttached<NavigationBar, AvaloniaObject, object>("Item");
 
@@ -80,6 +123,10 @@ public class NavigationBar : TemplatedControl
 
 	public static void SetItem(AvaloniaObject element, object parameter) =>
 		element.SetValue(ItemProperty, parameter);
+
+	#endregion
+
+	#region Header
 
 	public static readonly AttachedProperty<object> HeaderProperty =
 		AvaloniaProperty.RegisterAttached<NavigationBar, AvaloniaObject, object>("Header");
@@ -90,8 +137,26 @@ public class NavigationBar : TemplatedControl
 	public static void SetHeader(AvaloniaObject element, object parameter) =>
 		element.SetValue(HeaderProperty, parameter);
 
+	#endregion
+
+	#region Hide
+
+	public static readonly AttachedProperty<bool> VisibleProperty =
+		AvaloniaProperty.RegisterAttached<NavigationBar, AvaloniaObject, bool>("Visible", defaultValue: true);
+
+	public static bool GetVisible(AvaloniaObject element) =>
+		element.GetValue(VisibleProperty);
+
+	public static void SetVisible(AvaloniaObject element, bool parameter) =>
+		element.SetValue(VisibleProperty, parameter);
+
+	#endregion
+
+	#endregion
+
 	protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
 	{
+		base.OnApplyTemplate(e);
 		_header = e.NameScope.Find<ContentControl>("PART_Header") ?? throw new ArgumentNullException("PART_Header");
 		_actionButton = e.NameScope.Find<Button>("PART_ActionButton");
 		_items = e.NameScope.Find<ContentControl>("PART_Items");
@@ -117,6 +182,11 @@ public class NavigationBar : TemplatedControl
 		if (_items != null)
 			UpdateItems(view, _items);
 
+		if (view is StyledElement element)
+			this[!IsVisibleProperty] = element[!VisibleProperty];
+		else
+			IsVisible = true;
+
 		UpdateButtons();
 		return Task.CompletedTask;
 	}
@@ -136,7 +206,7 @@ public class NavigationBar : TemplatedControl
 
 		if (hasItem)
 		{
-			_actionButton.Classes.Remove("FlyoutButton");
+			_actionButton.Classes.Remove("SideMenuButton");
 			_actionButton.Classes.Add("BackButton");
 
 			_actionButton.IsVisible = true;
@@ -144,7 +214,7 @@ public class NavigationBar : TemplatedControl
 		else
 		{
 			_actionButton.Classes.Remove("BackButton");
-			_actionButton.Classes.Add("FlyoutButton");
+			_actionButton.Classes.Add("SideMenuButton");
 
 			_actionButton.IsVisible = HasSideMenuOption;
 		}

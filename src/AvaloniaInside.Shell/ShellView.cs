@@ -1,11 +1,9 @@
 using System;
-using System.Collections.Specialized;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
-using Avalonia.Controls.Templates;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Platform;
@@ -53,11 +51,13 @@ public partial class ShellView : TemplatedControl
 	#region ScreenSize
 
 	private ScreenSizeType _screenSize = ScreenSizeType.Large;
+
 	public static readonly DirectProperty<ShellView, ScreenSizeType> ScreenSizeProperty =
 		AvaloniaProperty.RegisterDirect<ShellView, ScreenSizeType>(
 			nameof(ScreenSize),
 			o => o.ScreenSize,
 			(o, v) => o.ScreenSize = v);
+
 	public ScreenSizeType ScreenSize
 	{
 		get => _screenSize;
@@ -83,16 +83,126 @@ public partial class ShellView : TemplatedControl
 
 	#endregion
 
-	#region NavigationTemplate
+	#region TopSafeSpace
 
-	public static readonly StyledProperty<IControlTemplate?> NavigationTemplateProperty =
-		AvaloniaProperty.Register<ShellView, IControlTemplate?>(nameof(NavigationTemplate));
+	public static readonly StyledProperty<double> TopSafeSpaceProperty =
+		AvaloniaProperty.Register<ShellView, double>(nameof(TopSafeSpace));
 
-	public IControlTemplate? NavigationTemplate
+	public double TopSafeSpace
 	{
-		get => GetValue(NavigationTemplateProperty);
-		set => SetValue(NavigationTemplateProperty, value);
+		get => GetValue(TopSafeSpaceProperty);
+		set => SetValue(TopSafeSpaceProperty, value);
 	}
+
+	#endregion
+
+	#region BottomSafeSpace
+
+	public static readonly StyledProperty<double> BottomSafeSpaceProperty =
+		AvaloniaProperty.Register<ShellView, double>(nameof(BottomSafeSpace));
+
+	public double BottomSafeSpace
+	{
+		get => GetValue(BottomSafeSpaceProperty);
+		set => SetValue(BottomSafeSpaceProperty, value);
+	}
+
+	#endregion
+
+	#region TopSafePadding
+
+	public static readonly StyledProperty<Thickness> TopSafePaddingProperty =
+		AvaloniaProperty.Register<ShellView, Thickness>(nameof(TopSafePadding));
+
+	public Thickness TopSafePadding
+	{
+		get => GetValue(TopSafePaddingProperty);
+		set => SetValue(TopSafePaddingProperty, value);
+	}
+
+	#endregion
+
+	#region BottomSafePadding
+
+	public static readonly StyledProperty<Thickness> BottomSafePaddingProperty =
+		AvaloniaProperty.Register<ShellView, Thickness>(nameof(BottomSafePadding));
+
+	public Thickness BottomSafePadding
+	{
+		get => GetValue(BottomSafePaddingProperty);
+		set => SetValue(BottomSafePaddingProperty, value);
+	}
+
+	#endregion
+
+	#region SafePadding
+
+	public static readonly StyledProperty<Thickness> SafePaddingProperty =
+		AvaloniaProperty.Register<ShellView, Thickness>(nameof(SafePadding));
+
+	public Thickness SafePadding
+	{
+		get => GetValue(SafePaddingProperty);
+		set => SetValue(SafePaddingProperty, value);
+	}
+
+	#endregion
+
+	#region ApplyTopSafePadding
+
+	public static readonly StyledProperty<bool> ApplyTopSafePaddingProperty =
+		AvaloniaProperty.Register<ShellView, bool>(nameof(ApplyTopSafePadding), defaultValue: true);
+
+	public bool ApplyTopSafePadding
+	{
+		get => GetValue(ApplyTopSafePaddingProperty);
+		set => SetValue(ApplyTopSafePaddingProperty, value);
+	}
+
+	#endregion
+
+	#region ApplyBottomSafePadding
+
+	public static readonly StyledProperty<bool> ApplyBottomSafePaddingProperty =
+		AvaloniaProperty.Register<ShellView, bool>(nameof(ApplyBottomSafePadding), defaultValue: true);
+
+	public bool ApplyBottomSafePadding
+	{
+		get => GetValue(ApplyBottomSafePaddingProperty);
+		set => SetValue(ApplyBottomSafePaddingProperty, value);
+	}
+
+	#endregion
+
+	#endregion
+
+	#region Attached properties
+
+	#region EnableSafeAreaForTop
+
+	public static readonly AttachedProperty<bool> EnableSafeAreaForTopProperty =
+		AvaloniaProperty.RegisterAttached<NavigationBar, AvaloniaObject, bool>("EnableSafeAreaForTop",
+			defaultValue: true);
+
+	public static bool GetEnableSafeAreaForTop(AvaloniaObject element) =>
+		element.GetValue(EnableSafeAreaForTopProperty);
+
+	public static void SetEnableSafeAreaForTop(AvaloniaObject element, bool parameter) =>
+		element.SetValue(EnableSafeAreaForTopProperty, parameter);
+
+	#endregion
+
+	#region EnableSafeAreaForBottom
+
+	public static readonly AttachedProperty<bool> EnableSafeAreaForBottomProperty =
+		AvaloniaProperty.RegisterAttached<NavigationBar, AvaloniaObject, bool>("EnableSafeAreaForBottom",
+			defaultValue: true);
+
+	public static bool GetEnableSafeAreaForBottom(AvaloniaObject element) =>
+		element.GetValue(EnableSafeAreaForBottomProperty);
+
+	public static void SetEnableSafeAreaForBottom(AvaloniaObject element, bool parameter) =>
+		element.SetValue(EnableSafeAreaForBottomProperty, parameter);
 
 	#endregion
 
@@ -135,6 +245,13 @@ public partial class ShellView : TemplatedControl
 		{
 			_ = Navigator.NavigateAsync(DefaultRoute, CancellationToken.None);
 		}
+
+		if (TopLevel.GetTopLevel(this) is { InsetsManager: { } insetsManager })
+		{
+			insetsManager.DisplayEdgeToEdge = true;
+		}
+
+		OnSafeEdgeSetup();
 	}
 
 	protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
@@ -169,6 +286,9 @@ public partial class ShellView : TemplatedControl
 			case nameof(SmallScreenSideMenuMode):
 				UpdateSideMenu();
 				break;
+			case nameof(SafePadding):
+				OnSafeEdgeSetup();
+				break;
 		}
 	}
 
@@ -180,6 +300,19 @@ public partial class ShellView : TemplatedControl
 			_navigationBar.BackCommand = ReactiveCommand.CreateFromTask(BackActionAsync);
 			_navigationBar.SideMenuCommand = ReactiveCommand.CreateFromTask(MenuActionAsync);
 		}
+
+		OnSafeEdgeSetup();
+	}
+
+	protected virtual void OnSafeEdgeSetup()
+	{
+		if (TopLevel.GetTopLevel(this) is { InsetsManager: { DisplayEdgeToEdge: true } insetsManager })
+			SafePadding = insetsManager.SafeAreaPadding;
+
+		TopSafeSpace = SafePadding.Top;
+		TopSafePadding = new Thickness(0, SafePadding.Top, 0, 0);
+		BottomSafeSpace = SafePadding.Bottom;
+		BottomSafePadding = new Thickness(0, 0, 0, SafePadding.Bottom);
 	}
 
 	#endregion
@@ -196,6 +329,7 @@ public partial class ShellView : TemplatedControl
 	{
 		await (_contentView?.PushViewAsync(view, cancellationToken) ?? Task.CompletedTask);
 		SelectSideMenuItem();
+		UpdateBindings();
 	}
 
 	public async Task RemoveViewAsync(object view, CancellationToken cancellationToken = default)
@@ -286,6 +420,21 @@ public partial class ShellView : TemplatedControl
 			SideMenuPresented = false;
 		else
 			UpdateSideMenu();
+	}
+
+	private void UpdateBindings()
+	{
+		var view = _contentView.CurrentView;
+		if (view is StyledElement element)
+		{
+			this[!ApplyTopSafePaddingProperty] = element[!EnableSafeAreaForTopProperty];
+			this[!ApplyBottomSafePaddingProperty] = element[!EnableSafeAreaForBottomProperty];
+		}
+		else
+		{
+			ApplyTopSafePadding = true;
+			ApplyBottomSafePadding = true;
+		}
 	}
 
 	#endregion

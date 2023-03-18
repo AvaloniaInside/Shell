@@ -9,20 +9,29 @@
 		</Setter>
 	</Style>
 
-	<Style Selector="ShellView">
-		<Setter Property="NavigationTemplate">
-			<ControlTemplate>
-				<Panel Background="{TemplateBinding Background}">
-					<Button Name="PART_ActionButton"
-					        HorizontalAlignment="Left"
-					        VerticalAlignment="Center"
-					        HorizontalContentAlignment="Center"
-					        VerticalContentAlignment="Center"
-					        Width="35">
-					</Button>
-					<TransitioningContentControl Name="PART_Header" HorizontalAlignment="Center" VerticalAlignment="Center" />
-					<TransitioningContentControl Name="PART_Items" HorizontalAlignment="Right" VerticalAlignment="Center" />
-				</Panel>
+	<Style Selector="NavigationBar">
+		<Setter Property="Template">
+			<ControlTemplate TargetType="NavigationBar">
+				<Border Background="{TemplateBinding Background}"
+				        Padding="{TemplateBinding Padding}"
+				        Margin="{TemplateBinding Margin}"
+				        MinHeight="35">
+					<Grid RowDefinitions="Auto,*">
+						<Border Grid.Row="0"
+						        Height="{TemplateBinding TopSafeSpace}"
+						        IsVisible="{TemplateBinding ApplyTopSafePadding}"></Border>
+						<Button Name="PART_ActionButton"
+						        HorizontalAlignment="Left"
+						        VerticalAlignment="Center"
+						        HorizontalContentAlignment="Center"
+						        VerticalContentAlignment="Center"
+						        Width="35"
+						        Grid.Row="1">
+						</Button>
+						<TransitioningContentControl Grid.Row="1" Name="PART_Header" HorizontalAlignment="Center" VerticalAlignment="Center" />
+						<TransitioningContentControl Grid.Row="1" Name="PART_Items" HorizontalAlignment="Right" VerticalAlignment="Center" />
+					</Grid>
+				</Border>
 			</ControlTemplate>
 		</Setter>
 	</Style>
@@ -30,28 +39,33 @@
 	<Style Selector="ShellView">
 		<Setter Property="Template">
 			<ControlTemplate>
-				<Grid>
+				<Panel>
 					<SplitView Name="PART_SplitView" DisplayMode="Inline">
 						<SplitView.Pane>
 							<SideMenu Name="PART_SideMenu"
-							                    SelectedItem="{TemplateBinding SideMenuSelectedItem, Mode=TwoWay}"
-							                    Header="{TemplateBinding SideMenuHeader}"
-							                    Footer="{TemplateBinding SideMenuFooter}"
-							                    Contents="{TemplateBinding SideMenuContents}"
-							                    ContentsTemplate="{TemplateBinding SideMenuContentsTemplate}">
-
+							          SelectedItem="{TemplateBinding SideMenuSelectedItem, Mode=TwoWay}"
+							          Header="{TemplateBinding SideMenuHeader}"
+							          Footer="{TemplateBinding SideMenuFooter}"
+							          Contents="{TemplateBinding SideMenuContents}"
+							          ContentsTemplate="{TemplateBinding SideMenuContentsTemplate}">
 							</SideMenu>
 						</SplitView.Pane>
 
-						<Grid RowDefinitions="35,*">
+						<Grid RowDefinitions="Auto,*,Auto">
 							<NavigationBar Name="PART_NavigationBar"
-							                      Template="{TemplateBinding NavigationTemplate}"/>
-							<StackContentView VerticalAlignment="Stretch" Name="PART_ContentView" Grid.Row="1"></StackContentView>
+							               TopSafePadding="{TemplateBinding TopSafePadding}"
+							               TopSafeSpace="{TemplateBinding TopSafeSpace}"
+							               ApplyTopSafePadding="{TemplateBinding ApplyTopSafePadding}"/>
+							<StackContentView Name="PART_ContentView" Grid.Row="1"></StackContentView>
+							<Border Grid.Row="2"
+							        IsVisible="{TemplateBinding ApplyBottomSafePadding}"
+							        Height="{TemplateBinding BottomSafeSpace}"
+							        RenderTransform="scaleY(1)"></Border>
 						</Grid>
 					</SplitView>
 
-					<Rectangle Grid.Row="0"
-					           IsVisible="{Binding ElementName=PART_Modal, Path=HasContent}" Opacity="0.5">
+					<Rectangle IsVisible="{Binding ElementName=PART_Modal, Path=HasContent}"
+					           Opacity="0.5">
 						<Rectangle.Fill>
 							<VisualBrush
 								TileMode="Tile"
@@ -70,7 +84,6 @@
 					</Rectangle>
 
 					<StackContentView Name="PART_Modal"
-					                        Grid.Row="0"
 					                        IsVisible="{Binding ElementName=PART_Modal, Path=HasContent}">
 						<StackContentView.Template>
 							<ControlTemplate>
@@ -85,7 +98,7 @@
 							</ControlTemplate>
 						</StackContentView.Template>
 					</StackContentView>
-				</Grid>
+				</Panel>
 			</ControlTemplate>
 		</Setter>
 		<Setter Property="SideMenuContentsTemplate">
@@ -121,9 +134,7 @@
 							</ListBox>
 							<ItemsControl Name="PART_Contents"
 							              Items="{TemplateBinding Contents}"
-							              ItemTemplate="{TemplateBinding ContentsTemplate}">
-
-							</ItemsControl>
+							              ItemTemplate="{TemplateBinding ContentsTemplate}" />
 						</StackPanel>
 					</ScrollViewer>
 					<ContentPresenter Grid.Row="2"
@@ -140,13 +151,18 @@
 			<ControlTemplate>
 				<Viewbox Stretch="UniformToFill">
 					<Border Background="#00000000">
-						<Polyline Points="7,2 2,7 7,12" StrokeThickness="3" Stroke="White" Width="16" Height="16" Margin="5" />
+						<Polyline Points="7,2 2,7 7,12"
+						          StrokeThickness="3"
+						          Stroke="White"
+						          Width="16"
+						          Height="16"
+						          Margin="5" />
 					</Border>
 				</Viewbox>
 			</ControlTemplate>
 		</Setter>
 	</Style>
-	<Style Selector="Button.FlyoutButton">
+	<Style Selector="Button.SideMenuButton">
 		<Setter Property="RenderTransform" Value="rotate(180deg)" />
 		<Setter Property="Template">
 			<ControlTemplate>
