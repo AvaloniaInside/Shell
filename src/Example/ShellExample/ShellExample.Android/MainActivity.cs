@@ -2,7 +2,6 @@
 using Android.Content.PM;
 using Android.OS;
 using AndroidX.AppCompat.App;
-using AndroidX.Core.View;
 using Avalonia.Android;
 
 namespace ShellExample.Android;
@@ -16,6 +15,5 @@ public class MainActivity : AvaloniaMainActivity
 	{
 		base.OnCreate(savedInstanceState);
 		AppCompatDelegate.DefaultNightMode = AppCompatDelegate.ModeNightYes;
-		WindowCompat.SetDecorFitsSystemWindows(Window, false);
 	}
 }
