@@ -58,12 +58,6 @@ public class Navigator : INavigator
 		return false;
 	}
 
-	public void RegisterPage(string route, Type page, NavigateType navigate) =>
-		Registrar.RegisterRoute(route, page, NavigationNodeType.Page, navigate, null);
-
-	public void RegisterHost(string route, Type page, string defaultPath, NavigateType navigate) =>
-		Registrar.RegisterRoute(route, page, NavigationNodeType.Host, navigate, defaultPath);
-
 	private async Task NotifyAsync(Uri newUri,
 		object? argument,
 		bool hasArgument,

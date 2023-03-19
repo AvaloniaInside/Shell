@@ -13,8 +13,6 @@ public interface INavigator
 	void RegisterShell(ShellView shellView);
 
 	bool HasItemInStack();
-	void RegisterPage(string route, Type page, NavigateType navigate);
-	void RegisterHost(string route, Type page, string defaultPath, NavigateType navigate);
 
 	Task NavigateAsync(string path, CancellationToken cancellationToken = default);
 	Task NavigateAsync(string path, object? argument, CancellationToken cancellationToken = default);

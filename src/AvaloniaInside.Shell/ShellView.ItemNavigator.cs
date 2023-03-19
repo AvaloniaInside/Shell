@@ -2,6 +2,7 @@ using System;
 using System.Collections.Specialized;
 using System.Linq;
 using Avalonia.Collections;
+using Avalonia.Controls;
 using Avalonia.Metadata;
 using AvaloniaInside.Shell.Data;
 
@@ -38,6 +39,10 @@ public partial class ShellView
 	{
 		var path = $"{basePath}/{route.Path}";
 		var host = route as Host;
+
+		if (host != null && !host.Page.IsSubclassOf(typeof(ItemsControl)))
+			throw new AggregateException("Host must inherits from ItemsControl");
+
 		Navigator.Registrar.RegisterRoute(
 			path,
 			route.Page,
