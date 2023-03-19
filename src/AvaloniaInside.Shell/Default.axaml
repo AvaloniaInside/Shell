@@ -59,8 +59,16 @@
 							<StackContentView Name="PART_ContentView" Grid.Row="1"></StackContentView>
 							<Border Grid.Row="2"
 							        IsVisible="{TemplateBinding ApplyBottomSafePadding}"
-							        Height="{TemplateBinding BottomSafeSpace}"
-							        RenderTransform="scaleY(1)"></Border>
+							        Height="{TemplateBinding BottomSafeSpace}">
+								<Border.Styles>
+									<Style Selector="Border[IsVisible=True]">
+										<Setter Property="RenderTransform" Value="scaleY(1)"></Setter>
+									</Style>
+									<Style Selector="Border[IsVisible=False]">
+										<Setter Property="RenderTransform" Value="scaleY(0)"></Setter>
+									</Style>
+								</Border.Styles>
+							</Border>
 						</Grid>
 					</SplitView>
 
@@ -120,6 +128,11 @@
 							<ListBox Name="PART_Items"
 							         Items="{TemplateBinding Items}"
 							         SelectedItem="{TemplateBinding SelectedItem, Mode=TwoWay}">
+								<ListBox.ItemsPanel>
+									<ItemsPanelTemplate>
+										<StackPanel></StackPanel>
+									</ItemsPanelTemplate>
+								</ListBox.ItemsPanel>
 								<ListBox.ItemTemplate>
 									<DataTemplate>
 										<StackPanel Orientation="Horizontal" Height="22" Spacing="8">
