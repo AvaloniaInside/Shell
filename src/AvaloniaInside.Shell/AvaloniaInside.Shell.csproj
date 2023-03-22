@@ -1,8 +1,19 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<LangVersion>latest</LangVersion>
+		<Version>0.1.0-alpha</Version>
+		<Title>Shell view for Avalonia</Title>
+		<Description>Shell reduces the complexity of mobile/desktop application development by providing the fundamental features that most applications require</Description>
+		<Copyright>AvaloniaInside</Copyright>
+		<PackageProjectUrl>https://github.com/AvaloniaInside/Shell</PackageProjectUrl>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<RepositoryUrl>https://github.com/AvaloniaInside/Shell</RepositoryUrl>
+		<PackageTags>avalonia,shell</PackageTags>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	</PropertyGroup>
 	<ItemGroup>
 		<AvaloniaResource Include="Assets\**" />
