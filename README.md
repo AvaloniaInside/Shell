@@ -99,8 +99,8 @@ It has a `Page` property that specifies the view associated with the host, as we
         
         <!-- Side Menu Header  -->
         <ShellView.SideMenuHeader>
-			<widgets:UserProfileWidgetView></widgets:UserProfileWidgetView>
-		</ShellView.SideMenuHeader>
+		<widgets:UserProfileWidgetView></widgets:UserProfileWidgetView>
+	</ShellView.SideMenuHeader>
 
         <!-- SideMenuItems go here -->
         <SideMenuItem Path="/main/home" Title="Home" Icon="/Assets/Icons/house-solid.png"></SideMenuItem>
@@ -112,21 +112,20 @@ It has a `Page` property that specifies the view associated with the host, as we
         
         <!-- SideMenu Content -->
         <ShellView.SideMenuContents>
-			<widgets:WeatherView Margin="0, 20, 0, 0" />
-			<widgets:CalendarWidgetView Margin="0, 20, 0, 0" />
-		</ShellView.SideMenuContents>
+		<widgets:WeatherView Margin="0, 20, 0, 0" />
+		<widgets:CalendarWidgetView Margin="0, 20, 0, 0" />
+	</ShellView.SideMenuContents>
         
         <!-- SideMenu Footer -->
-        <ShellView.SideMenuFooter>
-			<Border Background="#11000000" Height="25">
-				<TextBlock Text="AvaloniaInside Shell 2023"
-				           FontWeight="Light"
-				           VerticalAlignment="Center"
-				           HorizontalAlignment="Center">
-				</TextBlock>
-			</Border>
-		</ShellView.SideMenuFooter>
-
+	<ShellView.SideMenuFooter>
+		<Border Background="#11000000" Height="25">
+			<TextBlock Text="AvaloniaInside Shell 2023"
+				   FontWeight="Light"
+				   VerticalAlignment="Center"
+				   HorizontalAlignment="Center">
+			</TextBlock>
+		</Border>
+	</ShellView.SideMenuFooter>
     </ShellView>
 </UserControl>
 
