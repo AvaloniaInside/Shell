@@ -26,6 +26,21 @@ dotnet add package AvaloniaInside.Shell --version 0.1.1-alpha
 
 Alternatively, you can also install the package through Visual Studio's NuGet Package Manager.
 
+Add dependencies to the Locator or call `Program.cs`
+```csharp
+public static AppBuilder BuildAvaloniaApp()
+	=> AppBuilder.Configure<App>()
+		.UsePlatformDetect()
+		.LogToTrace()
+		.UseReactiveUI()
+		.UseShell();
+```
+
+Add default theme or add your custom theme to the App.axmal file
+```xml
+<StyleInclude Source="avares://AvaloniaInside.Shell/Default.axaml"></StyleInclude>
+```
+
 ## Using Shell
 
 #### Adding a ShellView
@@ -65,7 +80,7 @@ And to navigate to a specific page, we can use the Navigator property of the She
 await MyShellView.Navigator.NavigateAsync("/main/home/confirmation", cancellationToken);
 ```
 
-### NavigateBar 
+### NavigationBar 
 ![image](https://user-images.githubusercontent.com/956077/227613963-9b1a10b5-c2b0-4dcb-ba43-cd72f3a27333.png)
 
 Each page that is currently on top of the navigation stack has access to the navigation bar's title and navigation item. In hierarchical hosts, the currently selected item in the host will be the one that has access to the navigation bar. For example, in the case of /home/pets/cat, the page associated with the cat would be able to modify the navigation bar. This can be done by setting the NavigationBar.Header and NavigationBar.Item properties, as shown in the code snippet below:
