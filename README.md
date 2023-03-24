@@ -14,9 +14,7 @@ We welcome feedback, suggestions, and contributions from anyone who is intereste
 
 ## Screenshots
 
-![image](https://user-images.githubusercontent.com/956077/226295190-cbe81c7d-4054-4c07-9e5c-7ee7149c1468.png)
-
-![image](https://user-images.githubusercontent.com/956077/226295294-3d4f1f9e-941d-4248-b941-a0c35ca0533a.png)
+<img src="https://user-images.githubusercontent.com/956077/226295190-cbe81c7d-4054-4c07-9e5c-7ee7149c1468.png" width="350"/> <img src="https://user-images.githubusercontent.com/956077/226295294-3d4f1f9e-941d-4248-b941-a0c35ca0533a.png" width="350"/>  
 
 ## Installation
 
