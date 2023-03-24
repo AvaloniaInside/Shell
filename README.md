@@ -65,7 +65,9 @@ And to navigate to a specific page, we can use the Navigator property of the She
 await MyShellView.Navigator.NavigateAsync("/main/home/confirmation", cancellationToken);
 ```
 
-#### NavigateBar 
+### NavigateBar 
+![image](https://user-images.githubusercontent.com/956077/227613963-9b1a10b5-c2b0-4dcb-ba43-cd72f3a27333.png)
+
 Each page that is currently on top of the navigation stack has access to the navigation bar's title and navigation item. In hierarchical hosts, the currently selected item in the host will be the one that has access to the navigation bar. For example, in the case of /home/pets/cat, the page associated with the cat would be able to modify the navigation bar. This can be done by setting the NavigationBar.Header and NavigationBar.Item properties, as shown in the code snippet below:
 
 ```xml
