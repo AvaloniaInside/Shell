@@ -65,6 +65,21 @@ And to navigate to a specific page, we can use the Navigator property of the She
 await MyShellView.Navigator.NavigateAsync("/main/home/confirmation", cancellationToken);
 ```
 
+#### NavigateBar 
+Each page that is currently on top of the navigation stack has access to the navigation bar's title and navigation item. In hierarchical hosts, the currently selected item in the host will be the one that has access to the navigation bar. For example, in the case of /home/pets/cat, the page associated with the cat would be able to modify the navigation bar. This can be done by setting the NavigationBar.Header and NavigationBar.Item properties, as shown in the code snippet below:
+
+```xml
+<UserControl xmlns="https://github.com/avaloniaui"
+             x:Class="ShellExample.Views.ShopViews.ProductCatalogView"
+             NavigationBar.Header="Products">
+	<NavigationBar.Item>
+		<Button Content="Filter" Command="{Binding FilterCommand}"></Button>
+	</NavigationBar.Item>
+ ...
+</UserControl>
+```
+
+
 ## ShellView content's support
 
 `IItem` is the base interface for all items that can be added to the `ShellView`'s content. It has the following properties:
