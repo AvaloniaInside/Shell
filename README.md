@@ -14,7 +14,7 @@ We welcome feedback, suggestions, and contributions from anyone who is intereste
 
 ## Screenshots
 
-<img src="https://user-images.githubusercontent.com/956077/226295190-cbe81c7d-4054-4c07-9e5c-7ee7149c1468.png" width="350"/> <img src="https://user-images.githubusercontent.com/956077/226295294-3d4f1f9e-941d-4248-b941-a0c35ca0533a.png" width="350"/>  
+<img src="https://user-images.githubusercontent.com/956077/226295190-cbe81c7d-4054-4c07-9e5c-7ee7149c1468.png" width="300"/> <img src="https://user-images.githubusercontent.com/956077/226295294-3d4f1f9e-941d-4248-b941-a0c35ca0533a.png" width="300"/>  
 
 ## Installation
 
@@ -86,3 +86,50 @@ It has a `Page` property that specifies the view associated with the host, as we
 `Title`: The text label to display for the item in the side menu.
 `Path`: The path of navigation.
 
+## Example of Side Menu usage
+
+![side-menu](https://user-images.githubusercontent.com/956077/227538250-f5f86187-6c0f-46a0-803e-951b02abdccd.png)
+
+
+```xml
+<UserControl xmlns="https://github.com/avaloniaui" ...>
+
+    <ShellView Name="ShellViewMain" DefaultRoute="/main">
+        <Host Path="main" Page="views:MainTabControl"> ... </Host>
+        
+        <!-- Side Menu Header  -->
+        <ShellView.SideMenuHeader>
+			<widgets:UserProfileWidgetView></widgets:UserProfileWidgetView>
+		</ShellView.SideMenuHeader>
+
+        <!-- SideMenuItems go here -->
+        <SideMenuItem Path="/main/home" Title="Home" Icon="/Assets/Icons/house-solid.png"></SideMenuItem>
+        <SideMenuItem Path="/main/pets/cat" Title="Cat" Icon="/Assets/Icons/cat-solid.png"></SideMenuItem>
+        <SideMenuItem Path="/main/pets/dog" Title="Dog" Icon="/Assets/Icons/dog-solid.png"></SideMenuItem>
+        <SideMenuItem Path="/main/product" Title="Products" Icon="/Assets/Icons/tag-solid.png"></SideMenuItem>
+        <SideMenuItem Path="/main/setting" Title="Settings" Icon="/Assets/Icons/user-solid.png"></SideMenuItem>
+        <SideMenuItem Path="/second" Title="Second Click" Icon="/Assets/Icons/check-solid.png"></SideMenuItem>
+        
+        <!-- SideMenu Content -->
+        <ShellView.SideMenuContents>
+			<widgets:WeatherView Margin="0, 20, 0, 0" />
+			<widgets:CalendarWidgetView Margin="0, 20, 0, 0" />
+		</ShellView.SideMenuContents>
+        
+        <!-- SideMenu Footer -->
+        <ShellView.SideMenuFooter>
+			<Border Background="#11000000" Height="25">
+				<TextBlock Text="AvaloniaInside Shell 2023"
+				           FontWeight="Light"
+				           VerticalAlignment="Center"
+				           HorizontalAlignment="Center">
+				</TextBlock>
+			</Border>
+		</ShellView.SideMenuFooter>
+
+    </ShellView>
+</UserControl>
+
+```
+
+In the code above side menu will contains 6 navigate route and will link selected item to the current route.
