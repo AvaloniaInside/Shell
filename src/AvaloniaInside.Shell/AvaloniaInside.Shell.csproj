@@ -3,7 +3,7 @@
 		<TargetFramework>net6.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<LangVersion>latest</LangVersion>
-		<Version>0.1.0-alpha</Version>
+		<Version>0.1.2-alpha</Version>
 		<Title>Shell view for Avalonia</Title>
 		<Description>Shell reduces the complexity of mobile/desktop application development by providing the fundamental features that most applications require</Description>
 		<Copyright>AvaloniaInside</Copyright>
@@ -11,6 +11,7 @@
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<RepositoryUrl>https://github.com/AvaloniaInside/Shell</RepositoryUrl>
 		<PackageTags>avalonia,shell</PackageTags>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -28,5 +29,11 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <UpToDateCheckInput Remove="Assets\avalonia-logo.ico" />
+	</ItemGroup>
+	<ItemGroup>
+	  <None Include="..\..\README.md">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
 	</ItemGroup>
 </Project>
