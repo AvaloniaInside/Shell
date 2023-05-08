@@ -58,7 +58,9 @@ public class Navigator : INavigator
 		return false;
 	}
 
-	private async Task NotifyAsync(Uri newUri,
+	private async Task NotifyAsync(
+		Uri origin,
+        Uri newUri,
 		object? argument,
 		bool hasArgument,
 		NavigateType? navigateType,
@@ -73,7 +75,11 @@ public class Navigator : INavigator
 		_navigating = true;
 
 		var instances = new List<object>();
-		var finalNavigateType = navigateType ?? node.Navigate;
+        var finalNavigateType = 
+            !origin.AbsolutePath.Equals(newUri.AbsolutePath) && Registrar.TryGetNode(origin.AbsolutePath, out var originalNode)
+                ? navigateType ?? originalNode.Navigate
+                : navigateType ?? node.Navigate;
+
 		var stackChanges = _stack.Push(
 			node,
 			finalNavigateType,
@@ -109,7 +115,7 @@ public class Navigator : INavigator
 				cancellationToken);
 		if (CurrentUri.AbsolutePath != newUri.AbsolutePath)
 		{
-			await NotifyAsync(newUri, null, false, NavigateType.HostedItemChange, cancellationToken);
+			await NotifyAsync(newUri, newUri, null, false, NavigateType.HostedItemChange, cancellationToken);
 		}
 	}
 
@@ -142,9 +148,10 @@ public class Navigator : INavigator
 		await _semaphoreSlim.WaitAsync(cancellationToken);
 		try
 		{
-			var newUri = await _navigateStrategy.NavigateAsync(_stack.Current, CurrentUri, path, cancellationToken);
+            var originalUri = new Uri(CurrentUri, path);
+            var newUri = await _navigateStrategy.NavigateAsync(_stack.Current, CurrentUri, path, cancellationToken);
 			if (CurrentUri.AbsolutePath != newUri.AbsolutePath)
-				await NotifyAsync(newUri, argument, hasArgument, navigateType, cancellationToken);
+				await NotifyAsync(originalUri, newUri, argument, hasArgument, navigateType, cancellationToken);
 		}
 		finally
 		{
@@ -165,7 +172,7 @@ public class Navigator : INavigator
 		{
 			var newUri = await _navigateStrategy.BackAsync(_stack.Current, CurrentUri, cancellationToken);
 			if (newUri != null && CurrentUri.AbsolutePath != newUri.AbsolutePath)
-				await NotifyAsync(newUri, argument, hasArgument, NavigateType.Pop, cancellationToken);
+				await NotifyAsync(newUri, newUri, argument, hasArgument, NavigateType.Pop, cancellationToken);
 		}
 		finally
 		{
@@ -206,7 +213,8 @@ public class Navigator : INavigator
 		if (CurrentUri.AbsolutePath == newUri.AbsolutePath)
 			return new NavigateResult(false, null); // Or maybe we should throw exception.
 
-		await NotifyAsync(newUri, argument, hasArgument, navigateType, cancellationToken);
+        var originalUri = new Uri(CurrentUri, path);
+        await NotifyAsync(originalUri, newUri, argument, hasArgument, navigateType, cancellationToken);
 		var chain = _stack.Current;
 
 		if (!_waitingList.TryGetValue(chain, out var tcs))

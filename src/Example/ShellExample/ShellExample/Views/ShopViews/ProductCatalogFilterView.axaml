@@ -16,7 +16,7 @@
 		           Height="40">
 		</TextBlock>
 
-		<ListBox Grid.Row="1" Items="{Binding Categories}"
+		<ListBox Grid.Row="1" ItemsSource="{Binding Categories}"
 		         SelectedItem="{Binding SelectedCategory}"
 		         AutoScrollToSelectedItem="True"
 		         VerticalAlignment="Stretch"

@@ -20,9 +20,9 @@ public abstract class PresenterBase : IPresenter
 		{
 			if (current.Back is HostNavigationChain { Instance: ItemsControl itemsControl } parent)
 			{
-				if (itemsControl.Items is not IList collection)
+				if ((itemsControl.Items ?? itemsControl.ItemsSource) is not IList collection)
 				{
-					itemsControl.Items = collection = new AvaloniaList<object>();
+					itemsControl.ItemsSource = collection = new AvaloniaList<object>();
 				}
 
 				foreach (var hostedChildChain in parent.Nodes.Where(hostedChildChain =>

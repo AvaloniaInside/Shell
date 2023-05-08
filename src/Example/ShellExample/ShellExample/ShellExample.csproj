@@ -27,4 +27,10 @@
       <None Remove="Resources\Products.json" />
       <EmbeddedResource Include="Resources\Products.json" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Views\WelcomeView.axaml.cs">
+        <DependentUpon>WelcomeView.axaml</DependentUpon>
+      </Compile>
+    </ItemGroup>
 </Project>

@@ -255,7 +255,12 @@ public partial class ShellView
 				_splitView.IsPaneOpen = true;
 				_navigationBar.HasSideMenuOption = true;
 				break;
-		}
+            case SideMenuBehaveType.Removed:
+                _splitView.OpenPaneLength = 0;
+                _splitView.IsPaneOpen = false;
+                _navigationBar.HasSideMenuOption = false;
+                break;
+        }
 	}
 
 	private SideMenuBehaveType GetCurrentBehave()

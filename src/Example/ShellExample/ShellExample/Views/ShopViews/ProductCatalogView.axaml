@@ -15,7 +15,7 @@
 		        Background="#00000000"></Button>
 	</NavigationBar.Item>
 	<ScrollViewer>
-		<ItemsControl Items="{Binding Products}">
+		<ItemsControl ItemsSource="{Binding Products}">
 			<ItemsControl.ItemsPanel>
 				<ItemsPanelTemplate>
 					<VirtualizingStackPanel></VirtualizingStackPanel>

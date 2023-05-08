@@ -27,7 +27,8 @@ public partial class ShellView : TemplatedControl
 	{
 		Default,
 		Keep,
-		Closed
+		Closed,
+		Removed
 	}
 
 	#endregion

@@ -19,7 +19,7 @@
 	<ShellView Name="ShellViewMain"
 	           HorizontalAlignment="Stretch"
 	           VerticalAlignment="Stretch"
-	           DefaultRoute="/main"
+	           DefaultRoute="/welcome"
 
 	           SmallScreenSideMenuMode="Overlay"
 	           SmallScreenSideMenuBehave="Default"
@@ -30,8 +30,9 @@
 	           LargeScreenSideMenuMode="Inline"
 	           LargeScreenSideMenuBehave="Keep">
 
+		<Route Path="welcome" Page="views:WelcomeView"></Route>
 
-		<Host Path="main" Page="views:MainTabControl">
+        <Host Path="main" Page="views:MainTabControl" Type="ReplaceRoot">
 			<Route Path="home" Page="views:HomePage">
 				<Route Path="confirmation" Page="views:SimpleDialog" Type="Modal"></Route>
 			</Route>

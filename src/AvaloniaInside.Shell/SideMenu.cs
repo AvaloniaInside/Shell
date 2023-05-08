@@ -141,7 +141,7 @@ public class SideMenu : TemplatedControl
 
 	private void SetupUi()
 	{
-		_listBox!.Items ??= new AvaloniaList<object>();
+		_listBox!.ItemsSource ??= new AvaloniaList<object>();
 		_listBox!.SelectionChanged += OnSelectionChanged;
 	}
 
