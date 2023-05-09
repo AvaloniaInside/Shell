@@ -10,103 +10,106 @@ namespace AvaloniaInside.Shell;
 
 public class StackContentView : TemplatedControl
 {
-	private readonly SemaphoreSlim _semaphoreSlim = new(1, 1);
-	private readonly List<object> _controls = new();
-	private IContentControl? _contentPresenter;
-	private object? _pendingView;
+    private readonly SemaphoreSlim _semaphoreSlim = new(1, 1);
+    private readonly List<object> _controls = new();
+    private IContentControl? _contentPresenter;
+    private object? _pendingView;
+    private NavigateType? _pendingNavigateType;
 
-	public static readonly StyledProperty<bool> HasContentProperty =
-		AvaloniaProperty.Register<Border, bool>(nameof(HasContent));
+    public static readonly StyledProperty<bool> HasContentProperty =
+        AvaloniaProperty.Register<Border, bool>(nameof(HasContent));
 
-	public bool HasContent
-	{
-		get => GetValue(HasContentProperty);
-		private set => SetValue(HasContentProperty, value);
-	}
+    public bool HasContent
+    {
+        get => GetValue(HasContentProperty);
+        private set => SetValue(HasContentProperty, value);
+    }
 
-	protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
-	{
-		base.OnApplyTemplate(e);
-		_contentPresenter = e.NameScope.Find<IContentControl>("PART_ContentPresenter");
-		_contentPresenter!.Content = _pendingView;
-	}
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+    {
+        base.OnApplyTemplate(e);
+        _contentPresenter = e.NameScope.Find<IContentControl>("PART_ContentPresenter");
+        if (_pendingView == null || _pendingNavigateType == null) return;
+        
+        UpdateCurrentView(_pendingView, _pendingNavigateType ?? NavigateType.Normal);
 
-	public object? CurrentView => _controls.LastOrDefault();
+        _pendingView = null;
+        _pendingNavigateType = null;
+    }
 
-	public async Task PushViewAsync(object view, CancellationToken cancellationToken = default)
-	{
-		await _semaphoreSlim.WaitAsync(cancellationToken);
-		try
-		{
-			var currentView = _contentPresenter?.Content ?? _pendingView;
-			if (currentView == view) return;
+    public object? CurrentView => _controls.LastOrDefault();
 
-			if (_controls.Contains(view))
-				_controls.Remove(view);
+    public async Task PushViewAsync(object view,
+        NavigateType navigateType,
+        CancellationToken cancellationToken = default)
+    {
+        await _semaphoreSlim.WaitAsync(cancellationToken);
+        try
+        {
+            var currentView = _contentPresenter?.Content ?? _pendingView;
+            if (currentView == view) return;
 
-			_controls.Add(view);
+            if (_controls.Contains(view))
+                _controls.Remove(view);
 
-			if (_contentPresenter != null)
-				_contentPresenter!.Content = view;
-			else
-				_pendingView = view;
+            _controls.Add(view);
 
-			await OnContentUpdateAsync(CurrentView, cancellationToken);
-		}
-		finally
-		{
-			_semaphoreSlim.Release();
-		}
-	}
+            if (_contentPresenter != null)
+            {
+                UpdateCurrentView(view, navigateType);
+            }
+            else
+            {
+                _pendingView = view;
+                _pendingNavigateType = navigateType;
+            }
 
-	public async Task<bool> RemoveViewAsync(object view, CancellationToken cancellationToken)
-	{
-		await _semaphoreSlim.WaitAsync(cancellationToken);
-		try
-		{
-			if (!_controls.Contains(view)) return false;
-			var currentView = CurrentView;
+            await OnContentUpdateAsync(CurrentView, cancellationToken);
+        }
+        finally
+        {
+            _semaphoreSlim.Release();
+        }
+    }
 
-			_controls.Remove(view);
-			if (view == currentView && _contentPresenter != null)
-				_contentPresenter.Content = CurrentView;
+    protected virtual void UpdateCurrentView(object? view, NavigateType navigateType)
+    {
+        //TODO: Apply specific animation type
+        _contentPresenter!.Content = view;
+    }
 
-			await OnContentUpdateAsync(CurrentView, cancellationToken);
-			return true;
-		}
-		finally
-		{
-			_semaphoreSlim.Release();
-		}
-	}
+    public async Task<bool> RemoveViewAsync(object view, NavigateType navigateType, CancellationToken cancellationToken)
+    {
+        await _semaphoreSlim.WaitAsync(cancellationToken);
+        try
+        {
+            if (!_controls.Contains(view)) return false;
+            var currentView = CurrentView;
 
-	// public async Task<bool> BackAsync(CancellationToken cancellationToken)
-	// {
-	// 	await _semaphoreSlim.WaitAsync(cancellationToken);
-	// 	try
-	// 	{
-	// 		if (_controls.Count <= 1) return false;
-	// 		_controls.RemoveAt(_controls.Count - 1);
-	// 		_contentPresenter!.Content = _controls.Last();
-	//
-	// 		await OnContentUpdateAsync(CurrentView, cancellationToken);
-	// 		return true;
-	// 	}
-	// 	finally
-	// 	{
-	// 		_semaphoreSlim.Release();
-	// 	}
-	// }
+            _controls.Remove(view);
+            if (view == currentView && _contentPresenter != null)
+            {
+                UpdateCurrentView(CurrentView, navigateType);
+            }
 
-	protected virtual Task OnContentUpdateAsync(object? view, CancellationToken cancellationToken)
-	{
-		HasContent = _controls.Count > 0;
-		return Task.CompletedTask;
-	}
+            await OnContentUpdateAsync(CurrentView, cancellationToken);
+            return true;
+        }
+        finally
+        {
+            _semaphoreSlim.Release();
+        }
+    }
 
-	public Task ClearStackAsync(CancellationToken cancellationToken)
-	{
-		_controls.RemoveRange(0, _controls.Count - 1);
-		return Task.CompletedTask;
-	}
+    protected virtual Task OnContentUpdateAsync(object? view, CancellationToken cancellationToken)
+    {
+        HasContent = _controls.Count > 0;
+        return Task.CompletedTask;
+    }
+
+    public Task ClearStackAsync(CancellationToken cancellationToken)
+    {
+        _controls.RemoveRange(0, _controls.Count - 1);
+        return Task.CompletedTask;
+    }
 }

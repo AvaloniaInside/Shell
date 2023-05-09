@@ -33,8 +33,9 @@ public class NavigationBar : TemplatedControl
 	private ContentControl? _items;
 
 	private object? _pendingHeader;
+    private NavigateType? _pendingNavType;
 
-	public ShellView? ShellView { get; internal set; }
+    public ShellView? ShellView { get; internal set; }
 
 	private ICommand _backCommand;
 
@@ -144,7 +145,7 @@ public class NavigationBar : TemplatedControl
 	public static readonly AttachedProperty<bool> VisibleProperty =
 		AvaloniaProperty.RegisterAttached<NavigationBar, AvaloniaObject, bool>("Visible", defaultValue: true);
 
-	public static bool GetVisible(AvaloniaObject element) =>
+    public static bool GetVisible(AvaloniaObject element) =>
 		element.GetValue(VisibleProperty);
 
 	public static void SetVisible(AvaloniaObject element, bool parameter) =>
@@ -165,16 +166,19 @@ public class NavigationBar : TemplatedControl
 			_actionButton.Command = _backCommand;
 
 		if (_pendingHeader != null)
-			_ = UpdateAsync(_pendingHeader, CancellationToken.None);
+			_ = UpdateAsync(_pendingHeader, _pendingNavType ?? NavigateType.Normal, CancellationToken.None);
 	}
 
-	public Task UpdateAsync(object view, CancellationToken cancellationToken)
+	public Task UpdateAsync(object view, NavigateType navigateType, CancellationToken cancellationToken)
 	{
 		if (_header == null && _items == null)
 		{
 			_pendingHeader = view;
+            _pendingNavType = navigateType;
 			return Task.CompletedTask;
 		}
+
+		//TODO: Animation can apply for specific navigate type
 
 		if (_header != null)
 			UpdateHeader(view, _header);

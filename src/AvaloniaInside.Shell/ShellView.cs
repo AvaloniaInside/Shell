@@ -326,17 +326,21 @@ public partial class ShellView : TemplatedControl
 
 	#region View Stack Manager
 
-	public async Task PushViewAsync(object view, CancellationToken cancellationToken = default)
+	public async Task PushViewAsync(object view,
+        NavigateType navigateType,
+        CancellationToken cancellationToken = default)
 	{
-		await (_contentView?.PushViewAsync(view, cancellationToken) ?? Task.CompletedTask);
+		await (_contentView?.PushViewAsync(view, navigateType, cancellationToken) ?? Task.CompletedTask);
 		SelectSideMenuItem();
 		UpdateBindings();
 	}
 
-	public async Task RemoveViewAsync(object view, CancellationToken cancellationToken = default)
+	public async Task RemoveViewAsync(object view,
+        NavigateType navigateType,
+        CancellationToken cancellationToken = default)
 	{
-		await (_contentView?.RemoveViewAsync(view, cancellationToken) ?? Task.CompletedTask);
-		await (_modalView?.RemoveViewAsync(view, cancellationToken) ?? Task.CompletedTask);
+		await (_contentView?.RemoveViewAsync(view, navigateType, cancellationToken) ?? Task.CompletedTask);
+		await (_modalView?.RemoveViewAsync(view, navigateType, cancellationToken) ?? Task.CompletedTask);
 	}
 
 	public async Task ClearStackAsync(CancellationToken cancellationToken)
@@ -345,8 +349,8 @@ public partial class ShellView : TemplatedControl
 		await (_modalView?.ClearStackAsync(cancellationToken) ?? Task.CompletedTask);
 	}
 
-	public Task ModalAsync(object instance, CancellationToken cancellationToken) =>
-		_modalView?.PushViewAsync(instance, cancellationToken) ?? Task.CompletedTask;
+	public Task ModalAsync(object instance, NavigateType navigateType, CancellationToken cancellationToken) =>
+		_modalView?.PushViewAsync(instance, navigateType, cancellationToken) ?? Task.CompletedTask;
 
 	private bool Back()
 	{

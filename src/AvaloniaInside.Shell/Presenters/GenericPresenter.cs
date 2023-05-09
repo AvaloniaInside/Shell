@@ -6,14 +6,16 @@ namespace AvaloniaInside.Shell.Presenters;
 public class GenericPresenter : PresenterBase
 {
 	public override async Task PresentAsync(ShellView shellView, NavigationChain chain,
-		CancellationToken cancellationToken)
+        NavigateType navigateType,
+        CancellationToken cancellationToken)
 	{
 		var hostControl = GetHostControl(chain);
 
 		await (shellView.PushViewAsync(
 			hostControl ?? chain.Instance,
-			cancellationToken) ?? Task.CompletedTask);
+            navigateType,
+            cancellationToken) ?? Task.CompletedTask);
 
-		await (shellView.NavigationBar?.UpdateAsync(chain.Instance, cancellationToken) ?? Task.CompletedTask);
+		await (shellView.NavigationBar?.UpdateAsync(chain.Instance, navigateType, cancellationToken) ?? Task.CompletedTask);
 	}
 }

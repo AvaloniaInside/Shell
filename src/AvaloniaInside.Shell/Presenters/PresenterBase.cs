@@ -47,5 +47,6 @@ public abstract class PresenterBase : IPresenter
 		return current?.Instance ?? chain.Instance;
 	}
 
-	public abstract Task PresentAsync(ShellView shellView, NavigationChain chain, CancellationToken cancellationToken);
+	public abstract Task PresentAsync(ShellView shellView, NavigationChain chain, NavigateType navigateType,
+        CancellationToken cancellationToken);
 }
