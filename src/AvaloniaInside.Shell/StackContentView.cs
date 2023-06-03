@@ -12,7 +12,7 @@ public class StackContentView : TemplatedControl
 {
     private readonly SemaphoreSlim _semaphoreSlim = new(1, 1);
     private readonly List<object> _controls = new();
-    private IContentControl? _contentPresenter;
+    private ContentControl? _contentPresenter;
     private object? _pendingView;
     private NavigateType? _pendingNavigateType;
 
@@ -28,7 +28,7 @@ public class StackContentView : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        _contentPresenter = e.NameScope.Find<IContentControl>("PART_ContentPresenter");
+        _contentPresenter = e.NameScope.Find<ContentControl>("PART_ContentPresenter");
         if (_pendingView == null || _pendingNavigateType == null) return;
         
         UpdateCurrentView(_pendingView, _pendingNavigateType ?? NavigateType.Normal);

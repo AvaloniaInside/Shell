@@ -6,7 +6,6 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.Platform;
 using ReactiveUI;
 using Splat;
 
@@ -217,11 +216,7 @@ public partial class ShellView : TemplatedControl
 			.GetService<INavigator>() ?? throw new ArgumentException("Cannot find INavigationService");
 		Navigator.RegisterShell(this);
 
-		_isMobile = AvaloniaLocator.Current
-			.GetService<IRuntimePlatform>()?
-			.GetRuntimeInfo()
-			.IsMobile ?? false;
-
+        var isMobile = OperatingSystem.IsAndroid() || OperatingSystem.IsIOS();
 		if (!_isMobile)
 		{
 			Classes.Add("Mobile");

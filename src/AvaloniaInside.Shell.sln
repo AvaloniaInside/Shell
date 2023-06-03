@@ -1,35 +1,33 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30114.105
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvaloniaInside.Shell", "AvaloniaInside.Shell\AvaloniaInside.Shell.csproj", "{35BD513E-5EE1-4B85-BEE3-FEC0C90B8571}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AvaloniaInside.Shell", "AvaloniaInside.Shell\AvaloniaInside.Shell.csproj", "{35BD513E-5EE1-4B85-BEE3-FEC0C90B8571}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Example", "Example", "{A495BEFD-2260-489E-A8F3-003EF9603D43}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShellExample.Android", "Example\ShellExample\ShellExample.Android\ShellExample.Android.csproj", "{D77D24E0-7FF2-4DF9-BDAB-7703319D914E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShellExample.Android", "Example\ShellExample\ShellExample.Android\ShellExample.Android.csproj", "{D77D24E0-7FF2-4DF9-BDAB-7703319D914E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShellExample.Desktop", "Example\ShellExample\ShellExample.Desktop\ShellExample.Desktop.csproj", "{D6718B53-49BD-4BF0-BE48-AAC29EA27DFC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShellExample.Desktop", "Example\ShellExample\ShellExample.Desktop\ShellExample.Desktop.csproj", "{D6718B53-49BD-4BF0-BE48-AAC29EA27DFC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShellExample.Web", "Example\ShellExample\ShellExample.Web\ShellExample.Web.csproj", "{721FC232-3B13-492D-A96B-C6784FEDB10C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShellExample.Web", "Example\ShellExample\ShellExample.Web\ShellExample.Web.csproj", "{721FC232-3B13-492D-A96B-C6784FEDB10C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShellExample", "Example\ShellExample\ShellExample\ShellExample.csproj", "{E2E23F24-CC66-4940-91EA-68C28DC04602}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShellExample", "Example\ShellExample\ShellExample\ShellExample.csproj", "{E2E23F24-CC66-4940-91EA-68C28DC04602}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShellExample.iOS", "Example\ShellExample\ShellExample.iOS\ShellExample.iOS.csproj", "{75883514-564B-4EBA-83D8-68FD9FDB0CB2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShellExample.iOS", "Example\ShellExample\ShellExample.iOS\ShellExample.iOS.csproj", "{75883514-564B-4EBA-83D8-68FD9FDB0CB2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Files", "Files", "{50F7051E-1272-4015-A5C8-B6B1EF499EE3}"
 	ProjectSection(SolutionItems) = preProject
 		Directory.Build.props = Directory.Build.props
 		global.json = global.json
+		..\README.md = ..\README.md
 	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{35BD513E-5EE1-4B85-BEE3-FEC0C90B8571}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -57,11 +55,17 @@ Global
 		{75883514-564B-4EBA-83D8-68FD9FDB0CB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{75883514-564B-4EBA-83D8-68FD9FDB0CB2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{D77D24E0-7FF2-4DF9-BDAB-7703319D914E} = {A495BEFD-2260-489E-A8F3-003EF9603D43}
 		{D6718B53-49BD-4BF0-BE48-AAC29EA27DFC} = {A495BEFD-2260-489E-A8F3-003EF9603D43}
 		{721FC232-3B13-492D-A96B-C6784FEDB10C} = {A495BEFD-2260-489E-A8F3-003EF9603D43}
 		{E2E23F24-CC66-4940-91EA-68C28DC04602} = {A495BEFD-2260-489E-A8F3-003EF9603D43}
 		{75883514-564B-4EBA-83D8-68FD9FDB0CB2} = {A495BEFD-2260-489E-A8F3-003EF9603D43}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {10F59C6F-508A-4C41-820B-AAC163C9FDB2}
 	EndGlobalSection
 EndGlobal

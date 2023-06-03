@@ -2,6 +2,7 @@ using System;
 using Avalonia;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
+using Splat;
 
 namespace ShellExample.Helpers;
 
@@ -22,10 +23,11 @@ public static class ImageHelper
 			uri = new Uri($"avares://{assemblyName}/{rawUri.TrimStart('/')}");
 		}
 
-		var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
-		var asset = assets.Open(uri);
+		
+        //var assets = Locator.Current.GetService<IAssetLoader>();
+		using var asset = AssetLoader.Open(uri);
 
-		return new Bitmap(asset);
+        return new Bitmap(asset);
 	}
 
 }
