@@ -19,6 +19,7 @@
 	<ShellView Name="ShellViewMain"
 	           HorizontalAlignment="Stretch"
 	           VerticalAlignment="Stretch"
+			   DefaultSideMenuSize="80"
 	           DefaultRoute="/welcome"
 
 	           SmallScreenSideMenuMode="Overlay"

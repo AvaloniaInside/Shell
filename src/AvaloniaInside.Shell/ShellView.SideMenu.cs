@@ -12,8 +12,6 @@ namespace AvaloniaInside.Shell;
 
 public partial class ShellView
 {
-	public const double DefaultSideMenuSize = 250;
-
 	private readonly AvaloniaList<SideMenuItem> _sideMenuItems = new();
 
 	private bool _skipChanges = false;
@@ -21,6 +19,15 @@ public partial class ShellView
 	#region Properties
 
 	public double SideMenuSize => ScreenSize == ScreenSizeType.Small ? DesiredSize.Width - 35 : DefaultSideMenuSize;
+
+
+	public static readonly StyledProperty<double> DefaultSideMenuSizeProperty = AvaloniaProperty.Register<ShellView,double>(nameof(DefaultSideMenuSize), 250);
+
+	public double DefaultSideMenuSize
+    {
+		get { return GetValue(DefaultSideMenuSizeProperty);}
+		set { SetValue(DefaultSideMenuSizeProperty, value); }
+	}
 
 	#region SideMenuPresented
 
