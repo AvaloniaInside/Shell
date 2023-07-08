@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 
 namespace ShellExample.Views;
 
@@ -11,9 +12,10 @@ public partial class MainView : UserControl
 		Current = this;
 		InitializeComponent();
 	}
-	protected override void OnLoaded()
+
+	protected override void OnLoaded(RoutedEventArgs e)
 	{
 		Current = this;
-		base.OnLoaded();
+		base.OnLoaded(e);
 	}
 }

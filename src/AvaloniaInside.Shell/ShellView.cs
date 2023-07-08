@@ -227,9 +227,9 @@ public partial class ShellView : TemplatedControl
 		Items.CollectionChanged += ItemsOnCollectionChanged;
 	}
 
-	protected override void OnLoaded()
+    protected override void OnLoaded(RoutedEventArgs e)
 	{
-		base.OnLoaded();
+		base.OnLoaded(e);
 
 		if (TopLevel.GetTopLevel(this) is { } topLevel)
 		{

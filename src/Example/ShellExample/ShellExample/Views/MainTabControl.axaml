@@ -37,5 +37,8 @@
 			<Setter Property="Padding"
 			        Value="{Binding BottomSafePadding, RelativeSource={RelativeSource AncestorType={x:Type ShellView}}}"></Setter>
 		</Style>
+		<Style Selector="TabControl.MainTab /template/ Border > DockPanel > ItemsPresenter">
+			<Setter Property="HorizontalAlignment" Value="Center" />
+		</Style>
 	</TabControl.Styles>
 </TabControl>
