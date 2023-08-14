@@ -30,7 +30,7 @@ public class StackContentView : TemplatedControl
         base.OnApplyTemplate(e);
         _contentPresenter = e.NameScope.Find<ContentControl>("PART_ContentPresenter");
         if (_pendingView == null || _pendingNavigateType == null) return;
-        
+
         UpdateCurrentView(_pendingView, _pendingNavigateType ?? NavigateType.Normal);
 
         _pendingView = null;
@@ -75,7 +75,10 @@ public class StackContentView : TemplatedControl
     protected virtual void UpdateCurrentView(object? view, NavigateType navigateType)
     {
         //TODO: Apply specific animation type
-        _contentPresenter!.Content = view;
+        if (_contentPresenter is IPageSwitcher pageSwitcher)
+            pageSwitcher.SwitchPage(new PageSwitcherInfo(view, null, null, null, true, navigateType));
+        else
+            _contentPresenter!.Content = view;
     }
 
     public async Task<bool> RemoveViewAsync(object view, NavigateType navigateType, CancellationToken cancellationToken)

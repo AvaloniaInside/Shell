@@ -5,6 +5,7 @@
             xmlns:converters="clr-namespace:ShellExample.Converters"
             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
             x:Class="ShellExample.Views.MainTabControl"
+			Background="#061030"
             TabStripPlacement="Bottom"
             Classes="Center MainTab"
             ShellView.EnableSafeAreaForBottom="False">

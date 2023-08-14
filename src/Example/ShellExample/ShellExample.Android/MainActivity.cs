@@ -1,19 +1,22 @@
 ﻿using Android.App;
 using Android.Content.PM;
-using Android.OS;
-using AndroidX.AppCompat.App;
+using Avalonia;
 using Avalonia.Android;
+using Avalonia.ReactiveUI;
+using AvaloniaInside.Shell;
 
 namespace ShellExample.Android;
 
 [Activity(Label = "ShellExample.Android", Theme = "@style/MyTheme.Main", Icon = "@drawable/icon",
 
 	LaunchMode = LaunchMode.SingleTop, ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.ScreenSize)]
-public class MainActivity : AvaloniaMainActivity
+public class MainActivity : AvaloniaMainActivity<App>
 {
-	protected override void OnCreate(Bundle savedInstanceState)
-	{
-		base.OnCreate(savedInstanceState);
-		AppCompatDelegate.DefaultNightMode = AppCompatDelegate.ModeNightYes;
-	}
+    protected override AppBuilder CustomizeAppBuilder(AppBuilder builder)
+    {
+        return base.CustomizeAppBuilder(builder)
+            //.WithInterFont()
+            .UseReactiveUI()
+            .UseShell();
+    }
 }

@@ -10,20 +10,8 @@ using AvaloniaInside.Shell;
 namespace ShellExample.Android;
 
 [Activity(Theme = "@style/MyTheme.Splash", MainLauncher = true, NoHistory = true)]
-public class SplashActivity : AvaloniaSplashActivity<App>
+public class SplashActivity : Activity
 {
-	protected override AppBuilder CustomizeAppBuilder(AppBuilder builder)
-	{
-		return base.CustomizeAppBuilder(builder)
-			.UseReactiveUI()
-			.UseShell();
-	}
-
-	protected override void OnCreate(Bundle? savedInstanceState)
-	{
-		base.OnCreate(savedInstanceState);
-	}
-
 	protected override void OnResume()
 	{
 		base.OnResume();

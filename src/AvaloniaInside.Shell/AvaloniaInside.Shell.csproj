@@ -20,6 +20,9 @@
 		<AvaloniaResource Include="Assets\**" />
 	</ItemGroup>
 	<ItemGroup>
+	  <None Remove="Theme\PlatformTransitioningContentControl.xaml" />
+	</ItemGroup>
+	<ItemGroup>
 		<PackageReference Include="Avalonia" Version="$(AvaloniaVersion)" />
 		<PackageReference Include="Avalonia.Themes.Fluent" Version="$(AvaloniaVersion)" />
 		<PackageReference Include="Avalonia.ReactiveUI" Version="$(AvaloniaVersion)" />
@@ -29,6 +32,9 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <UpToDateCheckInput Remove="Assets\avalonia-logo.ico" />
+	</ItemGroup>
+	<ItemGroup>
+	  <AvaloniaXaml Include="Theme\PlatformTransitioningContentControl.xaml" />
 	</ItemGroup>
 	<ItemGroup>
 	  <None Include="..\..\README.md">

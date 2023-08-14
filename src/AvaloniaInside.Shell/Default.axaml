@@ -1,10 +1,21 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<Styles.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<MergeResourceInclude Source="avares://AvaloniaInside.Shell/Theme/PlatformTransitioningContentControl.xaml" />
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</Styles.Resources>
 
 	<Style Selector="StackContentView">
 		<Setter Property="Template">
 			<ControlTemplate>
-				<TransitioningContentControl Name="PART_ContentPresenter"></TransitioningContentControl>
+				<PlatformTransitioningContentControl Name="PART_ContentPresenter">
+					<PlatformTransitioningContentControl.PageTransition>
+						<IosPageSlide Orientation="Horizontal" Duration="0:00:00.100" />
+					</PlatformTransitioningContentControl.PageTransition>
+				</PlatformTransitioningContentControl>
 			</ControlTemplate>
 		</Setter>
 	</Style>
