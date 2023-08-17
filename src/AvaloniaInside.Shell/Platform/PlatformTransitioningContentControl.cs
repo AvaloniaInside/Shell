@@ -57,7 +57,6 @@ public class PlatformTransitioningContentControl : ContentControl, IPageSwitcher
             return;
 
         Debug.WriteLine("Called");
-        //Content = info.To;
 
         _currentTransition?.Cancel();
 
@@ -67,7 +66,7 @@ public class PlatformTransitioningContentControl : ContentControl, IPageSwitcher
         {
             var cancel = new CancellationTokenSource();
             _currentTransition = cancel;
-            
+
             var from = _isFirstFull ? presenter : _presenter2;
             var to = !_isFirstFull ? presenter : _presenter2;
             _isFirstFull = !_isFirstFull;
