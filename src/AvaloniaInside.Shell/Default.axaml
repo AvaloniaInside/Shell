@@ -11,11 +11,7 @@
 	<Style Selector="StackContentView">
 		<Setter Property="Template">
 			<ControlTemplate>
-				<PlatformTransitioningContentControl Name="PART_ContentPresenter">
-					<PlatformTransitioningContentControl.PageTransition>
-						<AndroidDefaultPageSlide Orientation="Horizontal" Duration="0:00:00.400" />
-					</PlatformTransitioningContentControl.PageTransition>
-				</PlatformTransitioningContentControl>
+				<PlatformTransitioningContentControl Name="PART_ContentPresenter" />
 			</ControlTemplate>
 		</Setter>
 	</Style>

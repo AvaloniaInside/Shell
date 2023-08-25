@@ -10,10 +10,11 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.VisualTree;
+using System.Diagnostics;
+using Avalonia.Rendering.Composition;
 
-namespace AvaloniaInside.Shell.Platform;
-
-internal class AndroidDefaultPageSlide : IPageTransition
+namespace AvaloniaInside.Shell.Platform.Ios;
+internal class IosPageSlide : IPageTransition
 {
     /// <summary>
     /// The axis on which the PageSlide should occur
@@ -27,7 +28,7 @@ internal class AndroidDefaultPageSlide : IPageTransition
     /// <summary>
     /// Initializes a new instance of the <see cref="PageSlide"/> class.
     /// </summary>
-    public AndroidDefaultPageSlide()
+    public IosPageSlide()
     {
     }
 
@@ -36,7 +37,7 @@ internal class AndroidDefaultPageSlide : IPageTransition
     /// </summary>
     /// <param name="duration">The duration of the animation.</param>
     /// <param name="orientation">The axis on which the animation should occur</param>
-    public AndroidDefaultPageSlide(TimeSpan duration, SlideAxis orientation = SlideAxis.Horizontal)
+    public IosPageSlide(TimeSpan duration, SlideAxis orientation = SlideAxis.Horizontal)
     {
         Duration = duration;
         Orientation = orientation;
@@ -45,22 +46,22 @@ internal class AndroidDefaultPageSlide : IPageTransition
     /// <summary>
     /// Gets the duration of the animation.
     /// </summary>
-    public TimeSpan Duration { get; set; }
+    public TimeSpan Duration { get; set; } = TimeSpan.FromSeconds(0.25);
 
     /// <summary>
     /// Gets the duration of the animation.
     /// </summary>
-    public SlideAxis Orientation { get; set; }
+    public SlideAxis Orientation { get; set; } = SlideAxis.Horizontal;
 
     /// <summary>
     /// Gets or sets element entrance easing.
     /// </summary>
-    public Easing SlideInEasing { get; set; } = new ExponentialEaseInOut();
+    public Easing SlideInEasing { get; set; } = Easing.Parse("0.42, 0.0, 0.58, 1.0");
 
     /// <summary>
     /// Gets or sets element exit easing.
     /// </summary>
-    public Easing SlideOutEasing { get; set; } = new ExponentialEaseInOut();
+    public Easing SlideOutEasing { get; set; } = Easing.Parse("0.42, 0.0, 0.58, 1.0");
 
     /// <inheritdoc />
     public virtual async Task Start(Visual? from, Visual? to, bool forward, CancellationToken cancellationToken)
@@ -92,8 +93,7 @@ internal class AndroidDefaultPageSlide : IPageTransition
                                 {
                                     Property = Visual.IsVisibleProperty,
                                     Value = true
-                                },
-                                new Setter { Property = Visual.OpacityProperty, Value = 1d },
+                                }
                             },
                             Cue = new Cue(0d)
                         },
@@ -104,9 +104,8 @@ internal class AndroidDefaultPageSlide : IPageTransition
                                 new Setter
                                 {
                                     Property = translateProperty,
-                                    Value = (forward ? -distance : distance) / 2d
-                                },
-                                new Setter { Property = Visual.OpacityProperty, Value = 0d },
+                                    Value = forward ? -distance / 4d : distance
+                                }
                             },
                             Cue = new Cue(1d)
                         }
@@ -133,18 +132,14 @@ internal class AndroidDefaultPageSlide : IPageTransition
                                 new Setter
                                 {
                                     Property = translateProperty,
-                                    Value = (forward ? distance : -distance) / 2d
-                                },
-                                new Setter { Property = Visual.OpacityProperty, Value = 0d },
+                                    Value = forward ? distance : -distance / 4d
+                                }
                             },
                             Cue = new Cue(0d)
                         },
                         new KeyFrame
                         {
-                            Setters = { 
-                                new Setter { Property = translateProperty, Value = 0d },
-                                new Setter { Property = Visual.OpacityProperty, Value = 1d },
-                            },
+                            Setters = { new Setter { Property = translateProperty, Value = 0d } },
                             Cue = new Cue(1d)
                         }
                     },

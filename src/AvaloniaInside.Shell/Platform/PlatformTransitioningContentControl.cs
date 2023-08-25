@@ -27,7 +27,7 @@ public class PlatformTransitioningContentControl : ContentControl, IPageSwitcher
     public static readonly StyledProperty<IPageTransition?> PageTransitionProperty =
         AvaloniaProperty.Register<TransitioningContentControl, IPageTransition?>(
             nameof(PageTransition),
-            defaultValue: new ImmutableCrossFade(TimeSpan.FromMilliseconds(125)));
+            defaultValue: new ImmutablePlatform());
 
     /// <summary>
     /// Gets or sets the animation played when content appears and disappears.
@@ -122,15 +122,18 @@ public class PlatformTransitioningContentControl : ContentControl, IPageSwitcher
         }
     }
 
-    private class ImmutableCrossFade : IPageTransition
+    private class ImmutablePlatform : IPageTransition
     {
-        private readonly CrossFade _inner;
+        private readonly IPageTransition _inner;
 
-        public ImmutableCrossFade(TimeSpan duration) => _inner = new CrossFade(duration);
+        public ImmutablePlatform()
+        {
+            _inner = new Android.AndroidDefaultPageSlide();
+        }
 
         public Task Start(Visual? from, Visual? to, bool forward, CancellationToken cancellationToken)
         {
-            return _inner.Start(from, to, cancellationToken);
+            return _inner.Start(from, to, forward, cancellationToken);
         }
     }
 }
