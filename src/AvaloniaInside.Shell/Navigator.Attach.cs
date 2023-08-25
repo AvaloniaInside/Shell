@@ -17,7 +17,7 @@ using System.Xml.Linq;
 
 namespace AvaloniaInside.Shell
 {
-    public partial class Navigator: AvaloniaObject
+    public partial class Navigator
     {
         static Navigator()
         {

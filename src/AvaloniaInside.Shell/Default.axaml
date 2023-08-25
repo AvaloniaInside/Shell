@@ -13,7 +13,7 @@
 			<ControlTemplate>
 				<PlatformTransitioningContentControl Name="PART_ContentPresenter">
 					<PlatformTransitioningContentControl.PageTransition>
-						<IosPageSlide Orientation="Horizontal" Duration="0:00:00.100" />
+						<AndroidDefaultPageSlide Orientation="Horizontal" Duration="0:00:00.400" />
 					</PlatformTransitioningContentControl.PageTransition>
 				</PlatformTransitioningContentControl>
 			</ControlTemplate>
