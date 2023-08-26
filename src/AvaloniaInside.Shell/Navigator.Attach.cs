@@ -82,7 +82,10 @@ namespace AvaloniaInside.Shell
             _singletonCanExecuteChanged?.Invoke(this, EventArgs.Empty);
             try
             {
-                await shell.Navigator.NavigateAsync(Path, cancellationToken);
+                if (parameter != null)
+                    await shell.Navigator.NavigateAsync(Path, parameter, cancellationToken);
+                else
+                    await shell.Navigator.NavigateAsync(Path, cancellationToken);
             }
             finally
             {
