@@ -12,14 +12,15 @@ using System.Threading.Tasks;
 using Avalonia.Styling;
 using System.Diagnostics;
 using Avalonia.Input;
+using Avalonia.Controls.Primitives;
 
 namespace AvaloniaInside.Shell.Platform;
 
 public class PlatformTransitioningContentControl : ContentControl, IPageSwitcher
 {
     private CancellationTokenSource? _currentTransition;
-    private ContentPresenter? _presenter2;
-    private bool _isFirstFull;
+    private Panel? _panel;
+    private object? _topContent;
 
     /// <summary>
     /// Defines the <see cref="PageTransition"/> property.
@@ -40,9 +41,9 @@ public class PlatformTransitioningContentControl : ContentControl, IPageSwitcher
 
     public void SwitchPage(PageSwitcherInfo pageSwitcherArgs)
     {
-        if (_presenter2 == null || !pageSwitcherArgs.WithAnimation || Content == null)
+        if (_panel == null || !pageSwitcherArgs.WithAnimation || pageSwitcherArgs.To == null)
         {
-            Content = pageSwitcherArgs.To;
+            _topContent = pageSwitcherArgs.To;
             UpdateDefaultContent();
         }
         else
@@ -53,29 +54,27 @@ public class PlatformTransitioningContentControl : ContentControl, IPageSwitcher
 
     private void SwitchContent(PageSwitcherInfo info)
     {
-        if ((_isFirstFull ? Presenter : _presenter2)?.Content == info.To)
+        if (_topContent == info.To)
             return;
-
-        Debug.WriteLine("Called");
 
         _currentTransition?.Cancel();
 
-        if (_presenter2 is not null &&
-            Presenter is { } presenter &&
-            (info.OverrideTransition ?? PageTransition) is { } transition)
+        if ((info.OverrideTransition ?? PageTransition) is { } transition)
         {
             var cancel = new CancellationTokenSource();
             _currentTransition = cancel;
 
-            var from = _isFirstFull ? presenter : _presenter2;
-            var to = !_isFirstFull ? presenter : _presenter2;
-            _isFirstFull = !_isFirstFull;
-
-            to.Content = info.To;
+            var toControl = (Control)info.To;
+            if (!_panel.Children.Contains(toControl))
+                _panel.Children.Add(toControl);
 
             var forward = info.Navigate is NavigateType.Normal or NavigateType.Top or NavigateType.Replace or NavigateType.ReplaceRoot;
 
-            _ = transition.Start(from, to, forward, cancel.Token);
+            transition.Start((Visual)_topContent, toControl, forward, cancel.Token).ContinueWith(t =>
+            {
+
+            });
+            _topContent = info.To;
         }
     }
 
@@ -85,41 +84,19 @@ public class PlatformTransitioningContentControl : ContentControl, IPageSwitcher
         UpdateDefaultContent();
     }
 
-    protected override bool RegisterContentPresenter(ContentPresenter presenter)
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
-        if (!base.RegisterContentPresenter(presenter) &&
-            presenter is ContentPresenter p &&
-            p.Name == "PART_ContentPresenter2")
-        {
-            _presenter2 = p;
-            _presenter2.IsVisible = false;
-            UpdateDefaultContent();
-
-            return true;
-        }
-
-        return false;
+        base.OnApplyTemplate(e);
+        _panel = e.NameScope.Find<Panel>("PART_Panel");
     }
 
     void UpdateDefaultContent()
     {
-        if ((_isFirstFull ? Presenter : _presenter2) is { } presenter)
-        {
-            presenter.Content = Content;
-            presenter.IsVisible = true;
-        }
+        if (_panel == null) return;
 
-        HideOldPresenter();
-    }
-
-    private void HideOldPresenter()
-    {
-        var oldPresenter = _isFirstFull ? _presenter2 : Presenter;
-        if (oldPresenter is not null)
-        {
-            oldPresenter.Content = null;
-            oldPresenter.IsVisible = false;
-        }
+        _panel.Children.Clear();
+        if (_topContent is Control control)
+            _panel.Children.Add(control);
     }
 
     private class ImmutablePlatform : IPageTransition
@@ -128,7 +105,7 @@ public class PlatformTransitioningContentControl : ContentControl, IPageSwitcher
 
         public ImmutablePlatform()
         {
-            _inner = new Android.AndroidDefaultPageSlide();
+            _inner = new Ios.DefaultIosPageSlide();
         }
 
         public Task Start(Visual? from, Visual? to, bool forward, CancellationToken cancellationToken)

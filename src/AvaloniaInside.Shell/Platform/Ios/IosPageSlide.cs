@@ -12,8 +12,136 @@ using System.Threading.Tasks;
 using Avalonia.VisualTree;
 using System.Diagnostics;
 using Avalonia.Rendering.Composition;
+using Avalonia.Layout;
+using Avalonia.Rendering.Composition.Animations;
+using System.Xml.Linq;
 
 namespace AvaloniaInside.Shell.Platform.Ios;
+
+public class DefaultIosPageSlide : IPageTransition
+{
+    /// <summary>
+    /// Gets the duration of the animation.
+    /// </summary>
+    public TimeSpan Duration { get; set; } = TimeSpan.FromSeconds(0.25);
+
+    private async Task EnsureAnimation(CompositionVisual element, double width, bool isNewPage, bool forward)
+    {
+        var compositor = element.Compositor;
+        
+        var easing = Easing.Parse("0.42, 0.0, 0.58, 1.0");
+
+        if (element.ImplicitAnimations != null)
+        {
+            ICompositionAnimationBase last;
+            foreach (var item in element.ImplicitAnimations)
+            {
+                last = item.Value;
+                (item.Value as Vector3DKeyFrameAnimation)?.ClearAllParameters();
+            }
+            element.ImplicitAnimations.Clear();
+            element.ImplicitAnimations = null;
+            await compositor.RequestCommitAsync();
+
+            
+        }
+
+        var vectorAnimation = compositor.CreateVector3DKeyFrameAnimation();
+        vectorAnimation.Direction = forward ? PlaybackDirection.Normal : PlaybackDirection.Reverse;
+        vectorAnimation.StopBehavior = AnimationStopBehavior.SetToFinalValue;
+
+        if (isNewPage)
+        {
+            vectorAnimation.Target = "Offset";
+            vectorAnimation.InsertKeyFrame(0f, new Vector3D(width, 0d, 0d), easing);
+            vectorAnimation.InsertKeyFrame(1f, new Vector3D(0d, 0d, 0d), easing);
+            vectorAnimation.IterationBehavior = AnimationIterationBehavior.Count;
+            vectorAnimation.Duration = TimeSpan.FromMilliseconds(1250);
+            vectorAnimation.IterationCount = 1;
+        }
+        else
+        {
+            vectorAnimation.Target = "Offset";
+            vectorAnimation.InsertKeyFrame(0f, new Vector3D(0, 0d, 0d), easing);
+            vectorAnimation.InsertKeyFrame(1f, new Vector3D(-width / 4d, 0d, 0d), easing);
+            vectorAnimation.IterationBehavior = AnimationIterationBehavior.Count;
+            vectorAnimation.Duration = TimeSpan.FromMilliseconds(1250);
+            vectorAnimation.IterationCount = 1;
+        }
+
+        var animations = compositor.CreateImplicitAnimationCollection();
+        animations["Offset"] = vectorAnimation;
+
+        element.ImplicitAnimations = animations;
+    }
+
+    private void StartAnimationGroup(CompositionVisual element, bool forward)
+    {
+        //foreach (var anim in group)
+        //{
+        //    ((KeyFrameAnimation)anim.Value).Direction = forward ? PlaybackDirection.Normal : PlaybackDirection.Reverse;
+        //}
+
+        element.StartAnimationGroup(element.ImplicitAnimations["Offset"]);
+    }
+
+    public async Task Start(Visual? from, Visual? to, bool forward, CancellationToken cancellationToken)
+    {
+        if (cancellationToken.IsCancellationRequested)
+        {
+            return;
+        }
+
+        var tasks = new List<Task>();
+        var parent = GetVisualParent(from, to);
+
+        var distance = parent.Bounds.Width;
+
+        if (from != null)
+        {
+            from.ZIndex = forward ? 0 : 1;
+            var fromElement = ElementComposition.GetElementVisual(from)!;
+            await EnsureAnimation(fromElement, distance, !forward, forward);
+            StartAnimationGroup(fromElement, forward);
+        }
+
+        if (to != null)
+        {
+            to.ZIndex = forward ? 1 : 0;
+            var toElement = ElementComposition.GetElementVisual(to)!;
+            await EnsureAnimation(toElement, distance, forward, forward);
+            StartAnimationGroup(toElement, forward);
+        }
+
+        await Task.Run(() => Task.Delay(250, cancellationToken), cancellationToken);
+    }
+
+    /// <summary>
+    /// Gets the common visual parent of the two control.
+    /// </summary>
+    /// <param name="from">The from control.</param>
+    /// <param name="to">The to control.</param>
+    /// <returns>The common parent.</returns>
+    /// <exception cref="ArgumentException">
+    /// The two controls do not share a common parent.
+    /// </exception>
+    /// <remarks>
+    /// Any one of the parameters may be null, but not both.
+    /// </remarks>
+    protected static Visual GetVisualParent(Visual? from, Visual? to)
+    {
+        var p1 = (from ?? to)!.GetVisualParent();
+        var p2 = (to ?? from)!.GetVisualParent();
+
+        if (p1 != null && p2 != null && p1 != p2)
+        {
+            throw new ArgumentException("Controls for PageSlide must have same parent.");
+        }
+
+        return p1 ?? throw new InvalidOperationException("Cannot determine visual parent.");
+    }
+}
+
 internal class IosPageSlide : IPageTransition
 {
     /// <summary>

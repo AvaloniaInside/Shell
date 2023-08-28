@@ -3,26 +3,7 @@
 	<ControlTheme x:Key="{x:Type PlatformTransitioningContentControl}" TargetType="PlatformTransitioningContentControl">
 		<Setter Property="Template">
 			<ControlTemplate>
-				<Panel>
-					<ContentPresenter Name="PART_ContentPresenter"
-									  Background="{TemplateBinding Background}"
-									  BorderBrush="{TemplateBinding BorderBrush}"
-									  BorderThickness="{TemplateBinding BorderThickness}"
-									  CornerRadius="{TemplateBinding CornerRadius}"
-									  ContentTemplate="{TemplateBinding ContentTemplate}"
-									  Padding="{TemplateBinding Padding}"
-									  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-									  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" />
-					<ContentPresenter Name="PART_ContentPresenter2"
-									  Background="{TemplateBinding Background}"
-									  BorderBrush="{TemplateBinding BorderBrush}"
-									  BorderThickness="{TemplateBinding BorderThickness}"
-									  CornerRadius="{TemplateBinding CornerRadius}"
-									  ContentTemplate="{TemplateBinding ContentTemplate}"
-									  Padding="{TemplateBinding Padding}"
-									  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-									  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" />
-				</Panel>
+				<Panel Name="PART_Panel"></Panel>
 			</ControlTemplate>
 		</Setter>
 	</ControlTheme>
