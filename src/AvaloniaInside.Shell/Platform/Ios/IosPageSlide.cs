@@ -25,25 +25,17 @@ public class DefaultIosPageSlide : IPageTransition
     /// </summary>
     public TimeSpan Duration { get; set; } = TimeSpan.FromSeconds(0.25);
 
-    private async Task EnsureAnimation(CompositionVisual element, double width, bool isNewPage, bool forward)
+    private void EnsureAnimation(CompositionVisual element, double width, bool isNewPage, bool forward)
     {
-        var compositor = element.Compositor;
-        
+        var compositor = element.Compositor;        
         var easing = Easing.Parse("0.42, 0.0, 0.58, 1.0");
 
         if (element.ImplicitAnimations != null)
         {
-            ICompositionAnimationBase last;
             foreach (var item in element.ImplicitAnimations)
-            {
-                last = item.Value;
                 (item.Value as Vector3DKeyFrameAnimation)?.ClearAllParameters();
-            }
             element.ImplicitAnimations.Clear();
             element.ImplicitAnimations = null;
-            await compositor.RequestCommitAsync();
-
-            
         }
 
         var vectorAnimation = compositor.CreateVector3DKeyFrameAnimation();
@@ -56,7 +48,7 @@ public class DefaultIosPageSlide : IPageTransition
             vectorAnimation.InsertKeyFrame(0f, new Vector3D(width, 0d, 0d), easing);
             vectorAnimation.InsertKeyFrame(1f, new Vector3D(0d, 0d, 0d), easing);
             vectorAnimation.IterationBehavior = AnimationIterationBehavior.Count;
-            vectorAnimation.Duration = TimeSpan.FromMilliseconds(1250);
+            vectorAnimation.Duration = TimeSpan.FromMilliseconds(250);
             vectorAnimation.IterationCount = 1;
         }
         else
@@ -65,13 +57,12 @@ public class DefaultIosPageSlide : IPageTransition
             vectorAnimation.InsertKeyFrame(0f, new Vector3D(0, 0d, 0d), easing);
             vectorAnimation.InsertKeyFrame(1f, new Vector3D(-width / 4d, 0d, 0d), easing);
             vectorAnimation.IterationBehavior = AnimationIterationBehavior.Count;
-            vectorAnimation.Duration = TimeSpan.FromMilliseconds(1250);
+            vectorAnimation.Duration = TimeSpan.FromMilliseconds(250);
             vectorAnimation.IterationCount = 1;
         }
 
         var animations = compositor.CreateImplicitAnimationCollection();
         animations["Offset"] = vectorAnimation;
-
         element.ImplicitAnimations = animations;
     }
 
@@ -101,7 +92,7 @@ public class DefaultIosPageSlide : IPageTransition
         {
             from.ZIndex = forward ? 0 : 1;
             var fromElement = ElementComposition.GetElementVisual(from)!;
-            await EnsureAnimation(fromElement, distance, !forward, forward);
+            EnsureAnimation(fromElement, distance, !forward, forward);
             StartAnimationGroup(fromElement, forward);
         }
 
@@ -109,7 +100,7 @@ public class DefaultIosPageSlide : IPageTransition
         {
             to.ZIndex = forward ? 1 : 0;
             var toElement = ElementComposition.GetElementVisual(to)!;
-            await EnsureAnimation(toElement, distance, forward, forward);
+            EnsureAnimation(toElement, distance, forward, forward);
             StartAnimationGroup(toElement, forward);
         }
 
