@@ -39,25 +39,25 @@ public class DefaultIosPageSlide : IPageTransition
         }
 
         var vectorAnimation = compositor.CreateVector3DKeyFrameAnimation();
-        vectorAnimation.Direction = forward ? PlaybackDirection.Normal : PlaybackDirection.Reverse;
+        //vectorAnimation.Direction = forward ? PlaybackDirection.Normal : PlaybackDirection.Reverse;
         vectorAnimation.StopBehavior = AnimationStopBehavior.SetToFinalValue;
 
         if (isNewPage)
         {
             vectorAnimation.Target = "Offset";
-            vectorAnimation.InsertKeyFrame(0f, new Vector3D(width, 0d, 0d), easing);
-            vectorAnimation.InsertKeyFrame(1f, new Vector3D(0d, 0d, 0d), easing);
+            vectorAnimation.InsertKeyFrame(0f, new Vector3D(forward ? width : 0d, 0d, 0d), easing);
+            vectorAnimation.InsertKeyFrame(1f, new Vector3D(!forward ? width : 0d, 0d, 0d), easing);
             vectorAnimation.IterationBehavior = AnimationIterationBehavior.Count;
-            vectorAnimation.Duration = TimeSpan.FromMilliseconds(250);
+            vectorAnimation.Duration = TimeSpan.FromMilliseconds(1250);
             vectorAnimation.IterationCount = 1;
         }
         else
         {
             vectorAnimation.Target = "Offset";
-            vectorAnimation.InsertKeyFrame(0f, new Vector3D(0, 0d, 0d), easing);
-            vectorAnimation.InsertKeyFrame(1f, new Vector3D(-width / 4d, 0d, 0d), easing);
+            vectorAnimation.InsertKeyFrame(0f, new Vector3D(!forward ? -width / 4d: 0d, 0d, 0d), easing);
+            vectorAnimation.InsertKeyFrame(1f, new Vector3D(forward ? -width / 4d : 0d, 0d, 0d), easing);
             vectorAnimation.IterationBehavior = AnimationIterationBehavior.Count;
-            vectorAnimation.Duration = TimeSpan.FromMilliseconds(250);
+            vectorAnimation.Duration = TimeSpan.FromMilliseconds(1250);
             vectorAnimation.IterationCount = 1;
         }
 
