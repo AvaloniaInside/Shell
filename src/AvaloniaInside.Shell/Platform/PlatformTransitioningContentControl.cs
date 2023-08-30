@@ -65,16 +65,8 @@ public class PlatformTransitioningContentControl : ContentControl, IPageSwitcher
             _currentTransition = cancel;
 
             var toControl = (Control)info.To;
-            if (_panel.Children.Contains(toControl))
-                _panel.Children.Remove(toControl);
-            _panel.Children.Add(toControl);
-
-            if (_topContent is Control fromControl)
-            {
-                if (_panel.Children.Contains(fromControl))
-                    _panel.Children.Remove(fromControl);
-                _panel.Children.Add(fromControl);
-            }
+            if (!_panel.Children.Contains(toControl))
+                _panel.Children.Add(toControl);
 
             var forward = info.Navigate is NavigateType.Normal or NavigateType.Top or NavigateType.Replace or NavigateType.ReplaceRoot;
 

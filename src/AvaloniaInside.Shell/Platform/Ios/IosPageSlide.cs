@@ -25,55 +25,31 @@ public class DefaultIosPageSlide : IPageTransition
     /// </summary>
     public TimeSpan Duration { get; set; } = TimeSpan.FromSeconds(0.25);
 
-    private void EnsureAnimation(CompositionVisual element, double width, bool isNewPage, bool forward)
+    /// <summary>
+    /// Gets or sets element entrance easing.
+    /// </summary>
+    public Easing SlideInEasing { get; set; } = Easing.Parse("0.42, 0.0, 0.58, 1.0");
+
+    private ImplicitAnimationCollection? _implicitAnimations;
+
+    private void EnsureAnimationCreated(CompositionVisual element)
     {
-        var compositor = element.Compositor;        
+        if (_implicitAnimations != null) return;
+
+        var compositor = element.Compositor;
         var easing = Easing.Parse("0.42, 0.0, 0.58, 1.0");
 
-        if (element.ImplicitAnimations != null)
-        {
-            foreach (var item in element.ImplicitAnimations)
-                (item.Value as Vector3DKeyFrameAnimation)?.ClearAllParameters();
-            element.ImplicitAnimations.Clear();
-            element.ImplicitAnimations = null;
-        }
+        var offsetAnimation = compositor.CreateVector3DKeyFrameAnimation();
+        offsetAnimation.Duration = Duration;
+        offsetAnimation.Target = "Offset";
+        
+        offsetAnimation.InsertExpressionKeyFrame(1.0f, "this.FinalValue", easing);
 
-        var vectorAnimation = compositor.CreateVector3DKeyFrameAnimation();
-        //vectorAnimation.Direction = forward ? PlaybackDirection.Normal : PlaybackDirection.Reverse;
-        vectorAnimation.StopBehavior = AnimationStopBehavior.SetToFinalValue;
+        var animationGroup = compositor.CreateAnimationGroup();
+        animationGroup.Add(offsetAnimation);
 
-        if (isNewPage)
-        {
-            vectorAnimation.Target = "Offset";
-            vectorAnimation.InsertKeyFrame(0f, new Vector3D(forward ? width : 0d, 0d, 0d), easing);
-            vectorAnimation.InsertKeyFrame(1f, new Vector3D(!forward ? width : 0d, 0d, 0d), easing);
-            vectorAnimation.IterationBehavior = AnimationIterationBehavior.Count;
-            vectorAnimation.Duration = TimeSpan.FromMilliseconds(1250);
-            vectorAnimation.IterationCount = 1;
-        }
-        else
-        {
-            vectorAnimation.Target = "Offset";
-            vectorAnimation.InsertKeyFrame(0f, new Vector3D(!forward ? -width / 4d: 0d, 0d, 0d), easing);
-            vectorAnimation.InsertKeyFrame(1f, new Vector3D(forward ? -width / 4d : 0d, 0d, 0d), easing);
-            vectorAnimation.IterationBehavior = AnimationIterationBehavior.Count;
-            vectorAnimation.Duration = TimeSpan.FromMilliseconds(1250);
-            vectorAnimation.IterationCount = 1;
-        }
-
-        var animations = compositor.CreateImplicitAnimationCollection();
-        animations["Offset"] = vectorAnimation;
-        element.ImplicitAnimations = animations;
-    }
-
-    private void StartAnimationGroup(CompositionVisual element, bool forward)
-    {
-        //foreach (var anim in group)
-        //{
-        //    ((KeyFrameAnimation)anim.Value).Direction = forward ? PlaybackDirection.Normal : PlaybackDirection.Reverse;
-        //}
-
-        element.StartAnimationGroup(element.ImplicitAnimations["Offset"]);
+        _implicitAnimations = compositor.CreateImplicitAnimationCollection();
+        _implicitAnimations["Offset"] = animationGroup;
     }
 
     public async Task Start(Visual? from, Visual? to, bool forward, CancellationToken cancellationToken)
@@ -88,23 +64,30 @@ public class DefaultIosPageSlide : IPageTransition
 
         var distance = parent.Bounds.Width;
 
+        EnsureAnimationCreated(ElementComposition.GetElementVisual(parent)!);
+
         if (from != null)
         {
             from.ZIndex = forward ? 0 : 1;
             var fromElement = ElementComposition.GetElementVisual(from)!;
-            EnsureAnimation(fromElement, distance, !forward, forward);
-            StartAnimationGroup(fromElement, forward);
+
+            fromElement.ImplicitAnimations = _implicitAnimations;
+            fromElement.Offset = new Vector3D(forward ? -distance / 4d : distance, 0d, 0d);
         }
 
         if (to != null)
         {
             to.ZIndex = forward ? 1 : 0;
             var toElement = ElementComposition.GetElementVisual(to)!;
-            EnsureAnimation(toElement, distance, forward, forward);
-            StartAnimationGroup(toElement, forward);
+
+            if (forward) {
+                to[TranslateTransform.XProperty] = distance;
+            }
+            toElement.ImplicitAnimations = _implicitAnimations;
+            toElement.Offset = new Vector3D(0d, 0d, 0d);
         }
 
-        await Task.Run(() => Task.Delay(250, cancellationToken), cancellationToken);
+        await Task.Run(() => Task.Delay(Duration, cancellationToken), cancellationToken);
     }
 
     /// <summary>
