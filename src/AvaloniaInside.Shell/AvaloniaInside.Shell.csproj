@@ -12,6 +12,7 @@
 		<RepositoryUrl>https://github.com/AvaloniaInside/Shell</RepositoryUrl>
 		<PackageTags>avalonia,shell</PackageTags>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>

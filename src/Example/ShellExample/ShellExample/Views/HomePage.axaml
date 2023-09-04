@@ -9,7 +9,12 @@
 	            VerticalAlignment="Center"
 	            Spacing="10">
 		<TextBlock Text="{Binding Greeting}" />
-		<Button HorizontalAlignment="Center" Content="Click on me" Command="{Binding NavigateToSecondPage}"></Button>
+		
+		<Button HorizontalAlignment="Center" 
+				Content="Click on me"
+				Navigator.To="/second"
+				CommandParameter="Hello Parameters"></Button>
+		
 		<Button HorizontalAlignment="Center" Content="Show dialog" Command="{Binding ShowDialogCommand}"></Button>
 	</StackPanel>
 </UserControl>

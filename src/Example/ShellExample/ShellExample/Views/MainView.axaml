@@ -43,6 +43,7 @@
 			</Host>
 			<Route Path="product" Page="shopViews:ProductCatalogView">
 				<Route Path="filter" Page="shopViews:ProductCatalogFilterView" Type="Modal"></Route>
+				<Route Path="detail" Page="shopViews:ProductDetailView"></Route>
 			</Route>
 			<Route Path="setting" Page="views:SettingView">
 				<Route Path="profile" Page="views:ProfileView"></Route>

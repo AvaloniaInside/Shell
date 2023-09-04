@@ -6,6 +6,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Threading;
 using ReactiveUI;
 using Splat;
 
@@ -13,429 +14,434 @@ namespace AvaloniaInside.Shell;
 
 public partial class ShellView : TemplatedControl
 {
-	#region Enums
+    #region Enums
 
-	public enum ScreenSizeType
-	{
-		Small,
-		Medium,
-		Large
-	}
+    public enum ScreenSizeType
+    {
+        Small,
+        Medium,
+        Large
+    }
 
-	public enum SideMenuBehaveType
-	{
-		Default,
-		Keep,
-		Closed,
-		Removed
-	}
+    public enum SideMenuBehaveType
+    {
+        Default,
+        Keep,
+        Closed,
+        Removed
+    }
 
-	#endregion
+    #endregion
 
-	#region Variables
+    #region Variables
 
-	private readonly bool _isMobile;
+    private readonly bool _isMobile;
 
-	private SplitView? _splitView;
-	private StackContentView? _contentView;
-	private NavigationBar? _navigationBar;
-	private StackContentView? _modalView;
-	private SideMenu? _sideMenu;
+    private SplitView? _splitView;
+    private StackContentView? _contentView;
+    private NavigationBar? _navigationBar;
+    private StackContentView? _modalView;
+    private SideMenu? _sideMenu;
 
-	#endregion
+    #endregion
 
-	#region Properties
+    #region Properties
 
-	public NavigationBar NavigationBar => _navigationBar;
+    public NavigationBar NavigationBar => _navigationBar;
 
-	#region ScreenSize
+    #region ScreenSize
 
-	private ScreenSizeType _screenSize = ScreenSizeType.Large;
+    private ScreenSizeType _screenSize = ScreenSizeType.Large;
 
-	public static readonly DirectProperty<ShellView, ScreenSizeType> ScreenSizeProperty =
-		AvaloniaProperty.RegisterDirect<ShellView, ScreenSizeType>(
-			nameof(ScreenSize),
-			o => o.ScreenSize,
-			(o, v) => o.ScreenSize = v);
+    public static readonly DirectProperty<ShellView, ScreenSizeType> ScreenSizeProperty =
+        AvaloniaProperty.RegisterDirect<ShellView, ScreenSizeType>(
+            nameof(ScreenSize),
+            o => o.ScreenSize,
+            (o, v) => o.ScreenSize = v);
 
-	public ScreenSizeType ScreenSize
-	{
-		get => _screenSize;
-		set
-		{
-			var oldValue = _screenSize;
-			if (SetAndRaise(ScreenSizeProperty, ref _screenSize, value))
-				UpdateScreenSize(oldValue, value);
-		}
-	}
+    public ScreenSizeType ScreenSize
+    {
+        get => _screenSize;
+        set
+        {
+            var oldValue = _screenSize;
+            if (SetAndRaise(ScreenSizeProperty, ref _screenSize, value))
+                UpdateScreenSize(oldValue, value);
+        }
+    }
 
-	#endregion
+    #endregion
 
-	#region DefaultRoute
+    #region DefaultRoute
 
-	public static DirectProperty<ShellView, string?> DefaultRouteProperty = AvaloniaProperty
-		.RegisterDirect<ShellView, string?>(
-			nameof(DefaultRoute),
-			o => o.DefaultRoute,
-			(o, v) => o.DefaultRoute = v);
+    public static DirectProperty<ShellView, string?> DefaultRouteProperty = AvaloniaProperty
+        .RegisterDirect<ShellView, string?>(
+            nameof(DefaultRoute),
+            o => o.DefaultRoute,
+            (o, v) => o.DefaultRoute = v);
 
-	public string? DefaultRoute { get; set; }
+    public string? DefaultRoute { get; set; }
 
-	#endregion
+    #endregion
 
-	#region TopSafeSpace
+    #region TopSafeSpace
 
-	public static readonly StyledProperty<double> TopSafeSpaceProperty =
-		AvaloniaProperty.Register<ShellView, double>(nameof(TopSafeSpace));
+    public static readonly StyledProperty<double> TopSafeSpaceProperty =
+        AvaloniaProperty.Register<ShellView, double>(nameof(TopSafeSpace));
 
-	public double TopSafeSpace
-	{
-		get => GetValue(TopSafeSpaceProperty);
-		set => SetValue(TopSafeSpaceProperty, value);
-	}
+    public double TopSafeSpace
+    {
+        get => GetValue(TopSafeSpaceProperty);
+        set => SetValue(TopSafeSpaceProperty, value);
+    }
 
-	#endregion
+    #endregion
 
-	#region BottomSafeSpace
+    #region BottomSafeSpace
 
-	public static readonly StyledProperty<double> BottomSafeSpaceProperty =
-		AvaloniaProperty.Register<ShellView, double>(nameof(BottomSafeSpace));
+    public static readonly StyledProperty<double> BottomSafeSpaceProperty =
+        AvaloniaProperty.Register<ShellView, double>(nameof(BottomSafeSpace));
 
-	public double BottomSafeSpace
-	{
-		get => GetValue(BottomSafeSpaceProperty);
-		set => SetValue(BottomSafeSpaceProperty, value);
-	}
+    public double BottomSafeSpace
+    {
+        get => GetValue(BottomSafeSpaceProperty);
+        set => SetValue(BottomSafeSpaceProperty, value);
+    }
 
-	#endregion
+    #endregion
 
-	#region TopSafePadding
+    #region TopSafePadding
 
-	public static readonly StyledProperty<Thickness> TopSafePaddingProperty =
-		AvaloniaProperty.Register<ShellView, Thickness>(nameof(TopSafePadding));
+    public static readonly StyledProperty<Thickness> TopSafePaddingProperty =
+        AvaloniaProperty.Register<ShellView, Thickness>(nameof(TopSafePadding));
 
-	public Thickness TopSafePadding
-	{
-		get => GetValue(TopSafePaddingProperty);
-		set => SetValue(TopSafePaddingProperty, value);
-	}
+    public Thickness TopSafePadding
+    {
+        get => GetValue(TopSafePaddingProperty);
+        set => SetValue(TopSafePaddingProperty, value);
+    }
 
-	#endregion
+    #endregion
 
-	#region BottomSafePadding
+    #region BottomSafePadding
 
-	public static readonly StyledProperty<Thickness> BottomSafePaddingProperty =
-		AvaloniaProperty.Register<ShellView, Thickness>(nameof(BottomSafePadding));
+    public static readonly StyledProperty<Thickness> BottomSafePaddingProperty =
+        AvaloniaProperty.Register<ShellView, Thickness>(nameof(BottomSafePadding));
 
-	public Thickness BottomSafePadding
-	{
-		get => GetValue(BottomSafePaddingProperty);
-		set => SetValue(BottomSafePaddingProperty, value);
-	}
+    public Thickness BottomSafePadding
+    {
+        get => GetValue(BottomSafePaddingProperty);
+        set => SetValue(BottomSafePaddingProperty, value);
+    }
 
-	#endregion
+    #endregion
 
-	#region SafePadding
+    #region SafePadding
 
-	public static readonly StyledProperty<Thickness> SafePaddingProperty =
-		AvaloniaProperty.Register<ShellView, Thickness>(nameof(SafePadding));
+    public static readonly StyledProperty<Thickness> SafePaddingProperty =
+        AvaloniaProperty.Register<ShellView, Thickness>(nameof(SafePadding));
 
-	public Thickness SafePadding
-	{
-		get => GetValue(SafePaddingProperty);
-		set => SetValue(SafePaddingProperty, value);
-	}
+    public Thickness SafePadding
+    {
+        get => GetValue(SafePaddingProperty);
+        set => SetValue(SafePaddingProperty, value);
+    }
 
-	#endregion
+    #endregion
 
-	#region ApplyTopSafePadding
+    #region ApplyTopSafePadding
 
-	public static readonly StyledProperty<bool> ApplyTopSafePaddingProperty =
-		AvaloniaProperty.Register<ShellView, bool>(nameof(ApplyTopSafePadding), defaultValue: true);
+    public static readonly StyledProperty<bool> ApplyTopSafePaddingProperty =
+        AvaloniaProperty.Register<ShellView, bool>(nameof(ApplyTopSafePadding), defaultValue: true);
 
-	public bool ApplyTopSafePadding
-	{
-		get => GetValue(ApplyTopSafePaddingProperty);
-		set => SetValue(ApplyTopSafePaddingProperty, value);
-	}
+    public bool ApplyTopSafePadding
+    {
+        get => GetValue(ApplyTopSafePaddingProperty);
+        set => SetValue(ApplyTopSafePaddingProperty, value);
+    }
 
-	#endregion
+    #endregion
 
-	#region ApplyBottomSafePadding
+    #region ApplyBottomSafePadding
 
-	public static readonly StyledProperty<bool> ApplyBottomSafePaddingProperty =
-		AvaloniaProperty.Register<ShellView, bool>(nameof(ApplyBottomSafePadding), defaultValue: true);
+    public static readonly StyledProperty<bool> ApplyBottomSafePaddingProperty =
+        AvaloniaProperty.Register<ShellView, bool>(nameof(ApplyBottomSafePadding), defaultValue: true);
 
-	public bool ApplyBottomSafePadding
-	{
-		get => GetValue(ApplyBottomSafePaddingProperty);
-		set => SetValue(ApplyBottomSafePaddingProperty, value);
-	}
+    public bool ApplyBottomSafePadding
+    {
+        get => GetValue(ApplyBottomSafePaddingProperty);
+        set => SetValue(ApplyBottomSafePaddingProperty, value);
+    }
 
-	#endregion
+    #endregion
 
-	#endregion
+    #endregion
 
-	#region Attached properties
+    #region Attached properties
 
-	#region EnableSafeAreaForTop
+    #region EnableSafeAreaForTop
 
-	public static readonly AttachedProperty<bool> EnableSafeAreaForTopProperty =
-		AvaloniaProperty.RegisterAttached<NavigationBar, AvaloniaObject, bool>("EnableSafeAreaForTop",
-			defaultValue: true);
+    public static readonly AttachedProperty<bool> EnableSafeAreaForTopProperty =
+        AvaloniaProperty.RegisterAttached<NavigationBar, AvaloniaObject, bool>("EnableSafeAreaForTop",
+            defaultValue: true);
 
-	public static bool GetEnableSafeAreaForTop(AvaloniaObject element) =>
-		element.GetValue(EnableSafeAreaForTopProperty);
+    public static bool GetEnableSafeAreaForTop(AvaloniaObject element) =>
+        element.GetValue(EnableSafeAreaForTopProperty);
 
-	public static void SetEnableSafeAreaForTop(AvaloniaObject element, bool parameter) =>
-		element.SetValue(EnableSafeAreaForTopProperty, parameter);
+    public static void SetEnableSafeAreaForTop(AvaloniaObject element, bool parameter) =>
+        element.SetValue(EnableSafeAreaForTopProperty, parameter);
 
-	#endregion
+    #endregion
 
-	#region EnableSafeAreaForBottom
+    #region EnableSafeAreaForBottom
 
-	public static readonly AttachedProperty<bool> EnableSafeAreaForBottomProperty =
-		AvaloniaProperty.RegisterAttached<NavigationBar, AvaloniaObject, bool>("EnableSafeAreaForBottom",
-			defaultValue: true);
+    public static readonly AttachedProperty<bool> EnableSafeAreaForBottomProperty =
+        AvaloniaProperty.RegisterAttached<NavigationBar, AvaloniaObject, bool>("EnableSafeAreaForBottom",
+            defaultValue: true);
 
-	public static bool GetEnableSafeAreaForBottom(AvaloniaObject element) =>
-		element.GetValue(EnableSafeAreaForBottomProperty);
+    public static bool GetEnableSafeAreaForBottom(AvaloniaObject element) =>
+        element.GetValue(EnableSafeAreaForBottomProperty);
 
-	public static void SetEnableSafeAreaForBottom(AvaloniaObject element, bool parameter) =>
-		element.SetValue(EnableSafeAreaForBottomProperty, parameter);
+    public static void SetEnableSafeAreaForBottom(AvaloniaObject element, bool parameter) =>
+        element.SetValue(EnableSafeAreaForBottomProperty, parameter);
 
-	#endregion
+    #endregion
 
-	#endregion
+    #endregion
 
-	#region Ctor and loading
+    #region Ctor and loading
 
-	public ShellView()
-	{
-		Navigator = Locator.Current
-			.GetService<INavigator>() ?? throw new ArgumentException("Cannot find INavigationService");
-		Navigator.RegisterShell(this);
+    public ShellView()
+    {
+        Navigator = Locator.Current
+            .GetService<INavigator>() ?? throw new ArgumentException("Cannot find INavigationService");
+        Navigator.RegisterShell(this);
 
         var isMobile = OperatingSystem.IsAndroid() || OperatingSystem.IsIOS();
-		if (!_isMobile)
-		{
-			Classes.Add("Mobile");
-			_sideMenuPresented = true;
-		}
+        if (!_isMobile)
+        {
+            Classes.Add("Mobile");
+            _sideMenuPresented = true;
+        }
 
-		SizeChanged += OnSizeChanged;
-		Items.CollectionChanged += ItemsOnCollectionChanged;
-	}
+        SizeChanged += OnSizeChanged;
+        Items.CollectionChanged += ItemsOnCollectionChanged;
+    }
 
     protected override void OnLoaded(RoutedEventArgs e)
-	{
-		base.OnLoaded(e);
+    {
+        base.OnLoaded(e);
 
-		if (TopLevel.GetTopLevel(this) is { } topLevel)
-		{
-			topLevel.BackRequested += TopLevelOnBackRequested;
-			topLevel.KeyUp += TopLevelOnKeyUp;
-		}
+        if (TopLevel.GetTopLevel(this) is { } topLevel)
+        {
+            topLevel.BackRequested += TopLevelOnBackRequested;
+            topLevel.KeyUp += TopLevelOnKeyUp;
+        }
 
-		if (DefaultRoute != null)
-		{
-			_ = Navigator.NavigateAsync(DefaultRoute, CancellationToken.None);
-		}
+        if (DefaultRoute != null)
+        {
+            _ = Navigator.NavigateAsync(DefaultRoute, CancellationToken.None);
+        }
 
-		if (TopLevel.GetTopLevel(this) is { InsetsManager: { } insetsManager })
-		{
-			insetsManager.DisplayEdgeToEdge = true;
-		}
+        if (TopLevel.GetTopLevel(this) is { InsetsManager: { } insetsManager })
+        {
+            insetsManager.DisplayEdgeToEdge = true;
+        }
 
-		OnSafeEdgeSetup();
-	}
+        OnSafeEdgeSetup();
+    }
 
-	protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
-	{
-		base.OnApplyTemplate(e);
-		_splitView = e.NameScope.Find<SplitView>("PART_SplitView");
-		_contentView = e.NameScope.Find<StackContentView>("PART_ContentView");
-		_modalView = e.NameScope.Find<StackContentView>("PART_Modal");
-		_navigationBar = e.NameScope.Find<NavigationBar>("PART_NavigationBar");
-		_sideMenu = e.NameScope.Find<SideMenu>("PART_SideMenu");
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+    {
+        base.OnApplyTemplate(e);
+        _splitView = e.NameScope.Find<SplitView>("PART_SplitView");
+        _contentView = e.NameScope.Find<StackContentView>("PART_ContentView");
+        _modalView = e.NameScope.Find<StackContentView>("PART_Modal");
+        _navigationBar = e.NameScope.Find<NavigationBar>("PART_NavigationBar");
+        _sideMenu = e.NameScope.Find<SideMenu>("PART_SideMenu");
 
-		SetupUi();
+        SetupUi();
 
-		if (_splitView != null)
-		{
-			_splitView.PaneClosing += SplitViewOnPaneClosing;
-		}
+        if (_splitView != null)
+        {
+            _splitView.PaneClosing += SplitViewOnPaneClosing;
+        }
 
-		if (_sideMenu != null)
-		{
-			_sideMenu.Items = _sideMenuItems;
-		}
-	}
+        if (_sideMenu != null)
+        {
+            _sideMenu.Items = _sideMenuItems;
+        }
+    }
 
-	protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
-	{
-		base.OnPropertyChanged(change);
-		switch (change.Property.Name)
-		{
-			case nameof(LargeScreenSideMenuMode):
-			case nameof(MediumScreenSideMenuMode):
-			case nameof(SmallScreenSideMenuMode):
-				UpdateSideMenu();
-				break;
-			case nameof(SafePadding):
-				OnSafeEdgeSetup();
-				break;
-		}
-	}
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+        switch (change.Property.Name)
+        {
+            case nameof(LargeScreenSideMenuMode):
+            case nameof(MediumScreenSideMenuMode):
+            case nameof(SmallScreenSideMenuMode):
+                UpdateSideMenu();
+                break;
+            case nameof(SafePadding):
+                OnSafeEdgeSetup();
+                break;
+        }
+    }
 
-	private void SetupUi()
-	{
-		if (_navigationBar != null)
-		{
-			_navigationBar.ShellView = this;
-			_navigationBar.BackCommand = ReactiveCommand.CreateFromTask(BackActionAsync);
-			_navigationBar.SideMenuCommand = ReactiveCommand.CreateFromTask(MenuActionAsync);
-		}
+    private void SetupUi()
+    {
+        if (_navigationBar != null)
+        {
+            _navigationBar.ShellView = this;
+            _navigationBar.BackCommand = ReactiveCommand.CreateFromTask(BackActionAsync);
+            _navigationBar.SideMenuCommand = ReactiveCommand.CreateFromTask(MenuActionAsync);
+        }
 
-		OnSafeEdgeSetup();
-	}
+        OnSafeEdgeSetup();
+    }
 
-	protected virtual void OnSafeEdgeSetup()
-	{
-		if (TopLevel.GetTopLevel(this) is { InsetsManager: { DisplayEdgeToEdge: true } insetsManager })
-			SafePadding = insetsManager.SafeAreaPadding;
+    protected virtual void OnSafeEdgeSetup()
+    {
+        Dispatcher.UIThread.InvokeAsync(async () =>
+        {
+            await Task.Delay(100);
 
-		TopSafeSpace = SafePadding.Top;
-		TopSafePadding = new Thickness(0, SafePadding.Top, 0, 0);
-		BottomSafeSpace = SafePadding.Bottom;
-		BottomSafePadding = new Thickness(0, 0, 0, SafePadding.Bottom);
-	}
+            if (TopLevel.GetTopLevel(this) is { InsetsManager: { DisplayEdgeToEdge: true } insetsManager })
+                SafePadding = insetsManager.SafeAreaPadding;
 
-	#endregion
+            TopSafeSpace = SafePadding.Top;
+            TopSafePadding = new Thickness(0, SafePadding.Top, 0, 0);
+            BottomSafeSpace = SafePadding.Bottom;
+            BottomSafePadding = new Thickness(0, 0, 0, SafePadding.Bottom);
+        });
+    }
 
-	#region Services and navigation
+    #endregion
 
-	public INavigator Navigator { get; }
+    #region Services and navigation
 
-	#endregion
+    public INavigator Navigator { get; }
 
-	#region View Stack Manager
+    #endregion
 
-	public async Task PushViewAsync(object view,
+    #region View Stack Manager
+
+    public async Task PushViewAsync(object view,
         NavigateType navigateType,
         CancellationToken cancellationToken = default)
-	{
-		await (_contentView?.PushViewAsync(view, navigateType, cancellationToken) ?? Task.CompletedTask);
-		SelectSideMenuItem();
-		UpdateBindings();
-	}
+    {
+        await (_contentView?.PushViewAsync(view, navigateType, cancellationToken) ?? Task.CompletedTask);
+        SelectSideMenuItem();
+        UpdateBindings();
+    }
 
-	public async Task RemoveViewAsync(object view,
+    public async Task RemoveViewAsync(object view,
         NavigateType navigateType,
         CancellationToken cancellationToken = default)
-	{
-		await (_contentView?.RemoveViewAsync(view, navigateType, cancellationToken) ?? Task.CompletedTask);
-		await (_modalView?.RemoveViewAsync(view, navigateType, cancellationToken) ?? Task.CompletedTask);
-	}
+    {
+        await (_contentView?.RemoveViewAsync(view, navigateType, cancellationToken) ?? Task.CompletedTask);
+        await (_modalView?.RemoveViewAsync(view, navigateType, cancellationToken) ?? Task.CompletedTask);
+    }
 
-	public async Task ClearStackAsync(CancellationToken cancellationToken)
-	{
-		await (_contentView?.ClearStackAsync(cancellationToken) ?? Task.CompletedTask);
-		await (_modalView?.ClearStackAsync(cancellationToken) ?? Task.CompletedTask);
-	}
+    public async Task ClearStackAsync(CancellationToken cancellationToken)
+    {
+        await (_contentView?.ClearStackAsync(cancellationToken) ?? Task.CompletedTask);
+        await (_modalView?.ClearStackAsync(cancellationToken) ?? Task.CompletedTask);
+    }
 
-	public Task ModalAsync(object instance, NavigateType navigateType, CancellationToken cancellationToken) =>
-		_modalView?.PushViewAsync(instance, navigateType, cancellationToken) ?? Task.CompletedTask;
+    public Task ModalAsync(object instance, NavigateType navigateType, CancellationToken cancellationToken) =>
+        _modalView?.PushViewAsync(instance, navigateType, cancellationToken) ?? Task.CompletedTask;
 
-	private bool Back()
-	{
-		if (ScreenSize == ScreenSizeType.Small && SideMenuPresented)
-		{
-			SideMenuPresented = false;
-			return true;
-		}
+    private bool Back()
+    {
+        if (ScreenSize == ScreenSizeType.Small && SideMenuPresented)
+        {
+            SideMenuPresented = false;
+            return true;
+        }
 
-		var result = Navigator.HasItemInStack();
-		if (result)
-			Navigator.BackAsync();
+        var result = Navigator.HasItemInStack();
+        if (result)
+            Navigator.BackAsync();
 
-		return result;
-	}
+        return result;
+    }
 
-	#endregion
+    #endregion
 
-	#region Ui Events
+    #region Ui Events
 
-	private void OnSizeChanged(object? sender, SizeChangedEventArgs e)
-	{
-		ScreenSize = e.NewSize.Width switch
-		{
-			<= 768 => ScreenSizeType.Small,
-			<= 1024 => ScreenSizeType.Medium,
-			_ => ScreenSizeType.Large,
-		};
-	}
+    private void OnSizeChanged(object? sender, SizeChangedEventArgs e)
+    {
+        ScreenSize = e.NewSize.Width switch
+        {
+            <= 768 => ScreenSizeType.Small,
+            <= 1024 => ScreenSizeType.Medium,
+            _ => ScreenSizeType.Large,
+        };
+    }
 
-	private void TopLevelOnBackRequested(object? sender, RoutedEventArgs e)
-	{
-		e.Handled = Back();
-	}
+    private void TopLevelOnBackRequested(object? sender, RoutedEventArgs e)
+    {
+        e.Handled = Back();
+    }
 
-	private void TopLevelOnKeyUp(object? sender, KeyEventArgs e)
-	{
-		if (e.Key == Key.Escape)
-			Back();
-	}
+    private void TopLevelOnKeyUp(object? sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Escape)
+            Back();
+    }
 
-	private void SplitViewOnPaneClosing(object? sender, CancelRoutedEventArgs e)
-	{
-		SideMenuPresented = false;
-	}
+    private void SplitViewOnPaneClosing(object? sender, CancelRoutedEventArgs e)
+    {
+        SideMenuPresented = false;
+    }
 
-	protected virtual Task BackActionAsync(CancellationToken cancellationToken)
-	{
-		return Navigator.BackAsync(cancellationToken);
-	}
+    protected virtual Task BackActionAsync(CancellationToken cancellationToken)
+    {
+        return Navigator.BackAsync(cancellationToken);
+    }
 
-	#endregion
+    #endregion
 
-	#region Screen Actions
+    #region Screen Actions
 
-	private void UpdateScreenSize(ScreenSizeType old, ScreenSizeType newScreen)
-	{
-		Classes.Add(newScreen.ToString());
-		Classes.Remove(old.ToString());
+    private void UpdateScreenSize(ScreenSizeType old, ScreenSizeType newScreen)
+    {
+        Classes.Add(newScreen.ToString());
+        Classes.Remove(old.ToString());
 
-		if (_splitView == null) return;
+        if (_splitView == null) return;
 
-		_splitView.DisplayMode = newScreen switch
-		{
-			ScreenSizeType.Small => SmallScreenSideMenuMode,
-			ScreenSizeType.Medium => MediumScreenSideMenuMode,
-			ScreenSizeType.Large => LargeScreenSideMenuMode,
-			_ => throw new ArgumentOutOfRangeException(nameof(newScreen), newScreen, null)
-		};
+        _splitView.DisplayMode = newScreen switch
+        {
+            ScreenSizeType.Small => SmallScreenSideMenuMode,
+            ScreenSizeType.Medium => MediumScreenSideMenuMode,
+            ScreenSizeType.Large => LargeScreenSideMenuMode,
+            _ => throw new ArgumentOutOfRangeException(nameof(newScreen), newScreen, null)
+        };
 
-		if (newScreen == ScreenSizeType.Small && SideMenuPresented)
-			SideMenuPresented = false;
-		else
-			UpdateSideMenu();
-	}
+        if (newScreen == ScreenSizeType.Small && SideMenuPresented)
+            SideMenuPresented = false;
+        else
+            UpdateSideMenu();
+    }
 
-	private void UpdateBindings()
-	{
-		var view = _contentView.CurrentView;
-		if (view is StyledElement element)
-		{
-			this[!ApplyTopSafePaddingProperty] = element[!EnableSafeAreaForTopProperty];
-			this[!ApplyBottomSafePaddingProperty] = element[!EnableSafeAreaForBottomProperty];
-		}
-		else
-		{
-			ApplyTopSafePadding = true;
-			ApplyBottomSafePadding = true;
-		}
-	}
+    private void UpdateBindings()
+    {
+        var view = _contentView.CurrentView;
+        if (view is StyledElement element)
+        {
+            this[!ApplyTopSafePaddingProperty] = element[!EnableSafeAreaForTopProperty];
+            this[!ApplyBottomSafePaddingProperty] = element[!EnableSafeAreaForBottomProperty];
+        }
+        else
+        {
+            ApplyTopSafePadding = true;
+            ApplyBottomSafePadding = true;
+        }
+    }
 
-	#endregion
+    #endregion
 }

@@ -1,23 +1,127 @@
-using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Avalonia;
+using Avalonia.Animation;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 
 namespace AvaloniaInside.Shell;
 
-public class StackContentView : TemplatedControl
+public class StackContentViewPanel : Panel
+{
+    public Task? AnimationToBeDone { get; set; }
+
+    protected override Size ArrangeOverride(Size finalSize)
+    {
+        var rcChild = new Rect(finalSize);
+        var zindex = 0;
+        foreach (var control in Children)
+        {
+            control.ZIndex = zindex++;
+            control.Arrange(rcChild);
+        }
+
+        return finalSize;
+    }
+
+    protected override async void ChildrenChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (e.Action == NotifyCollectionChangedAction.Remove && AnimationToBeDone != null)
+        {
+            await AnimationToBeDone;
+            AnimationToBeDone = null;
+        }
+        base.ChildrenChanged(sender, e);
+    }
+}
+
+public class StackContentViewItem : ContentControl
+{
+
+}
+
+public class StackContentView : ItemsControl
 {
     private readonly SemaphoreSlim _semaphoreSlim = new(1, 1);
-    private readonly List<object> _controls = new();
-    private ContentControl? _contentPresenter;
-    private object? _pendingView;
     private NavigateType? _pendingNavigateType;
-
+    private Control? _lastContainer;
     public static readonly StyledProperty<bool> HasContentProperty =
         AvaloniaProperty.Register<Border, bool>(nameof(HasContent));
+
+    /// <summary>
+    /// Defines the <see cref="PageTransition"/> property.
+    /// </summary>
+    public static readonly StyledProperty<IPageTransition?> PageTransitionProperty =
+        AvaloniaProperty.Register<TransitioningContentControl, IPageTransition?>(
+            nameof(PageTransition),
+            defaultValue: new ImmutablePlatform());
+
+    /// <summary>
+    /// Gets or sets the animation played when content appears and disappears.
+    /// </summary>
+    public IPageTransition? PageTransition
+    {
+        get => GetValue(PageTransitionProperty);
+        set => SetValue(PageTransitionProperty, value);
+    }
+
+    public StackContentView()
+    {
+        //ItemsPanel = new ItemsPanelTemplate() { Content = new StackContentViewPanel() };
+    }
+
+    protected override Control CreateContainerForItemOverride(object? item, int index, object? recycleKey) =>
+        new StackContentViewItem();
+
+    protected override bool NeedsContainerOverride(object? item, int index, out object? recycleKey) =>
+        NeedsContainer<StackContentViewItem>(item, out recycleKey);
+
+    protected override void PrepareContainerForItemOverride(Control element, object? item, int index)
+    {
+        base.PrepareContainerForItemOverride(element, item, index);
+    }
+
+    protected override void ContainerForItemPreparedOverride(Control container, object? item, int index)
+    {
+        base.ContainerForItemPreparedOverride(container, item, index);
+
+        if (index == Items.Count - 1)
+        {
+            _lastContainer = container;
+            _ = PageTransition?.Start(
+                Items.Count > 1 ? ContainerFromIndex(index - 1) : null,
+                container,
+                true,
+                CancellationToken.None);
+        }
+    }
+
+    protected override async void ClearContainerForItemOverride(Control container)
+    {
+        var currentContainer = ContainerFromIndex(Items.Count - 1);
+
+        if (_lastContainer != container)
+        {
+            base.ClearContainerForItemOverride(container);
+            return;
+        }
+
+        var task = (PageTransition?.Start(
+            container,
+            currentContainer,
+            false,
+            CancellationToken.None) ?? Task.CompletedTask);
+
+        if (ItemsPanelRoot is StackContentViewPanel panel)
+            panel.AnimationToBeDone = task;
+
+        await task;
+
+        base.ClearContainerForItemOverride(container);
+        _lastContainer = currentContainer;
+    }
 
     public bool HasContent
     {
@@ -25,19 +129,7 @@ public class StackContentView : TemplatedControl
         private set => SetValue(HasContentProperty, value);
     }
 
-    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
-    {
-        base.OnApplyTemplate(e);
-        _contentPresenter = e.NameScope.Find<ContentControl>("PART_ContentPresenter");
-        if (_pendingView == null || _pendingNavigateType == null) return;
-        
-        UpdateCurrentView(_pendingView, _pendingNavigateType ?? NavigateType.Normal);
-
-        _pendingView = null;
-        _pendingNavigateType = null;
-    }
-
-    public object? CurrentView => _controls.LastOrDefault();
+    public object? CurrentView => Items.LastOrDefault();
 
     public async Task PushViewAsync(object view,
         NavigateType navigateType,
@@ -46,25 +138,19 @@ public class StackContentView : TemplatedControl
         await _semaphoreSlim.WaitAsync(cancellationToken);
         try
         {
-            var currentView = _contentPresenter?.Content ?? _pendingView;
-            if (currentView == view) return;
+            var current = CurrentView;
 
-            if (_controls.Contains(view))
-                _controls.Remove(view);
+            if (current != null && current == view) return;
+            if (view is not Control control) return;
 
-            _controls.Add(view);
+            // Bring to front if exists in collection
+            if (Items.Contains(control))
+                Items.Remove(control);
+            Items.Add(control);
 
-            if (_contentPresenter != null)
-            {
-                UpdateCurrentView(view, navigateType);
-            }
-            else
-            {
-                _pendingView = view;
-                _pendingNavigateType = navigateType;
-            }
+            UpdateCurrentView(current, control, navigateType, false);
 
-            await OnContentUpdateAsync(CurrentView, cancellationToken);
+            await OnContentUpdateAsync(control, cancellationToken);
         }
         finally
         {
@@ -72,10 +158,13 @@ public class StackContentView : TemplatedControl
         }
     }
 
-    protected virtual void UpdateCurrentView(object? view, NavigateType navigateType)
+    protected virtual void UpdateCurrentView(object? from, object? to, NavigateType navigateType, bool removed)
     {
-        //TODO: Apply specific animation type
-        _contentPresenter!.Content = view;
+        ////TODO: Apply specific animation type
+        //if (_contentPresenter is IPageSwitcher pageSwitcher)
+        //    pageSwitcher.SwitchPage(new PageSwitcherInfo(view, null, null, null, true, navigateType));
+        //else
+        //    _contentPresenter!.Content = view;
     }
 
     public async Task<bool> RemoveViewAsync(object view, NavigateType navigateType, CancellationToken cancellationToken)
@@ -83,16 +172,17 @@ public class StackContentView : TemplatedControl
         await _semaphoreSlim.WaitAsync(cancellationToken);
         try
         {
-            if (!_controls.Contains(view)) return false;
-            var currentView = CurrentView;
+            if (!Items.Contains(view)) return false;
+            var from = CurrentView;
 
-            _controls.Remove(view);
-            if (view == currentView && _contentPresenter != null)
+            Items.Remove(view as Control);
+
+            var to = CurrentView;
+            if (from != to)
             {
-                UpdateCurrentView(CurrentView, navigateType);
+                UpdateCurrentView(from, to, navigateType, true);
+                await OnContentUpdateAsync(CurrentView, cancellationToken);
             }
-
-            await OnContentUpdateAsync(CurrentView, cancellationToken);
             return true;
         }
         finally
@@ -103,13 +193,30 @@ public class StackContentView : TemplatedControl
 
     protected virtual Task OnContentUpdateAsync(object? view, CancellationToken cancellationToken)
     {
-        HasContent = _controls.Count > 0;
+        HasContent = Items.Count > 0;
         return Task.CompletedTask;
     }
 
     public Task ClearStackAsync(CancellationToken cancellationToken)
     {
-        _controls.RemoveRange(0, _controls.Count - 1);
+        while (Items.Count > 1)
+            Items.RemoveAt(0);
+
         return Task.CompletedTask;
+    }
+
+    private class ImmutablePlatform : IPageTransition
+    {
+        private readonly IPageTransition _inner;
+
+        public ImmutablePlatform()
+        {
+            _inner = new Platform.Android.MaterialListPageSlide();
+        }
+
+        public Task Start(Visual? from, Visual? to, bool forward, CancellationToken cancellationToken)
+        {
+            return _inner.Start(from, to, forward, cancellationToken);
+        }
     }
 }

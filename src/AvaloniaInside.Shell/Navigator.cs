@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AvaloniaInside.Shell;
 
-public class Navigator : INavigator
+public partial class Navigator : INavigator
 {
 	private readonly INavigateStrategy _navigateStrategy;
 	private readonly INavigationUpdateStrategy _updateStrategy;
