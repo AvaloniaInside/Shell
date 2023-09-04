@@ -3,7 +3,7 @@
         <OutputType>Exe</OutputType>
         <TargetFramework>net7.0-ios</TargetFramework>
         <SupportedOSPlatformVersion>10.0</SupportedOSPlatformVersion>
-        <ProvisioningType>manual</ProvisioningType>
+        <ProvisioningType>automatic</ProvisioningType>
         <Nullable>enable</Nullable>
         <RuntimeIdentifier>iossimulator-x64</RuntimeIdentifier>
 
