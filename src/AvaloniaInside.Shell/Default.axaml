@@ -3,7 +3,7 @@
 	<Styles.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
-				<MergeResourceInclude Source="avares://AvaloniaInside.Shell/Theme/PlatformTransitioningContentControl.xaml" />
+				<MergeResourceInclude Source="avares://AvaloniaInside.Shell/Theme/StackContentView.xaml" />
 			</ResourceDictionary.MergedDictionaries>
 		</ResourceDictionary>
 	</Styles.Resources>
@@ -11,7 +11,36 @@
 	<Style Selector="StackContentView">
 		<Setter Property="Template">
 			<ControlTemplate>
-				<PlatformTransitioningContentControl Name="PART_ContentPresenter" />
+				<Border Padding="{TemplateBinding Padding}"
+						Background="{TemplateBinding Background}"
+						BorderBrush="{TemplateBinding BorderBrush}"
+						BorderThickness="{TemplateBinding BorderThickness}"
+						CornerRadius="{TemplateBinding CornerRadius}">
+					<ItemsPresenter Name="PART_ItemsPresenter"
+									ItemsPanel="{TemplateBinding ItemsPanel}" />
+				</Border>
+			</ControlTemplate>
+		</Setter>
+		<Setter Property="ItemsPanel">
+			<ItemsPanelTemplate>
+				<StackContentViewPanel></StackContentViewPanel>
+			</ItemsPanelTemplate>
+		</Setter>
+	</Style>
+
+	<Style Selector="StackContentViewItem">
+		<Setter Property="Template">
+			<ControlTemplate>
+				<ContentPresenter Name="PART_ContentPresenter"
+								  Padding="{TemplateBinding Padding}"
+								  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+								  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+								  Background="{TemplateBinding Background}"
+								  BorderBrush="{TemplateBinding BorderBrush}"
+								  BorderThickness="{TemplateBinding BorderThickness}"
+								  Content="{TemplateBinding Content}"
+								  ContentTemplate="{TemplateBinding ContentTemplate}"
+								  CornerRadius="{TemplateBinding CornerRadius}" />
 			</ControlTemplate>
 		</Setter>
 	</Style>
@@ -99,19 +128,7 @@
 					</Rectangle>
 
 					<StackContentView Name="PART_Modal"
-					                        IsVisible="{Binding ElementName=PART_Modal, Path=HasContent}">
-						<StackContentView.Template>
-							<ControlTemplate>
-								<Panel VerticalAlignment="Center" HorizontalAlignment="Center">
-									<TransitioningContentControl Name="PART_ContentPresenter"
-									                             VerticalContentAlignment="Center"
-									                             HorizontalContentAlignment="Center"
-									                             VerticalAlignment="Center"
-									                             HorizontalAlignment="Center">
-									</TransitioningContentControl>
-								</Panel>
-							</ControlTemplate>
-						</StackContentView.Template>
+					                  IsVisible="{Binding ElementName=PART_Modal, Path=HasContent}">
 					</StackContentView>
 				</Panel>
 			</ControlTemplate>

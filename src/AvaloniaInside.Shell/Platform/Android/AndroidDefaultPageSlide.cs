@@ -1,22 +1,27 @@
 ﻿using Avalonia.Animation.Easings;
 using Avalonia.Animation;
-using Avalonia.Media;
-using Avalonia.Styling;
 using Avalonia;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.VisualTree;
 using Avalonia.Rendering.Composition;
-using Avalonia.Utilities;
+using Avalonia.Rendering.Composition.Animations;
 
 namespace AvaloniaInside.Shell.Platform.Android;
 
-public class AndroidDefaultPageSlide : IPageTransition
+public class MaterialListPageSlide : IPageTransition
 {
+    private CompositionAnimationGroup? _enteranceAnimation;
+    private CompositionAnimationGroup? _exitAnimation;
+    private CompositionAnimationGroup? _sendBackAnimation;
+    private CompositionAnimationGroup? _bringBackAnimation;
+
+    private const float EndingCue = 0.75f;
+    private const float StartingCue = 0.25f;
+
+    private double _lastDistance = 0;
+
     /// <summary>
     /// The axis on which the PageSlide should occur
     /// </summary>
@@ -29,40 +34,115 @@ public class AndroidDefaultPageSlide : IPageTransition
     /// <summary>
     /// Initializes a new instance of the <see cref="PageSlide"/> class.
     /// </summary>
-    public AndroidDefaultPageSlide()
+    public MaterialListPageSlide()
     {
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="PageSlide"/> class.
-    /// </summary>
-    /// <param name="duration">The duration of the animation.</param>
-    /// <param name="orientation">The axis on which the animation should occur</param>
-    public AndroidDefaultPageSlide(TimeSpan duration, SlideAxis orientation = SlideAxis.Horizontal)
-    {
-        Duration = duration;
-        Orientation = orientation;
     }
 
     /// <summary>
     /// Gets the duration of the animation.
     /// </summary>
-    public TimeSpan Duration { get; set; } = TimeSpan.FromSeconds(0.3);
-
-    /// <summary>
-    /// Gets the duration of the animation.
-    /// </summary>
-    public SlideAxis Orientation { get; set; } = SlideAxis.Horizontal;
+    public TimeSpan Duration { get; set; } = TimeSpan.FromSeconds(.3);
 
     /// <summary>
     /// Gets or sets element entrance easing.
     /// </summary>
-    public Easing SlideInEasing { get; set; } = new FastOutExtraSlowInEasing(); //Easing.Parse("0.4, 0.0, 0.2, 1");
+    public Easing SlideEasing { get; set; } = new FastOutExtraSlowInEasing(); //Easing.Parse("0.4, 0.0, 0.2, 1");
 
-    /// <summary>
-    /// Gets or sets element exit easing.
-    /// </summary>
-    public Easing SlideOutEasing { get; set; } = new FastOutExtraSlowInEasing(); //Easing.Parse("0.4, 0.0, 0.2, 1");
+    private CompositionAnimationGroup GetOrCreateEnteranceAnimation(CompositionVisual element, double distance)
+    {
+        if (_enteranceAnimation != null) return _enteranceAnimation;
+
+        var compositor = element.Compositor;
+
+        var offsetAnimation = compositor.CreateVector3DKeyFrameAnimation();
+        offsetAnimation.Duration = Duration;
+        offsetAnimation.Target = nameof(element.Offset);
+        offsetAnimation.InsertKeyFrame(StartingCue, new Vector3D(distance / 2d, 0, 0), SlideEasing);
+        offsetAnimation.InsertKeyFrame(1.0f, new Vector3D(0, 0, 0), SlideEasing);
+
+        var fadeAnimation = compositor.CreateScalarKeyFrameAnimation();
+        fadeAnimation.Duration = Duration;
+        fadeAnimation.Target = nameof(element.Opacity);
+        fadeAnimation.InsertKeyFrame(StartingCue, 0f, SlideEasing);
+        fadeAnimation.InsertKeyFrame(1.0f, 1f, SlideEasing);
+
+        _enteranceAnimation = compositor.CreateAnimationGroup();
+        _enteranceAnimation.Add(offsetAnimation);
+        _enteranceAnimation.Add(fadeAnimation);
+        return _enteranceAnimation;
+    }
+
+    private CompositionAnimationGroup GetOrCreateExitAnimation(CompositionVisual element, double distance)
+    {
+        if (_exitAnimation != null) return _exitAnimation;
+
+        var compositor = element.Compositor;
+
+        var offsetAnimation = compositor.CreateVector3DKeyFrameAnimation();
+        offsetAnimation.Duration = Duration;
+        offsetAnimation.Target = nameof(element.Offset);
+        offsetAnimation.InsertKeyFrame(0f, new Vector3D(0, 0, 0), SlideEasing);
+        offsetAnimation.InsertKeyFrame(EndingCue, new Vector3D(distance / 2d, 0, 0), SlideEasing);
+
+        var fadeAnimation = compositor.CreateScalarKeyFrameAnimation();
+        fadeAnimation.Duration = Duration;
+        fadeAnimation.Target = nameof(element.Opacity);
+        fadeAnimation.InsertKeyFrame(0f, 1f, SlideEasing);
+        fadeAnimation.InsertKeyFrame(EndingCue, 0f, SlideEasing);
+
+        _exitAnimation = compositor.CreateAnimationGroup();
+        _exitAnimation.Add(offsetAnimation);
+        _exitAnimation.Add(fadeAnimation);
+        return _exitAnimation;
+    }
+
+    private CompositionAnimationGroup GetOrCreateSendBackAnimation(CompositionVisual element, double distance)
+    {
+        if (_sendBackAnimation != null) return _sendBackAnimation;
+
+        var compositor = element.Compositor;
+
+        var offsetAnimation = compositor.CreateVector3DKeyFrameAnimation();
+        offsetAnimation.Duration = Duration;
+        offsetAnimation.Target = nameof(element.Offset);
+        offsetAnimation.InsertKeyFrame(0f, new Vector3D(0, 0, 0), SlideEasing);
+        offsetAnimation.InsertKeyFrame(EndingCue, new Vector3D(-distance / 2d, 0, 0), SlideEasing);
+
+        var fadeAnimation = compositor.CreateScalarKeyFrameAnimation();
+        fadeAnimation.Duration = Duration;
+        fadeAnimation.Target = nameof(element.Opacity);
+        fadeAnimation.InsertKeyFrame(0f, 1f, SlideEasing);
+        fadeAnimation.InsertKeyFrame(EndingCue, 0f, SlideEasing);
+
+        _sendBackAnimation = compositor.CreateAnimationGroup();
+        _sendBackAnimation.Add(offsetAnimation);
+        _sendBackAnimation.Add(fadeAnimation);
+        return _sendBackAnimation;
+    }
+
+    private CompositionAnimationGroup GetOrCreateBringBackAnimation(CompositionVisual element, double distance)
+    {
+        if (_bringBackAnimation != null) return _bringBackAnimation;
+
+        var compositor = element.Compositor;
+
+        var offsetAnimation = compositor.CreateVector3DKeyFrameAnimation();
+        offsetAnimation.Duration = Duration;
+        offsetAnimation.Target = nameof(element.Offset);
+        offsetAnimation.InsertKeyFrame(StartingCue, new Vector3D(-distance / 2d, 0, 0), SlideEasing);
+        offsetAnimation.InsertKeyFrame(1f, new Vector3D(0, 0, 0), SlideEasing);
+
+        var fadeAnimation = compositor.CreateScalarKeyFrameAnimation();
+        fadeAnimation.Duration = Duration;
+        fadeAnimation.Target = nameof(element.Opacity);
+        fadeAnimation.InsertKeyFrame(StartingCue, 0f, SlideEasing);
+        fadeAnimation.InsertKeyFrame(1f, 1f, SlideEasing);
+
+        _bringBackAnimation = compositor.CreateAnimationGroup();
+        _bringBackAnimation.Add(offsetAnimation);
+        _bringBackAnimation.Add(fadeAnimation);
+        return _bringBackAnimation;
+    }
 
     /// <inheritdoc />
     public virtual async Task Start(Visual? from, Visual? to, bool forward, CancellationToken cancellationToken)
@@ -72,98 +152,40 @@ public class AndroidDefaultPageSlide : IPageTransition
             return;
         }
 
-        var tasks = new List<Task>();
         var parent = GetVisualParent(from, to);
-        var distance = Orientation == SlideAxis.Horizontal ? parent.Bounds.Width : parent.Bounds.Height;
-        var translateProperty = Orientation == SlideAxis.Horizontal ? TranslateTransform.XProperty : TranslateTransform.YProperty;
+        var parentComposition = ElementComposition.GetElementVisual(parent)!;
 
-        if (from != null)
+        var distance = parent.Bounds.Width;
+
+        if (distance != _lastDistance)
         {
-            from.ZIndex = forward ? 0 : 1;
-            var animation = new Animation
-            {
-                FillMode = FillMode.Forward,
-                Easing = forward ? SlideInEasing : SlideOutEasing,
-                Children =
-                    {
-                        new KeyFrame
-                        {
-                            Setters = {
-                                new Setter { Property = Visual.OpacityProperty, Value = 1d },
-                                new Setter { Property = translateProperty, Value = 0d },
-                            },
-                            Cue = new Cue(0d)
-                        },
-                        new KeyFrame
-                        {
-                            Setters =
-                            {
-                                new Setter { Property = Visual.OpacityProperty, Value = 0d },
-                                new Setter
-                                {
-                                    Property = translateProperty,
-                                    Value = (forward ? -distance : distance) / 2d
-                                },
-                            },
-                            Cue = new Cue(0.5d)
-                        },
-                        new KeyFrame
-                        {
-                            Setters =
-                            {
-                                new Setter { Property = Visual.OpacityProperty, Value = 0d },
-                                new Setter
-                                {
-                                    Property = translateProperty,
-                                    Value = (forward ? -distance : distance) / 2d
-                                },
-                            },
-                            Cue = new Cue(1d)
-                        }
-                    },
-                Duration = Duration
-            };
-            tasks.Add(animation.RunAsync(from, cancellationToken));
+            _enteranceAnimation = null;
+            _exitAnimation = null;
+            _sendBackAnimation = null;
+            _bringBackAnimation = null;
         }
 
         if (to != null)
         {
-            to.ZIndex = forward ? 1 : 0;
-            to.IsVisible = true;
-            var animation = new Animation
-            {
-                FillMode = FillMode.Forward,
-                Easing = forward ? SlideInEasing : SlideOutEasing,
-                Children =
-                    {
-                        new KeyFrame
-                        {
-                            Setters =
-                            {
-                                new Setter { Property = Visual.OpacityProperty, Value = 0d },
-                                new Setter { Property = translateProperty, Value = (forward ? distance : -distance) / 2d },
-                            },
-                            Cue = new Cue(0.5d)
-                        },
-                        new KeyFrame
-                        {
-                            Setters = {
-                                new Setter { Property = Visual.OpacityProperty, Value = 1d },
-                                new Setter { Property = translateProperty, Value = 0d },
-                            },
-                            Cue = new Cue(1d)
-                        }
-                    },
-                Duration = Duration
-            };
-            tasks.Add(animation.RunAsync(to, cancellationToken));
+            var toElement = ElementComposition.GetElementVisual(to)!;
+            var animation = forward
+                ? GetOrCreateEnteranceAnimation(parentComposition, distance)
+                : GetOrCreateBringBackAnimation(parentComposition, distance);
+
+            toElement.StartAnimationGroup(animation);
         }
 
-        await Task.WhenAll(tasks);
-        if (from != null && !cancellationToken.IsCancellationRequested)
+        if (from != null)
         {
-            from.IsVisible = false;
+            var fromElement = ElementComposition.GetElementVisual(from)!;
+            var animation = forward
+               ? GetOrCreateSendBackAnimation(parentComposition, distance)
+               : GetOrCreateExitAnimation(parentComposition, distance);
+
+            fromElement.StartAnimationGroup(animation);
         }
+
+        await Task.Run(() => Task.Delay(Duration, cancellationToken), cancellationToken);
     }
 
     /// <summary>
