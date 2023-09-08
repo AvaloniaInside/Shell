@@ -1,4 +1,4 @@
-<UserControl xmlns="https://github.com/avaloniaui"
+<Page xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -7,14 +7,14 @@
              x:Class="ShellExample.Views.ShopViews.ProductDetailView"
 			 NavigationBar.Header="{Binding Product.Title}"
 			 Background="#171C2C">
-	<UserControl.Resources>
+	<Page.Resources>
 		<converters:BitmapAssetValueConverter x:Key="variableImage"/>
-	</UserControl.Resources>
+	</Page.Resources>
 
 	<ScrollViewer>
 		<Grid RowDefinitions="auto,auto,auto,auto,*" Margin="4">
 			<Border Background="White" Margin="5" CornerRadius="8">
-				<Image Source="{Binding Product.PictureUrl, Converter={StaticResource variableImage}}" 
+				<Image Source="{Binding Product.PictureUrl, Converter={StaticResource variableImage}}"
 					   Margin="10"
 					   MaxHeight="250"></Image>
 			</Border>
@@ -40,4 +40,4 @@
 			<TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding Product.Price}"></TextBlock>
 		</Grid>
 	</ScrollViewer>
-</UserControl>
+</Page>

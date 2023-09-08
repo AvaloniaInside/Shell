@@ -1,10 +1,11 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using AvaloniaInside.Shell;
 
 namespace ShellExample.Views;
 
-public partial class SimpleDialog : UserControl
+public partial class SimpleDialog : Page
 {
 	public SimpleDialog()
 	{
@@ -18,12 +19,12 @@ public partial class SimpleDialog : UserControl
 
 	private void OkButton_OnClick(object? sender, RoutedEventArgs e)
 	{
-		MainView.Current.ShellViewMain.Navigator.BackAsync();
+		Navigator?.BackAsync();
 	}
 
 	private void CancelButton_OnClick(object? sender, RoutedEventArgs e)
 	{
-		MainView.Current.ShellViewMain.Navigator.BackAsync();
+        Navigator?.BackAsync();
 	}
 }
 

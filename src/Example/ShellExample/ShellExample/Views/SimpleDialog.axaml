@@ -1,4 +1,4 @@
-<UserControl xmlns="https://github.com/avaloniaui"
+<Page xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -26,7 +26,7 @@
 					Excepteur sint occaecat cupidatat
 					non proident, sunt in
 					culpa qui officia deserunt
-						mollit anim id est laborum.
+					mollit anim id est laborum.
 				</TextBlock>
 			</Canvas>
 			<Border Grid.Row="2" Background="#333333" VerticalAlignment="Bottom">
@@ -37,5 +37,5 @@
 			</Border>
 		</Grid>
 	</Border>
-</UserControl>
+</Page>
 

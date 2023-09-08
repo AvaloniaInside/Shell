@@ -1,9 +1,10 @@
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using AvaloniaInside.Shell;
 
 namespace ShellExample.Views;
 
-public partial class SecondView : UserControl
+public partial class SecondView : Page
 {
 	public SecondView()
 	{

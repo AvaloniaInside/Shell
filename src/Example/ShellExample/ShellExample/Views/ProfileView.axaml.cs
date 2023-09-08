@@ -1,9 +1,10 @@
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using AvaloniaInside.Shell;
 
 namespace ShellExample.Views;
 
-public partial class ProfileView : UserControl
+public partial class ProfileView : Page
 {
 	public ProfileView()
 	{

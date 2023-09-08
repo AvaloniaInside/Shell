@@ -1,13 +1,21 @@
 using Avalonia.Controls;
+using AvaloniaInside.Shell;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ShellExample.Views
 {
-    public partial class WelcomeView : UserControl
+    public partial class WelcomeView : Page
     {
         public WelcomeView()
         {
             InitializeComponent();
-            DataContext = new ViewModels.WelcomeViewModel(MainView.Current.ShellViewMain.Navigator);
+        }
+
+        public override Task InitialiseAsync(CancellationToken cancellationToken)
+        {
+            DataContext = new ViewModels.WelcomeViewModel(Navigator);
+            return base.InitialiseAsync(cancellationToken);
         }
     }
 }

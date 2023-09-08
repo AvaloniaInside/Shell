@@ -87,7 +87,8 @@ public partial class Navigator : INavigator
 			instanceFor =>
 			{
 				var instance = _viewLocator.GetView(instanceFor);
-				instances.Add(instance);
+                SetShellToPage(instance);
+                instances.Add(instance);
 				return instance;
 			});
 
@@ -104,6 +105,12 @@ public partial class Navigator : INavigator
 
 		_navigating = false;
 	}
+
+	private void SetShellToPage(object instance)
+	{
+		if (instance is Page page)
+			page.Shell = ShellView;
+    }
 
 	private async Task SwitchHostedItem(
 		NavigationChain old,

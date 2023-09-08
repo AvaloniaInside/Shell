@@ -1,20 +1,27 @@
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using AvaloniaInside.Shell;
 using ShellExample.ViewModels.ShopViewModels;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ShellExample.Views.ShopViews;
 
-public partial class ProductCatalogView : UserControl
+public partial class ProductCatalogView : Page
 {
 	public ProductCatalogView()
 	{
 		InitializeComponent();
-		DataContext = ViewModel = new ProductCatalogViewModel(MainView.Current.ShellViewMain.Navigator);
 	}
 
-	public ProductCatalogViewModel ViewModel { get; }
+	public override Task InitialiseAsync(CancellationToken cancellationToken)
+	{
+        DataContext = new ProductCatalogViewModel(Navigator);
 
-	private void InitializeComponent()
+        return base.InitialiseAsync(cancellationToken);
+	}
+
+    private void InitializeComponent()
 	{
 		AvaloniaXamlLoader.Load(this);
 	}

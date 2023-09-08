@@ -1,9 +1,10 @@
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using AvaloniaInside.Shell;
 
 namespace ShellExample.Views;
 
-public partial class CatView : UserControl
+public partial class CatView : Page
 {
 	public CatView()
 	{

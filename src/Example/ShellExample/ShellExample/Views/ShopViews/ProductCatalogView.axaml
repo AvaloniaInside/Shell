@@ -1,4 +1,4 @@
-<UserControl xmlns="https://github.com/avaloniaui"
+<Page xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -6,9 +6,9 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="ShellExample.Views.ShopViews.ProductCatalogView"
              NavigationBar.Header="{Binding Title}">
-	<UserControl.Resources>
+	<Page.Resources>
 		<converters:BitmapAssetValueConverter x:Key="variableImage"/>
-	</UserControl.Resources>
+	</Page.Resources>
 	<NavigationBar.Item>
 		<Button Content="Filter"
 		        Command="{Binding FilterCommand}"
@@ -23,8 +23,8 @@
 			</ItemsControl.ItemsPanel>
 			<ItemsControl.ItemTemplate>
 				<DataTemplate>
-					<Button Navigator.To="/main/product/detail" 
-							CommandParameter="{Binding .}" 
+					<Button Navigator.To="/main/product/detail"
+							CommandParameter="{Binding .}"
 							HorizontalAlignment="Stretch">
 						<Button.Template>
 							<ControlTemplate>
@@ -61,4 +61,4 @@
 			</ItemsControl.ItemTemplate>
 		</ItemsControl>
 	</ScrollViewer>
-</UserControl>
+</Page>
