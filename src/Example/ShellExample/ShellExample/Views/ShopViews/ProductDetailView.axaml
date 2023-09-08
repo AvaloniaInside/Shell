@@ -5,7 +5,8 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              xmlns:converters="clr-namespace:ShellExample.Converters"
              x:Class="ShellExample.Views.ShopViews.ProductDetailView"
-			 NavigationBar.Header="{Binding Product.Title}">
+			 NavigationBar.Header="{Binding Product.Title}"
+			 Background="#171C2C">
 	<UserControl.Resources>
 		<converters:BitmapAssetValueConverter x:Key="variableImage"/>
 	</UserControl.Resources>

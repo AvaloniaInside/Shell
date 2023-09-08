@@ -1,37 +1,37 @@
 ﻿using Avalonia.Animation.Easings;
+using Avalonia.Rendering.Composition.Animations;
+using Avalonia.Rendering.Composition;
 using Avalonia;
+using AvaloniaInside.Shell.Platform.Android;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Avalonia.Rendering.Composition;
-using Avalonia.Rendering.Composition.Animations;
 
-namespace AvaloniaInside.Shell.Platform.Android;
-
-public class AndroidDefaultPageSlide : PlatformBasePageTransition
+namespace AvaloniaInside.Shell.Platform.Windows;
+public class DrillInNavigationTransition : PlatformBasePageTransition
 {
-    private const float EndingCue = 0.65f;
-    private const float StartingCue = 0.35f;
+    private const float EndingCue = 0.7f;
+    private const float StartingCue = 0.3f;
 
     /// <summary>
     /// Gets the duration of the animation.
     /// </summary>
-    public override TimeSpan Duration { get; set; } = TimeSpan.FromSeconds(0.3);
+    public override TimeSpan Duration { get; set; } = TimeSpan.FromSeconds(0.33);
 
     /// <summary>
     /// Scale factor to animate in
     /// </summary>
-    public float ZoomInFactor { get; set; } = 1.1f;
+    public float ZoomInFactor { get; set; } = 1.25f;
 
     /// <summary>
     /// Scale factor to animate out
     /// </summary>
-    public float ZoomOutFactor { get; set; } = 0.9f;
+    public float ZoomOutFactor { get; set; } = 0.75f;
 
     /// <summary>
     /// Gets or sets element entrance easing.
     /// </summary>
-    public override Easing Easing { get; set; } = new FastOutExtraSlowInEasing();
+    public override Easing Easing { get; set; } = Easing.Parse("0.85, 0.0, 0.0, 1.0");
 
     protected override CompositionAnimationGroup GetOrCreateEnteranceAnimation(CompositionVisual element, double widthDistance, double heightDistance)
     {

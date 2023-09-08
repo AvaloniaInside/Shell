@@ -33,6 +33,32 @@
 			<ContentPresenter Content="{Binding Instance}"></ContentPresenter>
 		</DataTemplate>
 	</TabControl.ContentTemplate>
+	<TabControl.Template>
+		<ControlTemplate>
+			<Border BorderBrush="{TemplateBinding BorderBrush}"
+					BorderThickness="{TemplateBinding BorderThickness}"
+					CornerRadius="{TemplateBinding CornerRadius}"
+					Background="{TemplateBinding Background}"
+					HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+					VerticalAlignment="{TemplateBinding VerticalAlignment}">
+				<DockPanel>
+					<ItemsPresenter Name="PART_ItemsPresenter"
+									ItemsPanel="{TemplateBinding ItemsPanel}"
+									DockPanel.Dock="{TemplateBinding TabStripPlacement}" />
+					<!--<Carousel Name="PART_SelectedContentHost"
+							  Margin="{TemplateBinding Padding}"
+							  ItemsSource="{TemplateBinding ItemsSource}"
+							  SelectedItem="{TemplateBinding SelectedContent}"></Carousel>-->
+					<ContentPresenter Name="PART_SelectedContentHost"
+									  Margin="{TemplateBinding Padding}"
+									  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+									  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+									  Content="{TemplateBinding SelectedContent}"
+									  ContentTemplate="{TemplateBinding SelectedContentTemplate}" />
+				</DockPanel>
+			</Border>
+		</ControlTemplate>
+	</TabControl.Template>
 	<TabControl.Styles>
 		<Style Selector="TabControl.MainTab /template/ Border > DockPanel > Border">
 			<Setter Property="Padding"

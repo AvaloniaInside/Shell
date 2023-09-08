@@ -92,7 +92,9 @@
 							               TopSafePadding="{TemplateBinding TopSafePadding}"
 							               TopSafeSpace="{TemplateBinding TopSafeSpace}"
 							               ApplyTopSafePadding="{TemplateBinding ApplyTopSafePadding}"/>
-							<StackContentView Name="PART_ContentView" Grid.Row="1"></StackContentView>
+							<StackContentView Name="PART_ContentView" 
+											  Grid.Row="1"
+											  PageTransition="{TemplateBinding DefaultPageTransition}"></StackContentView>
 							<Border Grid.Row="2"
 							        IsVisible="{TemplateBinding ApplyBottomSafePadding}"
 							        Height="{TemplateBinding BottomSafeSpace}">
