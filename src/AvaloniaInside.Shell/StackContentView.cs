@@ -2,10 +2,10 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 using Avalonia;
 using Avalonia.Animation;
 using Avalonia.Controls;
+using AvaloniaInside.Shell.Platform.Windows;
 
 namespace AvaloniaInside.Shell;
 
@@ -56,7 +56,7 @@ public class StackContentView : ItemsControl
     public static readonly StyledProperty<IPageTransition?> PageTransitionProperty =
         AvaloniaProperty.Register<TransitioningContentControl, IPageTransition?>(
             nameof(PageTransition),
-            defaultValue: new ImmutablePlatform());
+            defaultValue: new ListSlideNavigationTransition());
 
     /// <summary>
     /// Gets or sets the animation played when content appears and disappears.
@@ -160,11 +160,7 @@ public class StackContentView : ItemsControl
 
     protected virtual void UpdateCurrentView(object? from, object? to, NavigateType navigateType, bool removed)
     {
-        ////TODO: Apply specific animation type
-        //if (_contentPresenter is IPageSwitcher pageSwitcher)
-        //    pageSwitcher.SwitchPage(new PageSwitcherInfo(view, null, null, null, true, navigateType));
-        //else
-        //    _contentPresenter!.Content = view;
+        //TODO: Apply specific animation type
     }
 
     public async Task<bool> RemoveViewAsync(object view, NavigateType navigateType, CancellationToken cancellationToken)
@@ -203,20 +199,5 @@ public class StackContentView : ItemsControl
             Items.RemoveAt(0);
 
         return Task.CompletedTask;
-    }
-
-    private class ImmutablePlatform : IPageTransition
-    {
-        private readonly IPageTransition _inner;
-
-        public ImmutablePlatform()
-        {
-            _inner = new Platform.Android.MaterialListPageSlide();
-        }
-
-        public Task Start(Visual? from, Visual? to, bool forward, CancellationToken cancellationToken)
-        {
-            return _inner.Start(from, to, forward, cancellationToken);
-        }
     }
 }
