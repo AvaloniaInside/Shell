@@ -8,7 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 namespace AvaloniaInside.Shell.Platform.Windows;
-internal class DrillInNavigationTransition : PlatformBasePageTransition
+public class DrillInNavigationTransition : PlatformBasePageTransition
 {
     private const float EndingCue = 0.7f;
     private const float StartingCue = 0.3f;

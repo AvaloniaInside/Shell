@@ -54,7 +54,7 @@ public class StackContentView : ItemsControl
     /// Defines the <see cref="PageTransition"/> property.
     /// </summary>
     public static readonly StyledProperty<IPageTransition?> PageTransitionProperty =
-        AvaloniaProperty.Register<TransitioningContentControl, IPageTransition?>(
+        AvaloniaProperty.Register<StackContentView, IPageTransition?>(
             nameof(PageTransition),
             defaultValue: new ListSlideNavigationTransition());
 

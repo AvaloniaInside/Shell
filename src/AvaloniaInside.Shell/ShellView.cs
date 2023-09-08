@@ -2,11 +2,13 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia;
+using Avalonia.Animation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
+using AvaloniaInside.Shell.Platform.Windows;
 using ReactiveUI;
 using Splat;
 
@@ -171,6 +173,27 @@ public partial class ShellView : TemplatedControl
     {
         get => GetValue(ApplyBottomSafePaddingProperty);
         set => SetValue(ApplyBottomSafePaddingProperty, value);
+    }
+
+    #endregion
+
+    #region ApplyBottomSafePadding
+
+    /// <summary>
+    /// Defines the <see cref="DefaultPageTransitionProperty"/> property.
+    /// </summary>
+    public static readonly StyledProperty<IPageTransition?> DefaultPageTransitionProperty =
+        AvaloniaProperty.Register<ShellView, IPageTransition?>(
+            nameof(DefaultPageTransition),
+            defaultValue: new DrillInNavigationTransition());
+
+    /// <summary>
+    /// Gets or sets the animation played when content appears and disappears.
+    /// </summary>
+    public IPageTransition? DefaultPageTransition
+    {
+        get => GetValue(DefaultPageTransitionProperty);
+        set => SetValue(DefaultPageTransitionProperty, value);
     }
 
     #endregion

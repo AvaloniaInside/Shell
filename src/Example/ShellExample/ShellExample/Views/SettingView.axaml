@@ -5,6 +5,18 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="ShellExample.Views.SettingView"
              NavigationBar.Header="Settings">
-	Welcome to Avalonia!
+	<Grid RowDefinitions="35,35,35,35,35,*" ColumnDefinitions="*,*" Margin="10">
+		<TextBlock Text="Default Page Transition" />
+		<ComboBox ItemsSource="{Binding Transitions}" 
+				  SelectedItem="{Binding CurrentTransition}"
+				  Grid.Column="1"
+				  HorizontalAlignment="Stretch">
+			<ComboBox.ItemTemplate>
+				<DataTemplate>
+					<TextBlock Text="{Binding Name}" />
+				</DataTemplate>
+			</ComboBox.ItemTemplate>
+		</ComboBox>
+	</Grid>
 </UserControl>
 

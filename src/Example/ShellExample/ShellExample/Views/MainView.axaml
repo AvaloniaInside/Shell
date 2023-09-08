@@ -29,7 +29,9 @@
 	           MediumScreenSideMenuBehave="Default"
 
 	           LargeScreenSideMenuMode="Inline"
-	           LargeScreenSideMenuBehave="Keep">
+	           LargeScreenSideMenuBehave="Keep"
+			   
+			   DefaultPageTransition="{Binding CurrentTransition}">
 
 		<Route Path="welcome" Page="views:WelcomeView"></Route>
 

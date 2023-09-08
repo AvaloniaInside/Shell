@@ -45,16 +45,16 @@
 					<ItemsPresenter Name="PART_ItemsPresenter"
 									ItemsPanel="{TemplateBinding ItemsPanel}"
 									DockPanel.Dock="{TemplateBinding TabStripPlacement}" />
-					<Carousel Name="PART_SelectedContentHost"
+					<!--<Carousel Name="PART_SelectedContentHost"
 							  Margin="{TemplateBinding Padding}"
 							  ItemsSource="{TemplateBinding ItemsSource}"
-							  SelectedItem="{TemplateBinding SelectedContent}"></Carousel>
-					<!--<ContentPresenter Name="PART_SelectedContentHost"
+							  SelectedItem="{TemplateBinding SelectedContent}"></Carousel>-->
+					<ContentPresenter Name="PART_SelectedContentHost"
 									  Margin="{TemplateBinding Padding}"
 									  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
 									  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
 									  Content="{TemplateBinding SelectedContent}"
-									  ContentTemplate="{TemplateBinding SelectedContentTemplate}" />-->
+									  ContentTemplate="{TemplateBinding SelectedContentTemplate}" />
 				</DockPanel>
 			</Border>
 		</ControlTemplate>

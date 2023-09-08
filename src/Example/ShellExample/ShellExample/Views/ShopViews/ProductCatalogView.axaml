@@ -23,7 +23,9 @@
 			</ItemsControl.ItemsPanel>
 			<ItemsControl.ItemTemplate>
 				<DataTemplate>
-					<Button Navigator.To="/main/product/detail" CommandParameter="{Binding .}" HorizontalAlignment="Stretch">
+					<Button Navigator.To="/main/product/detail" 
+							CommandParameter="{Binding .}" 
+							HorizontalAlignment="Stretch">
 						<Button.Template>
 							<ControlTemplate>
 								<Border Background="#40000000" Margin="8" Padding="4" CornerRadius="6">
