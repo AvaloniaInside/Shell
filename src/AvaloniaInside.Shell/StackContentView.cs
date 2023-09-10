@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Animation;
 using Avalonia.Controls;
+using AvaloniaInside.Shell.Platform;
 using AvaloniaInside.Shell.Platform.Windows;
 
 namespace AvaloniaInside.Shell;
@@ -56,7 +57,7 @@ public class StackContentView : ItemsControl
     public static readonly StyledProperty<IPageTransition?> PageTransitionProperty =
         AvaloniaProperty.Register<StackContentView, IPageTransition?>(
             nameof(PageTransition),
-            defaultValue: new ListSlideNavigationTransition());
+            defaultValue: PlatformSetup.TransitionForPage());
 
     /// <summary>
     /// Gets or sets the animation played when content appears and disappears.

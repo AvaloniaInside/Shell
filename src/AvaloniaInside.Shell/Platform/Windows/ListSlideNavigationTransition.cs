@@ -7,6 +7,8 @@ using Avalonia.Animation.Easings;
 namespace AvaloniaInside.Shell.Platform.Windows;
 public class ListSlideNavigationTransition : PlatformBasePageTransition
 {
+    public static readonly ListSlideNavigationTransition Instance = new();
+
     /// <summary>
     /// Gets the duration of the animation.
     /// </summary>

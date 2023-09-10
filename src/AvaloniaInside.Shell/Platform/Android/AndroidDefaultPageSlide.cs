@@ -10,6 +10,8 @@ namespace AvaloniaInside.Shell.Platform.Android;
 
 public class AndroidDefaultPageSlide : PlatformBasePageTransition
 {
+    public static readonly AndroidDefaultPageSlide Instance = new();
+
     private const float EndingCue = 0.65f;
     private const float StartingCue = 0.35f;
 

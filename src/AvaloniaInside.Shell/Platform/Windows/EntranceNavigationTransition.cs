@@ -1,19 +1,16 @@
 ﻿using Avalonia;
-using Avalonia.Animation;
 using Avalonia.Animation.Easings;
 using Avalonia.Rendering.Composition;
 using Avalonia.Rendering.Composition.Animations;
-using AvaloniaInside.Shell.Platform.Android;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace AvaloniaInside.Shell.Platform.Windows;
 public class EntranceNavigationTransition : PlatformBasePageTransition
 {
+    public static readonly EntranceNavigationTransition Instance = new();
+
     private const float EndingCue = 0.5f;
     private const float StartingCue = 0.5f;
     private const double DistanceFactor = 0.2d;

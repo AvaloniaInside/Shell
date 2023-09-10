@@ -1,5 +1,6 @@
 ﻿using Avalonia.Animation;
 using Avalonia.Collections;
+using AvaloniaInside.Shell.Platform;
 using AvaloniaInside.Shell.Platform.Android;
 using AvaloniaInside.Shell.Platform.Ios;
 using AvaloniaInside.Shell.Platform.Windows;
@@ -39,15 +40,15 @@ public class SettingViewModel : ViewModelBase
     {
         Transitions = new AvaloniaList<TransitionItem>
         {
-            new TransitionItem{ Name = "Android Default", Transition = new AndroidDefaultPageSlide() },
-            new TransitionItem{ Name = "Android Material", Transition = new MaterialListPageSlide() },
-            new TransitionItem{ Name = "iOS", Transition = new DefaultIosPageSlide() },
-            new TransitionItem{ Name = "Windows EntranceNavigation", Transition = new EntranceNavigationTransition() },
-            new TransitionItem{ Name = "Windows DrillInNavigation", Transition = new DrillInNavigationTransition() },
-            new TransitionItem{ Name = "Windows ListSlideNavigation", Transition = new ListSlideNavigationTransition() },
+            new TransitionItem{ Name = "Android Default", Transition = AndroidDefaultPageSlide.Instance },
+            new TransitionItem{ Name = "Android Material", Transition = MaterialListPageSlide.Instance },
+            new TransitionItem{ Name = "iOS", Transition = DefaultIosPageSlide.Instance },
+            new TransitionItem{ Name = "Windows EntranceNavigation", Transition = EntranceNavigationTransition.Instance },
+            new TransitionItem{ Name = "Windows DrillInNavigation", Transition = DrillInNavigationTransition.Instance },
+            new TransitionItem{ Name = "Windows ListSlideNavigation", Transition = ListSlideNavigationTransition.Instance },
         };
 
-        CurrentTransition = Transitions[4];
+        CurrentTransition = Transitions.FirstOrDefault(f => f.Transition == PlatformSetup.TransitionForPage());
     }
 
 }

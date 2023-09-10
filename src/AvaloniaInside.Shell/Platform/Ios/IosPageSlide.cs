@@ -6,6 +6,8 @@ namespace AvaloniaInside.Shell.Platform.Ios;
 
 public class DefaultIosPageSlide : PlatformBasePageTransition
 {
+    public static readonly DefaultIosPageSlide Instance = new();
+
     protected override CompositionAnimationGroup GetOrCreateEnteranceAnimation(CompositionVisual element, double widthDistance, double heightDistance)
     {
         var compositor = element.Compositor;

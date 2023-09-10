@@ -10,25 +10,25 @@ public class PlatformSetup
     public static IPageTransition TransitionForPage()
     {
         if (OperatingSystem.IsAndroid())
-            return new AndroidDefaultPageSlide();
+            return AndroidDefaultPageSlide.Instance;
         if (OperatingSystem.IsIOS())
-            return new DefaultIosPageSlide();
+            return DefaultIosPageSlide.Instance;
         if (OperatingSystem.IsWindows())
-            return new EntranceNavigationTransition();
+            return EntranceNavigationTransition.Instance;
 
         //Default for the moment
-        return new DrillInNavigationTransition();
+        return DrillInNavigationTransition.Instance;
     }
 
     public static IPageTransition TransitionForList()
     {
         if (OperatingSystem.IsAndroid())
-            return new MaterialListPageSlide();
+            return MaterialListPageSlide.Instance;
         if (OperatingSystem.IsIOS())
-            return new DefaultIosPageSlide();
+            return DefaultIosPageSlide.Instance;
 
         //Default for the moment
-        return new ListSlideNavigationTransition();
+        return ListSlideNavigationTransition.Instance;
     }
 
     public static IPageTransition? TransitionForTab()
@@ -38,6 +38,6 @@ public class PlatformSetup
         if (OperatingSystem.IsMacCatalyst()) return null;
 
         //Default for the moment
-        return new MaterialListPageSlide();
+        return MaterialListPageSlide.Instance;
     }
 }

@@ -2,14 +2,16 @@
 using Avalonia.Rendering.Composition.Animations;
 using Avalonia.Rendering.Composition;
 using Avalonia;
-using AvaloniaInside.Shell.Platform.Android;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using AvaloniaInside.Shell.Platform.Ios;
 
 namespace AvaloniaInside.Shell.Platform.Windows;
 public class DrillInNavigationTransition : PlatformBasePageTransition
 {
+    public static readonly DrillInNavigationTransition Instance = new();
+
     private const float EndingCue = 0.7f;
     private const float StartingCue = 0.3f;
 

@@ -28,7 +28,7 @@ namespace AvaloniaInside.Shell
         }
 
         public bool CanExecute(object? parameter) => _singletonCanExecute;
-        public void Execute(object? parameter) => ExecuteAsync(parameter, CancellationToken.None).Wait();
+        public void Execute(object? parameter) => ExecuteAsync(parameter, CancellationToken.None);
 
         public async Task ExecuteAsync(object? parameter, CancellationToken cancellationToken)
         {
