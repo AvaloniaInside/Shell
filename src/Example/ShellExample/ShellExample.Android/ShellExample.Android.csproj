@@ -10,6 +10,14 @@
         <AndroidPackageFormat>apk</AndroidPackageFormat>
         <AndroidEnableProfiledAot>False</AndroidEnableProfiledAot>
     </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+      <AndroidEnableMultiDex>True</AndroidEnableMultiDex>
+      <EnableLLVM>False</EnableLLVM>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+      <AndroidEnableMultiDex>True</AndroidEnableMultiDex>
+      <EnableLLVM>False</EnableLLVM>
+    </PropertyGroup>
 
     <ItemGroup>
         <AndroidResource Include="Icon.png">
@@ -18,10 +26,10 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Avalonia.Android" Version="$(AvaloniaVersion)"/>
+        <PackageReference Include="Avalonia.Android" Version="$(AvaloniaVersion)" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\ShellExample\ShellExample.csproj"/>
+        <ProjectReference Include="..\ShellExample\ShellExample.csproj" />
     </ItemGroup>
 </Project>

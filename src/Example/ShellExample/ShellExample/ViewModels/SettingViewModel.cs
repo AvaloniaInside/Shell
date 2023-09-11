@@ -48,7 +48,7 @@ public class SettingViewModel : ViewModelBase
             new TransitionItem{ Name = "Windows ListSlideNavigation", Transition = ListSlideNavigationTransition.Instance },
         };
 
-        CurrentTransition = Transitions.FirstOrDefault(f => f.Transition == PlatformSetup.TransitionForPage());
+        CurrentTransition = Transitions.FirstOrDefault(f => f.Transition == PlatformSetup.TransitionForPage);
     }
 
 }

@@ -57,7 +57,7 @@ public class StackContentView : ItemsControl
     public static readonly StyledProperty<IPageTransition?> PageTransitionProperty =
         AvaloniaProperty.Register<StackContentView, IPageTransition?>(
             nameof(PageTransition),
-            defaultValue: PlatformSetup.TransitionForPage());
+            defaultValue: PlatformSetup.TransitionForPage);
 
     /// <summary>
     /// Gets or sets the animation played when content appears and disappears.

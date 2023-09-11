@@ -10,7 +10,7 @@ public class MainViewModel : ViewModelBase
 {
 	public string Greeting => "Welcome to Avalonia!";
 
-    private IPageTransition _currentTransition = PlatformSetup.TransitionForPage();
+    private IPageTransition _currentTransition = PlatformSetup.TransitionForPage;
     public IPageTransition CurrentTransition
     {
         get => _currentTransition;

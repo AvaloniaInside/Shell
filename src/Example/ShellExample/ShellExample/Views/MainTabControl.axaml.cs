@@ -7,16 +7,16 @@ namespace ShellExample.Views;
 
 public partial class MainTabControl : TabControl, IStyleable
 {
-	public Type StyleKey => typeof(TabControl);
+    public Type StyleKey => typeof(TabControl);
 
-	public MainTabControl()
-	{
-		InitializeComponent();
-	}
+    public MainTabControl()
+    {
+        InitializeComponent();
+    }
 
-	private void InitializeComponent()
-	{
-		AvaloniaXamlLoader.Load(this);
-	}
+    private void InitializeComponent()
+    {
+        AvaloniaXamlLoader.Load(this);
+    }
 }
 

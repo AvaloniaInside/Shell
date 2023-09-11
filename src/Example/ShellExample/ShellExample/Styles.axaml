@@ -1,5 +1,8 @@
 <Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:ShellExample"
+        xmlns:platform="clr-namespace:AvaloniaInside.Shell.Platform;assembly=AvaloniaInside.Shell"
+		>
 	<Design.PreviewWith>
 		<Border Padding="20">
 			<!-- Add Controls for Previewer Here -->
@@ -24,6 +27,33 @@
 	<!-- 	<Setter Property="Foreground" Value="Red"></Setter> -->
 	<!-- 	<Setter Property="FontWeight" Value="DemiBold"></Setter> -->
 	<!-- </Style> -->
+
+	<Style Selector="TabControl">
+		<Setter Property="Template">
+			<ControlTemplate>
+				<Border BorderBrush="{TemplateBinding BorderBrush}"
+					BorderThickness="{TemplateBinding BorderThickness}"
+					CornerRadius="{TemplateBinding CornerRadius}"
+					Background="{TemplateBinding Background}"
+					HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+					VerticalAlignment="{TemplateBinding VerticalAlignment}">
+					<DockPanel>
+						<ItemsPresenter Name="PART_ItemsPresenter"
+										ItemsPanel="{TemplateBinding ItemsPanel}"
+										DockPanel.Dock="{TemplateBinding TabStripPlacement}" />
+						<Carousel Name="PART_SelectedContentHost"
+								  Margin="{TemplateBinding Padding}"
+								  ItemsSource="{TemplateBinding ItemsSource}"
+								  SelectedItem="{TemplateBinding SelectedContent}"
+								  local:Helper.CarouselToTabControl="true"
+								  ItemTemplate="{TemplateBinding SelectedContentTemplate}"
+								  PageTransition="{x:Static PlatformSetup.TransitionForTab}">
+						</Carousel>
+					</DockPanel>
+				</Border>
+			</ControlTemplate>
+		</Setter>
+	</Style>
 
 	<Style Selector="TabControl.MainTab /template/ Border > DockPanel > Border">
 		<Setter Property="Background" Value="Black"></Setter>
@@ -51,12 +81,14 @@
 							                ItemsPanel="{TemplateBinding ItemsPanel}"
 							                HorizontalAlignment="Center"/>
 						</Border>
-						<ContentPresenter Name="PART_SelectedContentHost"
-						                  Margin="{TemplateBinding Padding}"
-						                  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-						                  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-						                  Content="{TemplateBinding SelectedContent}"
-						                  ContentTemplate="{TemplateBinding SelectedContentTemplate}" />
+						<Carousel Name="PART_SelectedContentHost"
+							  Margin="{TemplateBinding Padding}"
+							  ItemsSource="{TemplateBinding ItemsSource}"
+							  SelectedItem="{TemplateBinding SelectedContent}"
+							  local:Helper.CarouselToTabControl="true"
+							  ItemTemplate="{TemplateBinding SelectedContentTemplate}"
+							  PageTransition="{x:Static PlatformSetup.TransitionForTab}">
+						</Carousel>
 					</DockPanel>
 				</Border>
 			</ControlTemplate>
