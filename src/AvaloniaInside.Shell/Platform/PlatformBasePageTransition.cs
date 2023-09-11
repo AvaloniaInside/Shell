@@ -88,7 +88,7 @@ public abstract class PlatformBasePageTransition : IPageTransition
             fromElement.StartAnimationGroup(animation);
         }
 
-        return Task.Run(() => Task.Delay(Duration, cancellationToken), cancellationToken);
+        return Task.Delay(Duration, cancellationToken);
     }
 
     /// <summary>

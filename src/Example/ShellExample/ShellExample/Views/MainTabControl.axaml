@@ -60,8 +60,8 @@
 		</ControlTemplate>
 	</TabControl.Template>
 	<TabControl.Styles>
-		<Style Selector="TabControl.MainTab /template/ Border > DockPanel > Border">
-			<Setter Property="Padding"
+		<Style Selector="TabControl.MainTab /template/ Border > DockPanel > ItemsPresenter">
+			<Setter Property="Margin"
 			        Value="{Binding BottomSafePadding, RelativeSource={RelativeSource AncestorType={x:Type ShellView}}}"></Setter>
 		</Style>
 		<Style Selector="TabControl.MainTab /template/ Border > DockPanel > ItemsPresenter">
