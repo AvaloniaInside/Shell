@@ -3,7 +3,7 @@
 		<TargetFramework>net6.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<LangVersion>latest</LangVersion>
-		<Version>1.0.0</Version>
+		<Version>1.1.0</Version>
 		<Title>Shell view for Avalonia</Title>
 		<Description>Shell reduces the complexity of mobile/desktop application development by providing the fundamental features that most applications require</Description>
 		<Copyright>AvaloniaInside</Copyright>
