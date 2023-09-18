@@ -182,8 +182,8 @@
 			<ControlTemplate>
 				<Viewbox Stretch="UniformToFill">
                     <Canvas Width="16" Height="16" Margin="5" Background="#00000000">
-                        <Line StartPoint="7,2" EndPoint="2,7" StrokeThickness="3" Stroke="White"></Line>
-                        <Line StartPoint="2,7" EndPoint="7,12" StrokeThickness="3" Stroke="White"></Line>
+                        <Line StartPoint="7,2" EndPoint="2,7" StrokeThickness="3" Stroke="{DynamicResource ButtonForeground}"></Line>
+                        <Line StartPoint="2,7" EndPoint="7,12" StrokeThickness="3" Stroke="{DynamicResource ButtonForeground}"></Line>
                     </Canvas>
 				</Viewbox>
 			</ControlTemplate>
@@ -195,9 +195,9 @@
 			<ControlTemplate>
 				<Viewbox Stretch="UniformToFill">
 					<Canvas Width="16" Height="16" Margin="5" Background="#00000000">
-						<Line StartPoint="1,4" EndPoint="15,4" StrokeThickness="3" Stroke="White"></Line>
-						<Line StartPoint="1,8" EndPoint="15,8" StrokeThickness="3" Stroke="White"></Line>
-						<Line StartPoint="1,12" EndPoint="15,12" StrokeThickness="3" Stroke="White"></Line>
+						<Line StartPoint="1,4" EndPoint="15,4" StrokeThickness="3" Stroke="{DynamicResource ButtonForeground}"></Line>
+						<Line StartPoint="1,8" EndPoint="15,8" StrokeThickness="3" Stroke="{DynamicResource ButtonForeground}"></Line>
+						<Line StartPoint="1,12" EndPoint="15,12" StrokeThickness="3" Stroke="{DynamicResource ButtonForeground}"></Line>
 					</Canvas>
 				</Viewbox>
 			</ControlTemplate>
