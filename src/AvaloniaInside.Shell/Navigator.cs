@@ -2,8 +2,11 @@ using Avalonia.Animation;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Avalonia.Controls;
+using AvaloniaInside.Shell.Query;
 
 namespace AvaloniaInside.Shell;
 
@@ -80,7 +83,8 @@ public partial class Navigator : INavigator
 
         var instances = new List<object>();
         var finalNavigateType =
-            !origin.AbsolutePath.Equals(newUri.AbsolutePath) && Registrar.TryGetNode(origin.AbsolutePath, out var originalNode)
+            !origin.AbsolutePath.Equals(newUri.AbsolutePath) &&
+            Registrar.TryGetNode(origin.AbsolutePath, out var originalNode)
                 ? navigateType ?? originalNode.Navigate
                 : navigateType ?? node.Navigate;
 
@@ -113,7 +117,7 @@ public partial class Navigator : INavigator
             withAnimation = args.WithAnimation;
             overrideTransition = args.OverrideTransition;
         }
-
+        
         var stackChanges = _stack.Push(
             node,
             finalNavigateType,
@@ -122,6 +126,7 @@ public partial class Navigator : INavigator
             {
                 var instance = _viewLocator.GetView(instanceFor);
                 SetShellToPage(instance);
+                
                 instances.Add(instance);
                 return instance;
             });
@@ -134,6 +139,12 @@ public partial class Navigator : INavigator
             argument,
             hasArgument,
             cancellationToken);
+
+        if (_stack.Current?.Instance != null)
+        {
+            SetViewModelQueryData(_stack.Current?.Instance, argument);
+        }
+        
 
         CheckWaitingList(stackChanges, argument, hasArgument);
 
@@ -158,6 +169,46 @@ public partial class Navigator : INavigator
         _navigating = false;
     }
 
+    private void SetViewModelQueryData(object? instance, object? argument)
+    {
+        if (instance is Control view)
+        {
+            var viewModel = view.DataContext;
+
+            if (argument != null && viewModel != null)
+            {
+                var queryProperties = viewModel
+                    .GetType()
+                    .GetCustomAttributes(typeof(QueryPropertyAttribute), true)
+                    .Select(v => v as QueryPropertyAttribute)
+                    .Where(v => v != null).ToList();
+
+
+                foreach (var queryProperty in queryProperties)
+                {
+                    // check viewModel has same name property
+                    var viewModelProperty = viewModel.GetType().GetProperty(queryProperty!.Name);
+                    if (viewModelProperty == null)
+                        continue;
+
+                    // check has same name property
+                    var argumentProperty = argument.GetType().GetProperty(queryProperty!.Name);
+                    if (argumentProperty == null)
+                        continue;
+
+                    var value = argument.GetType().GetProperty(queryProperty.Name)?.GetValue(argument);
+
+                    // TODO: need to check type or convert type?
+                    viewModelProperty.SetValue(viewModel, value);
+                }
+            }
+
+            // invoke ViewModel ApplyQueryAttributes
+            if (viewModel is IQueryAttributable viewModelQuery)
+                viewModelQuery.ApplyQueryAttributes(argument);
+        }
+    }
+
     private void SetShellToPage(object instance)
     {
         if (instance is Page page)
@@ -176,9 +227,11 @@ public partial class Navigator : INavigator
                 cancellationToken);
         if (CurrentUri.AbsolutePath != newUri.AbsolutePath)
         {
-            await NotifyAsync(newUri, newUri, null, false, null, NavigateType.HostedItemChange, withAnimation, overrideTransition, cancellationToken);
+            await NotifyAsync(newUri, newUri, null, false, null, NavigateType.HostedItemChange, withAnimation,
+                overrideTransition, cancellationToken);
         }
     }
+
 
     public Task NavigateAsync(string path, CancellationToken cancellationToken = default) =>
         NavigateAsync(path, null, null, false, null, true, null, cancellationToken);
@@ -198,6 +251,7 @@ public partial class Navigator : INavigator
         object? argument,
         CancellationToken cancellationToken = default) =>
         NavigateAsync(path, navigateType, argument, true, null, true, null, cancellationToken);
+
     public Task NavigateAsync(
         string path,
         NavigateType? navigateType,
@@ -205,7 +259,9 @@ public partial class Navigator : INavigator
         bool withAnimation = true,
         IPageTransition? overrideTransition = null,
         CancellationToken cancellationToken = default) =>
-        NavigateAndWaitAsync(path, navigateType, null, false, sender, withAnimation, overrideTransition, cancellationToken);
+        NavigateAndWaitAsync(path, navigateType, null, false, sender, withAnimation, overrideTransition,
+            cancellationToken);
+
     public Task NavigateAsync(
         string path,
         NavigateType? navigateType,
@@ -214,7 +270,8 @@ public partial class Navigator : INavigator
         bool withAnimation,
         IPageTransition? overrideTransition = null,
         CancellationToken cancellationToken = default) =>
-        NavigateAndWaitAsync(path, navigateType, argument, true, sender, withAnimation, overrideTransition, cancellationToken);
+        NavigateAndWaitAsync(path, navigateType, argument, true, sender, withAnimation, overrideTransition,
+            cancellationToken);
 
     private async Task NavigateAsync(
         string path,
@@ -232,7 +289,8 @@ public partial class Navigator : INavigator
             var originalUri = new Uri(CurrentUri, path);
             var newUri = await _navigateStrategy.NavigateAsync(_stack.Current, CurrentUri, path, cancellationToken);
             if (CurrentUri.AbsolutePath != newUri.AbsolutePath)
-                await NotifyAsync(originalUri, newUri, argument, hasArgument, sender, navigateType, withAnimation, overrideTransition, cancellationToken);
+                await NotifyAsync(originalUri, newUri, argument, hasArgument, sender, navigateType, withAnimation,
+                    overrideTransition, cancellationToken);
         }
         finally
         {
@@ -242,19 +300,24 @@ public partial class Navigator : INavigator
 
     public Task BackAsync(CancellationToken cancellationToken = default) =>
         BackAsync(null, false, null, true, null, cancellationToken);
+
     public Task BackAsync(object? argument, CancellationToken cancellationToken = default) =>
         BackAsync(argument, true, null, true, null, cancellationToken);
+
     public Task BackAsync(
         object? sender,
         bool withAnimation = true,
         IPageTransition? overrideTransition = null,
-        CancellationToken cancellationToken = default) => BackAsync(null, false, sender, withAnimation, overrideTransition, cancellationToken);
+        CancellationToken cancellationToken = default) =>
+        BackAsync(null, false, sender, withAnimation, overrideTransition, cancellationToken);
+
     public Task BackAsync(
         object? argument,
         object? sender,
         bool withAnimation,
         IPageTransition? overrideTransition = null,
-        CancellationToken cancellationToken = default) => BackAsync(argument, true, sender, withAnimation, overrideTransition, cancellationToken);
+        CancellationToken cancellationToken = default) => BackAsync(argument, true, sender, withAnimation,
+        overrideTransition, cancellationToken);
 
     private async Task BackAsync(
         object? argument,
@@ -269,7 +332,8 @@ public partial class Navigator : INavigator
         {
             var newUri = await _navigateStrategy.BackAsync(_stack.Current, CurrentUri, cancellationToken);
             if (newUri != null && CurrentUri.AbsolutePath != newUri.AbsolutePath)
-                await NotifyAsync(newUri, newUri, argument, hasArgument, sender, NavigateType.Pop, withAnimation, overrideTransition, cancellationToken);
+                await NotifyAsync(newUri, newUri, argument, hasArgument, sender, NavigateType.Pop, withAnimation,
+                    overrideTransition, cancellationToken);
         }
         finally
         {
@@ -298,6 +362,7 @@ public partial class Navigator : INavigator
         NavigateType navigateType,
         CancellationToken cancellationToken = default) =>
         NavigateAndWaitAsync(path, navigateType, argument, true, null, true, null, cancellationToken);
+
     public Task<NavigateResult> NavigateAndWaitAsync(
         string path,
         object? sender,
@@ -305,16 +370,19 @@ public partial class Navigator : INavigator
         bool withAnimation = true,
         IPageTransition? overrideTransition = null,
         CancellationToken cancellationToken = default) =>
-        NavigateAndWaitAsync(path, navigateType, null, false, sender, withAnimation, overrideTransition, cancellationToken);
+        NavigateAndWaitAsync(path, navigateType, null, false, sender, withAnimation, overrideTransition,
+            cancellationToken);
+
     public Task<NavigateResult> NavigateAndWaitAsync(
         string path,
-        object? argument, 
-        object? sender, 
+        object? argument,
+        object? sender,
         NavigateType navigateType,
         bool withAnimation,
-        IPageTransition? overrideTransition = null, 
+        IPageTransition? overrideTransition = null,
         CancellationToken cancellationToken = default) =>
-        NavigateAndWaitAsync(path, navigateType, argument, true, sender, withAnimation, overrideTransition, cancellationToken);
+        NavigateAndWaitAsync(path, navigateType, argument, true, sender, withAnimation, overrideTransition,
+            cancellationToken);
 
     private async Task<NavigateResult> NavigateAndWaitAsync(
         string path,
@@ -331,7 +399,8 @@ public partial class Navigator : INavigator
             return new NavigateResult(false, null); // Or maybe we should throw exception.
 
         var originalUri = new Uri(CurrentUri, path);
-        await NotifyAsync(originalUri, newUri, argument, hasArgument, sender, navigateType, withAnimation, overrideTransition, cancellationToken);
+        await NotifyAsync(originalUri, newUri, argument, hasArgument, sender, navigateType, withAnimation,
+            overrideTransition, cancellationToken);
         var chain = _stack.Current;
 
         if (!_waitingList.TryGetValue(chain, out var tcs))

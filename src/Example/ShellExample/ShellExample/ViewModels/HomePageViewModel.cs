@@ -12,12 +12,14 @@ public class HomePageViewModel : ViewModelBase
 
 	public ICommand NavigateToSecondPage { get; set; }
 	public ICommand ShowDialogCommand { get; set; }
+	public ICommand ToSecondAndPutQueryDataCommand { get; set; }
 
 	public HomePageViewModel(INavigator navigationService)
 	{
 		_navigationService = navigationService;
 		NavigateToSecondPage = ReactiveCommand.CreateFromTask(Navigate);
 		ShowDialogCommand = ReactiveCommand.CreateFromTask(ShowDialog);
+		ToSecondAndPutQueryDataCommand = ReactiveCommand.CreateFromTask(ToSecondAndPutQueryData);
 	}
 
 	private Task ShowDialog(CancellationToken cancellationToken)
@@ -28,5 +30,13 @@ public class HomePageViewModel : ViewModelBase
 	private Task Navigate()
 	{
 		return _navigationService.NavigateAsync("/second");
+	}
+	
+	private Task ToSecondAndPutQueryData()
+	{
+		return _navigationService.NavigateAsync("/second",new
+		{
+			Name = "Shell Example"
+		});
 	}
 }
