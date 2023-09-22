@@ -52,19 +52,19 @@ public class DefaultNavigationUpdateStrategy : INavigationUpdateStrategy
 			if (hasArgument)
 				await newInstanceLifecycle.ArgumentAsync(argument, cancellationToken);
 			
-			var hasQuery = !string.IsNullOrWhiteSpace(changes.Front.Uri.Query);
+			var hasQuery = !string.IsNullOrWhiteSpace(changes.Front?.Uri?.Query);
 			if (hasQuery && (changes.Front.Instance as Control)?.DataContext is IQueryAttributable queryAttributable)
 			{
 				var query = changes.Front.Uri.Query;
 
-				var queryDict = query
+				var queryDict = query?
 					.TrimStart('?')
 					.Split('&')
 					.Select(x => x.Split('='))
 					.Where(x => x.Length == 2)
 					.ToDictionary(x => x[0], x => (object) x[1]);
-
-				queryAttributable.ApplyQueryAttributes(queryDict);
+				if(queryDict != null)
+					queryAttributable.ApplyQueryAttributes(queryDict);
 			}
 		}
 
