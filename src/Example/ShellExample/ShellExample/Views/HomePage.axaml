@@ -12,7 +12,7 @@
 
 		<Button HorizontalAlignment="Center"
 				Content="Click on me"
-				Navigator.To="/second"
+				Navigator.To="/second?Name=ShellExample"
 				CommandParameter="Hello Parameters"></Button>
 
 		<Button HorizontalAlignment="Center" Content="Show dialog" Command="{Binding ShowDialogCommand}"></Button>
