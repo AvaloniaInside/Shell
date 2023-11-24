@@ -45,6 +45,9 @@ public partial class ShellView : TemplatedControl
     private StackContentView? _modalView;
     private SideMenu? _sideMenu;
 
+    private bool _loadedFlag = false;
+    private bool _topLevelEventFlag = false;
+
     #endregion
 
     #region Properties
@@ -255,15 +258,17 @@ public partial class ShellView : TemplatedControl
     {
         base.OnLoaded(e);
 
-        if (TopLevel.GetTopLevel(this) is { } topLevel)
+        if (TopLevel.GetTopLevel(this) is { } topLevel && !_topLevelEventFlag)
         {
             topLevel.BackRequested += TopLevelOnBackRequested;
             topLevel.KeyUp += TopLevelOnKeyUp;
+            _topLevelEventFlag = true;
         }
 
-        if (DefaultRoute != null)
+        if (DefaultRoute != null  && !_loadedFlag)
         {
             _ = Navigator.NavigateAsync(DefaultRoute, CancellationToken.None);
+            _loadedFlag = true;
         }
 
         if (TopLevel.GetTopLevel(this) is { InsetsManager: { } insetsManager })
