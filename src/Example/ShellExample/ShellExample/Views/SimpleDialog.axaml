@@ -29,7 +29,7 @@
 					mollit anim id est laborum.
 				</TextBlock>
 			</Canvas>
-			<Border Grid.Row="2" Background="#333333" VerticalAlignment="Bottom">
+			<Border Grid.Row="2" Background="#55000000" VerticalAlignment="Bottom">
 				<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="8">
 					<Button Content="Close" Foreground="Red" Click="CancelButton_OnClick"></Button>
 					<Button Content=" OK " Click="OkButton_OnClick"></Button>

@@ -2,18 +2,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:i="https://github.com/projektanker/icons.avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="ShellExample.Views.Widgets.UserProfileWidgetView"
              Height="200">
-	<Border CornerRadius="0, 0, 12, 12" Margin="0, 0, 0, 30">
-		<Border.Background>
-			<LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
-				<LinearGradientBrush.GradientStops>
-					<GradientStop Offset="0" Color="#192535"/>
-					<GradientStop Offset="1" Color="#132c4d"/>
-				</LinearGradientBrush.GradientStops>
-			</LinearGradientBrush>
-		</Border.Background>
+	<Border CornerRadius="0, 0, 12, 12" Margin="0, 0, 0, 30" Background="{DynamicResource ProfileBackground}">
 		<StackPanel>
 
 			<Ellipse Width="80" Height="80"
@@ -28,7 +21,7 @@
 
 			<TextBlock Text="Omid Mafakher" FontWeight="Heavy" HorizontalAlignment="Center"></TextBlock>
 			<WrapPanel HorizontalAlignment="Center">
-				<Image Source="/Assets/Icons/location-dot-solid.png" Width="10" Stretch="Uniform" />
+				<i:Icon Value="fa-solid fa-location-dot" />
 				<TextBlock Text="Versailles, France" FontWeight="UltraLight"></TextBlock>
 			</WrapPanel>
 		</StackPanel>

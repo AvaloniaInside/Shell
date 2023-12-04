@@ -26,6 +26,6 @@ public partial class ProductCatalogView : Page
 		AvaloniaXamlLoader.Load(this);
 	}
 
-	public string Icon => "/Assets/Icons/tag-solid.png";
+	public string Icon => "fa-solid fa-tag";
 }
 

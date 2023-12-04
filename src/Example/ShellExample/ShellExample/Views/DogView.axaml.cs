@@ -16,6 +16,6 @@ public partial class DogView : Page
 		AvaloniaXamlLoader.Load(this);
 	}
 
-	public string Icon => "/Assets/Icons/dog-solid.png";
+	public string Icon => "fa-solid fa-dog";
 }
 

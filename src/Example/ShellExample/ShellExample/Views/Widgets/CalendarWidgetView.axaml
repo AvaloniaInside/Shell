@@ -4,15 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="ShellExample.Views.Widgets.CalendarWidgetView">
-	<Border Padding="14">
-		<Border.Background>
-			<LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
-				<LinearGradientBrush.GradientStops>
-					<GradientStop Offset="0" Color="#00357d"/>
-					<GradientStop Offset="1" Color="#1f3149"/>
-				</LinearGradientBrush.GradientStops>
-			</LinearGradientBrush>
-		</Border.Background>
+	<Border Padding="14" Background="{DynamicResource WidgetBackground}">
 		<StackPanel>
 			<TextBlock Text="{Binding JustNow}" FontWeight="ExtraBlack"></TextBlock>
 

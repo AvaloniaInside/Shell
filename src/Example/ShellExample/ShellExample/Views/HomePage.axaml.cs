@@ -24,5 +24,5 @@ public partial class HomePage : Page
 		return Task.CompletedTask;
 	}
 
-    public string Icon => "/Assets/Icons/house-solid.png";
+    public string Icon => "fa-solid fa-house";
 }

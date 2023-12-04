@@ -2,24 +2,20 @@
             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			xmlns:i="https://github.com/projektanker/icons.avalonia"
             xmlns:converters="clr-namespace:ShellExample.Converters"
             xmlns:views="clr-namespace:ShellExample.Views"
             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
             x:Class="ShellExample.Views.MainTabControl"
-			Background="#061030"
             TabStripPlacement="Bottom"
             Classes="Center MainTab"
             ShellView.EnableSafeAreaForBottom="False">
-	<TabControl.Resources>
-		<converters:BitmapAssetValueConverter x:Key="variableImage"/>
-	</TabControl.Resources>
 	<TabControl.ItemTemplate>
 		<DataTemplate>
 			<Grid RowDefinitions="*,*" Width="70">
-				<Image Source="{Binding Instance.Icon, Converter={StaticResource variableImage}}"
+				<i:Icon Value="{Binding Instance.Icon}"
 				       HorizontalAlignment="Center"
 				       Height="24"
-				       Stretch="Uniform"
 				       Margin="2"/>
 				<TextBlock Grid.Row="1"
 				           DataContext="{Binding Instance}"

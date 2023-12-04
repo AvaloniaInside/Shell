@@ -16,6 +16,6 @@ public partial class CatView : Page
 		AvaloniaXamlLoader.Load(this);
 	}
 
-	public string Icon => "/Assets/Icons/cat-solid.png";
+	public string Icon => "fa-solid fa-cat";
 }
 

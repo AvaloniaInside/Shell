@@ -29,6 +29,6 @@ public partial class SettingView : Page
 		AvaloniaXamlLoader.Load(this);
 	}
 
-	public string Icon => "/Assets/Icons/user-solid.png";
+	public string Icon => "fa-solid fa-user";
 }
 

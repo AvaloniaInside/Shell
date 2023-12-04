@@ -3,6 +3,39 @@
         xmlns:local="clr-namespace:ShellExample"
         xmlns:platform="clr-namespace:AvaloniaInside.Shell.Platform;assembly=AvaloniaInside.Shell"
 		>
+	<Styles.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.ThemeDictionaries>
+				<ResourceDictionary x:Key='Light'>
+					<SolidColorBrush x:Key='HomePageBackground'>White</SolidColorBrush>
+					<SolidColorBrush x:Key='SubTitleForeground'>Gray</SolidColorBrush>
+					<SolidColorBrush x:Key='SemiAttentionForeground'>Blue</SolidColorBrush>
+					<LinearGradientBrush x:Key='WidgetBackground' StartPoint="0%,0%" EndPoint="100%,100%">
+						<GradientStop Offset="0" Color="#e4efff"/>
+						<GradientStop Offset="1" Color="#8ca9d1"/>
+					</LinearGradientBrush>
+					<LinearGradientBrush x:Key='ProfileBackground' StartPoint="0%,0%" EndPoint="0%,100%">
+						<GradientStop Offset="0" Color="#e4efff"/>
+						<GradientStop Offset="1" Color="#8ca9d1"/>
+					</LinearGradientBrush>
+				</ResourceDictionary>
+				<ResourceDictionary x:Key='Dark'>
+					<SolidColorBrush x:Key='HomePageBackground'>#001E39</SolidColorBrush>
+					<SolidColorBrush x:Key='SubTitleForeground'>Silver</SolidColorBrush>
+					<SolidColorBrush x:Key='SemiAttentionForeground'>LightSkyBlue</SolidColorBrush>
+					<LinearGradientBrush x:Key='WidgetBackground' StartPoint="0%,0%" EndPoint="100%,100%">
+						<GradientStop Offset="0" Color="#00357d"/>
+						<GradientStop Offset="1" Color="#1f3149"/>
+					</LinearGradientBrush>
+					<LinearGradientBrush x:Key='ProfileBackground' StartPoint="0%,0%" EndPoint="0%,100%">
+						<GradientStop Offset="0" Color="#192535"/>
+						<GradientStop Offset="1" Color="#132c4d"/>
+					</LinearGradientBrush>
+				</ResourceDictionary>
+			</ResourceDictionary.ThemeDictionaries>
+		</ResourceDictionary>
+	</Styles.Resources>
+	
 	<Design.PreviewWith>
 		<Border Padding="20">
 			<!-- Add Controls for Previewer Here -->
@@ -10,16 +43,16 @@
 	</Design.PreviewWith>
 
 	<Style Selector="NavigationBar">
-		<Setter Property="Background" Value="#44000000"></Setter>
+		<!--<Setter Property="Background" Value="#44000000"></Setter>-->
 	</Style>
 
 	<Style Selector="TextBlock.SubTitle">
-		<Setter Property="Foreground" Value="Silver"></Setter>
+		<Setter Property="Foreground" Value="{DynamicResource SubTitleForeground}"></Setter>
 		<Setter Property="FontWeight" Value="Thin"></Setter>
 	</Style>
 
 	<Style Selector="TextBlock.SemiAttention">
-		<Setter Property="Foreground" Value="LightSkyBlue"></Setter>
+		<Setter Property="Foreground" Value="{DynamicResource SemiAttentionForeground}"></Setter>
 		<Setter Property="FontWeight" Value="DemiBold"></Setter>
 	</Style>
 
@@ -56,11 +89,11 @@
 	</Style>
 
 	<Style Selector="TabControl.MainTab /template/ Border > DockPanel > Border">
-		<Setter Property="Background" Value="Black"></Setter>
+		<Setter Property="Background" Value="#40000000"></Setter>
 	</Style>
 
 	<Style Selector="TabControl.HeadTab /template/ Border > DockPanel > Border">
-		<Setter Property="Background" Value="#11FFFFFF"></Setter>
+		<Setter Property="Background" Value="#40000000"></Setter>
 		<Setter Property="HorizontalAlignment" Value="Center"></Setter>
 		<Setter Property="CornerRadius" Value="5"></Setter>
 		<Setter Property="Padding" Value="8"></Setter>

@@ -19,6 +19,6 @@ public partial class PetsTabControlView : TabControl, IStyleable
 		AvaloniaXamlLoader.Load(this);
 	}
 
-	public string Icon => "/Assets/Icons/paw-solid.png";
+	public string Icon => "fa-solid fa-paw";
 }
 

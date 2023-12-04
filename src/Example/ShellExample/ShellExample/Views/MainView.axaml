@@ -7,9 +7,7 @@
              xmlns:views="clr-namespace:ShellExample.Views"
              xmlns:shopViews="clr-namespace:ShellExample.Views.ShopViews"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="ShellExample.Views.MainView"
-             Foreground="White"
-             Background="#171C2C">
+             x:Class="ShellExample.Views.MainView">
 	<Design.DataContext>
 		<!-- This only sets the DataContext for the previewer in an IDE,
          to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
@@ -35,7 +33,7 @@
 
 		<Route Path="welcome" Page="views:WelcomeView"></Route>
 
-        <Host Path="main" Page="views:MainTabControl" Type="ReplaceRoot">
+		<Host Path="main" Page="views:MainTabControl" Type="ReplaceRoot">
 			<Route Path="home" Page="views:HomePage">
 				<Route Path="confirmation" Page="views:SimpleDialog" Type="Modal"></Route>
 			</Route>
@@ -54,12 +52,36 @@
 
 		<Route Path="second" Page="views:SecondView"></Route>
 
-		<SideMenuItem Path="/main/home" Title="Home" Icon="/Assets/Icons/house-solid.png"></SideMenuItem>
-		<SideMenuItem Path="/main/pets/cat" Title="Cat" Icon="/Assets/Icons/cat-solid.png"></SideMenuItem>
-		<SideMenuItem Path="/main/pets/dog" Title="Dog" Icon="/Assets/Icons/dog-solid.png"></SideMenuItem>
-		<SideMenuItem Path="/main/product" Title="Products" Icon="/Assets/Icons/tag-solid.png"></SideMenuItem>
-		<SideMenuItem Path="/main/setting" Title="Settings" Icon="/Assets/Icons/user-solid.png"></SideMenuItem>
-		<SideMenuItem Path="/second" Title="Second Click" Icon="/Assets/Icons/check-solid.png"></SideMenuItem>
+		<SideMenuItem Path="/main/home" Title="Home">
+			<SideMenuItem.Icon>
+				<views:FontIconImageSource Value="fa-solid fa-house" Brush="{DynamicResource ButtonForeground}" />
+			</SideMenuItem.Icon>
+		</SideMenuItem>
+		<SideMenuItem Path="/main/pets/cat" Title="Cat">
+			<SideMenuItem.Icon>
+				<views:FontIconImageSource Value="fa-solid fa-cat" Brush="{DynamicResource ButtonForeground}" />
+			</SideMenuItem.Icon>
+		</SideMenuItem>
+		<SideMenuItem Path="/main/pets/dog" Title="Dog">
+			<SideMenuItem.Icon>
+				<views:FontIconImageSource Value="fa-solid fa-dog" Brush="{DynamicResource ButtonForeground}" />
+			</SideMenuItem.Icon>
+		</SideMenuItem>
+		<SideMenuItem Path="/main/product" Title="Products">
+			<SideMenuItem.Icon>
+				<views:FontIconImageSource Value="fa-solid fa-tag" Brush="{DynamicResource ButtonForeground}" />
+			</SideMenuItem.Icon>
+		</SideMenuItem>
+		<SideMenuItem Path="/main/setting" Title="Settings">
+			<SideMenuItem.Icon>
+				<views:FontIconImageSource Value="fa-solid fa-user" Brush="{DynamicResource ButtonForeground}" />
+			</SideMenuItem.Icon>
+		</SideMenuItem>
+		<SideMenuItem Path="/second" Title="Second Click">
+			<SideMenuItem.Icon>
+				<views:FontIconImageSource Value="fa-solid fa-check" Brush="{DynamicResource ButtonForeground}" />
+			</SideMenuItem.Icon>
+		</SideMenuItem>
 
 
 		<ShellView.SideMenuHeader>

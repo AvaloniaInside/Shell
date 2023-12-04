@@ -17,6 +17,8 @@
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
         <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="$(AvaloniaVersion)" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+		<PackageReference Include="Projektanker.Icons.Avalonia" Version="8.3.0" />
+		<PackageReference Include="Projektanker.Icons.Avalonia.FontAwesome" Version="8.3.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -26,11 +28,5 @@
     <ItemGroup>
       <None Remove="Resources\Products.json" />
       <EmbeddedResource Include="Resources\Products.json" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Compile Update="Views\WelcomeView.axaml.cs">
-        <DependentUpon>WelcomeView.axaml</DependentUpon>
-      </Compile>
     </ItemGroup>
 </Project>
