@@ -36,11 +36,11 @@ public abstract class PlatformBasePageTransition : IPageTransition
 
     protected abstract CompositionAnimationGroup GetOrCreateBringBackAnimation(CompositionVisual element, double distance, double heightDistance);
 
-    public Task Start(Visual? from, Visual? to, bool forward, CancellationToken cancellationToken)
+    public async Task Start(Visual? from, Visual? to, bool forward, CancellationToken cancellationToken)
     {
         if (cancellationToken.IsCancellationRequested)
         {
-            return Task.CompletedTask;
+            return;
         }
 
         var parent = GetVisualParent(from, to);
@@ -58,7 +58,9 @@ public abstract class PlatformBasePageTransition : IPageTransition
             _bringBackAnimation = null;
         }
 
-        return RunAnimationAsync(parentComposition, fromElement, toElement, forward, parent.Bounds.Width, parent.Bounds.Height, cancellationToken);
+        if (to != null) to.IsVisible = true;
+        await RunAnimationAsync(parentComposition, fromElement, toElement, forward, parent.Bounds.Width, parent.Bounds.Height, cancellationToken);
+        if (from != null) from.IsVisible = false;
     }
 
     protected virtual Task RunAnimationAsync(
