@@ -12,9 +12,8 @@ namespace AvaloniaInside.Shell
     [TypeConverter(typeof(BindingNavigateConverter))]
     public class BindingNavigate : AvaloniaObject, ICommand
     {
-        // Temporary solution for now, Can execute should refer to current shell
-        private static bool _singletonCanExecute = true;
-        private static EventHandler? _singletonCanExecuteChanged;
+        private bool _singletonCanExecute = true;
+        private EventHandler? _singletonCanExecuteChanged;
 
         public AvaloniaObject? Sender { get; internal set; }
         public string Path { get; set; }
