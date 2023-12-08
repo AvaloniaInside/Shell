@@ -233,13 +233,17 @@ public class NavigationBar : TemplatedControl
 			return;
 		}
 
+		itemPresenter.DataContext = null;
 		if (view is StyledElement element)
 		{
-			itemPresenter.DataContext = element.DataContext ?? element;
 			itemPresenter[!ContentControl.ContentProperty] = element[!ItemProperty];
-			return;
-		}
 
+			if (itemPresenter.Content is StyledElement elementContent)
+				elementContent.DataContext = element.DataContext ?? element;
+			
+			return;
+		} 
+		
 		itemPresenter.Content = view;
 	}
 

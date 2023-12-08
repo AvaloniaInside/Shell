@@ -326,11 +326,11 @@ public partial class Navigator : INavigator
         IPageTransition? overrideTransition,
         CancellationToken cancellationToken = default)
     {
+        var originalUri = new Uri(CurrentUri, path);
         var newUri = await _navigateStrategy.NavigateAsync(_stack.Current, CurrentUri, path, cancellationToken);
         if (CurrentUri.AbsolutePath == newUri.AbsolutePath)
             return new NavigateResult(false, null); // Or maybe we should throw exception.
 
-        var originalUri = new Uri(CurrentUri, path);
         await NotifyAsync(originalUri, newUri, argument, hasArgument, sender, navigateType, withAnimation, overrideTransition, cancellationToken);
         var chain = _stack.Current;
 
