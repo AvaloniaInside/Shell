@@ -263,7 +263,8 @@ public partial class ShellView
 				_navigationBar.HasSideMenuOption = true;
 				break;
             case SideMenuBehaveType.Removed:
-                _splitView.OpenPaneLength = 0;
+				_splitView.OpenPaneLength = 0;
+				_splitView.CompactPaneLength = 0;
                 _splitView.IsPaneOpen = false;
                 _navigationBar.HasSideMenuOption = false;
                 break;

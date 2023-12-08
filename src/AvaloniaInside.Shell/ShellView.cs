@@ -327,6 +327,7 @@ public partial class ShellView : TemplatedControl
         }
 
         OnSafeEdgeSetup();
+        UpdateSideMenu();
     }
 
     protected virtual void OnSafeEdgeSetup()
