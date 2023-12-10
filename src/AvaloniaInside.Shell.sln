@@ -20,7 +20,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Files", "Files", "{50F7051E-1272-4015-A5C8-B6B1EF499EE3}"
 	ProjectSection(SolutionItems) = preProject
 		Directory.Build.props = Directory.Build.props
-		global.json = global.json
 		..\README.md = ..\README.md
 	EndProjectSection
 EndProject
