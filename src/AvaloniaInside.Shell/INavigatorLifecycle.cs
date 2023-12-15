@@ -24,6 +24,7 @@ public class NaviagatingEventArgs : EventArgs
     public IPageTransition? OverrideTransition { get; set; }
     public bool WithAnimation { get; set; }
     public NavigateType Navigate { get; set; }
+    public bool Cancel { get; set; } = false;
 }
 
 public class NaviagateEventArgs : EventArgs

@@ -15,7 +15,6 @@ public partial class Navigator : INavigator
     private readonly NavigationStack _stack = new();
     private readonly Dictionary<NavigationChain, TaskCompletionSource<NavigateResult>> _waitingList = new();
 
-    private readonly SemaphoreSlim _semaphoreSlim = new(1, 1);
     private bool _navigating;
     private ShellView? _shellView;
 
@@ -76,8 +75,6 @@ public partial class Navigator : INavigator
             return;
         }
 
-        _navigating = true;
-
         var instances = new List<object>();
         var finalNavigateType =
             !origin.AbsolutePath.Equals(newUri.AbsolutePath) && Registrar.TryGetNode(origin.AbsolutePath, out var originalNode)
@@ -100,6 +97,7 @@ public partial class Navigator : INavigator
             };
 
             await fromPage.OnNavigatingAsync(args, cancellationToken);
+            if (args.Cancel) return;
 
             //Check for overrides 
 
@@ -113,6 +111,8 @@ public partial class Navigator : INavigator
             withAnimation = args.WithAnimation;
             overrideTransition = args.OverrideTransition;
         }
+
+        _navigating = true;
 
         var stackChanges = _stack.Push(
             node,
@@ -226,18 +226,10 @@ public partial class Navigator : INavigator
         IPageTransition? overrideTransition,
         CancellationToken cancellationToken = default)
     {
-        await _semaphoreSlim.WaitAsync(cancellationToken);
-        try
-        {
-            var originalUri = new Uri(CurrentUri, path);
-            var newUri = await _navigateStrategy.NavigateAsync(_stack.Current, CurrentUri, path, cancellationToken);
-            if (CurrentUri.AbsolutePath != newUri.AbsolutePath)
-                await NotifyAsync(originalUri, newUri, argument, hasArgument, sender, navigateType, withAnimation, overrideTransition, cancellationToken);
-        }
-        finally
-        {
-            _semaphoreSlim.Release();
-        }
+        var originalUri = new Uri(CurrentUri, path);
+        var newUri = await _navigateStrategy.NavigateAsync(_stack.Current, CurrentUri, path, cancellationToken);
+        if (CurrentUri.AbsolutePath != newUri.AbsolutePath)
+            await NotifyAsync(originalUri, newUri, argument, hasArgument, sender, navigateType, withAnimation, overrideTransition, cancellationToken);
     }
 
     public Task BackAsync(CancellationToken cancellationToken = default) =>
@@ -264,17 +256,9 @@ public partial class Navigator : INavigator
         IPageTransition? overrideTransition,
         CancellationToken cancellationToken = default)
     {
-        await _semaphoreSlim.WaitAsync(cancellationToken);
-        try
-        {
-            var newUri = await _navigateStrategy.BackAsync(_stack.Current, CurrentUri, cancellationToken);
-            if (newUri != null && CurrentUri.AbsolutePath != newUri.AbsolutePath)
-                await NotifyAsync(newUri, newUri, argument, hasArgument, sender, NavigateType.Pop, withAnimation, overrideTransition, cancellationToken);
-        }
-        finally
-        {
-            _semaphoreSlim.Release();
-        }
+        var newUri = await _navigateStrategy.BackAsync(_stack.Current, CurrentUri, cancellationToken);
+        if (newUri != null && CurrentUri.AbsolutePath != newUri.AbsolutePath)
+            await NotifyAsync(newUri, newUri, argument, hasArgument, sender, NavigateType.Pop, withAnimation, overrideTransition, cancellationToken);
     }
 
     public Task<NavigateResult> NavigateAndWaitAsync(string path, CancellationToken cancellationToken = default) =>

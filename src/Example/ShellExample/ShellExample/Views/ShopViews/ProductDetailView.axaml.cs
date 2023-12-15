@@ -15,7 +15,19 @@ public partial class ProductDetailView : Page
 
     public override Task ArgumentAsync(object args, CancellationToken cancellationToken)
     {
-        DataContext = new ProductDetailViewModel((ProductDto)args);
+        if (args is not ProductDto dto) return Task.CompletedTask;
+
+        DataContext = new ProductDetailViewModel(dto);
         return Task.CompletedTask;
+    }
+
+    public override async Task OnNavigatingAsync(NaviagatingEventArgs args, CancellationToken cancellationToken)
+    {
+        if (args.Navigate == NavigateType.Pop)
+        {
+            var result = await Navigator.NavigateAndWaitAsync("/main/product/confirmation");
+            if (result.Argument is bool v)
+                args.Cancel = !v;
+        }
     }
 }
