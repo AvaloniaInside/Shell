@@ -20,6 +20,8 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
+    - name: Install workloads
+      run: dotnet workload install android ios maccatalyst tvos macos maui wasm-tools
     - name: Restore dependencies
       run: dotnet restore
       working-directory: src
