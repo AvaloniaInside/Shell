@@ -7,8 +7,6 @@ Avalonia Inside Shell reduces the complexity of mobile/desktop application devel
     A URI-based navigation scheme that permits navigation to any page in the application
     
 
-This project is currently in alpha stage of development. This means that it is still being designed and built, and it has not been thoroughly tested yet. It may contain serious errors, bugs, or missing features that could affect its functionality and performance. Use it at your own risk and do not rely on it for any critical purposes.
-
 We welcome feedback, suggestions, and contributions from anyone who is interested in this project. We appreciate your support and patience as we work towards releasing a stable version of this project.
 
 
