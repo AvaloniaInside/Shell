@@ -26,7 +26,7 @@ jobs:
       run: dotnet restore
       working-directory: src/AvaloniaInside.Shell
     - name: Build
-      run: dotnet build --release --no-restore
+      run: dotnet build -c Release --no-restore
       working-directory: src/AvaloniaInside.Shell
     #- name: Test
     #  run: dotnet test --no-build --verbosity normal
