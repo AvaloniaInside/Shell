@@ -1,4 +1,5 @@
-# Shell
+
+<h1><img src="https://github.com/AvaloniaInside/Shell/assets/956077/6b34f130-0297-4530-ab0d-4074e92dae21" width="86" /> Shell</h1>
 
 Avalonia Inside Shell reduces the complexity of mobile/desktop application development by providing the fundamental features that most applications require, including:
 
