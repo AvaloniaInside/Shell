@@ -12,7 +12,7 @@ on:
 jobs:
   build:
 
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v3
@@ -20,13 +20,13 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
-    - name: Install workloads
-      run: dotnet workload install android ios maccatalyst tvos macos maui wasm-tools
+    #- name: Install workloads
+    #  run: dotnet workload install android ios maccatalyst tvos macos maui wasm-tools
     - name: Restore dependencies
       run: dotnet restore
-      working-directory: src
+      working-directory: src/AvaloniaInside.Shell
     - name: Build
       run: dotnet build --release --no-restore
-      working-directory: src
-#    - name: Test
-#      run: dotnet test --no-build --verbosity normal
+      working-directory: src/AvaloniaInside.Shell
+    #- name: Test
+    #  run: dotnet test --no-build --verbosity normal
