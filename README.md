@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/AvaloniaInside/Shell/features/add-image-resources/res/banner.png" />
+![image](https://github.com/AvaloniaInside/Shell/assets/956077/656b77bc-f7bf-4d24-96f4-00d201bb78e0)
 
 <h1><img src="https://github.com/AvaloniaInside/Shell/assets/956077/6b34f130-0297-4530-ab0d-4074e92dae21" width="86" /> Shell</h1>
 
