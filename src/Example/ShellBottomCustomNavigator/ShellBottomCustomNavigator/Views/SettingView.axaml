@@ -1,0 +1,22 @@
+<Page xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="ShellBottomCustomNavigator.Views.SettingView"
+             NavigationBar.Header="Settings">
+	<Grid RowDefinitions="35,35,35,35,35,*" ColumnDefinitions="*,*" Margin="10">
+		<TextBlock Text="Default Page Transition" />
+		<ComboBox ItemsSource="{Binding Transitions}" 
+				  SelectedItem="{Binding CurrentTransition}"
+				  Grid.Column="1"
+				  HorizontalAlignment="Stretch">
+			<ComboBox.ItemTemplate>
+				<DataTemplate>
+					<TextBlock Text="{Binding Name}" />
+				</DataTemplate>
+			</ComboBox.ItemTemplate>
+		</ComboBox>
+	</Grid>
+</Page>
+

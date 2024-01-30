@@ -1,8 +1,11 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:local="clr-namespace:ShellExample">
+        xmlns:local="clr-namespace:ShellBottomCustomNavigator">
 	<Styles.Resources>
 		<ResourceDictionary>
+			<Geometry x:Key="ArcData">
+				M0,0 L100,0 C95.167503,0 91.135628,3.4278221 90.203163,7.9846497 L90.152122,8.2704506 89.963921,9.1416779 C85.813438,27.384438 69.496498,41 50,41 30.5035,41 14.186564,27.384438 10.036079,9.1416779 L9.8478823,8.2704926 9.7968359,7.9846497 C8.8643732,3.4278221 4.8324914,0,0,0 z
+			</Geometry>
 			<ResourceDictionary.ThemeDictionaries>
 				<ResourceDictionary x:Key='Light'>
 					<SolidColorBrush x:Key='HomePageBackground'>White</SolidColorBrush>
@@ -45,13 +48,13 @@
 	</Style>
 
 	<Style Selector="TextBlock.SubTitle">
-		<Setter Property="Foreground" Value="{DynamicResource SubTitleForeground}" />
-		<Setter Property="FontWeight" Value="Thin" />
+		<Setter Property="Foreground" Value="{DynamicResource SubTitleForeground}"></Setter>
+		<Setter Property="FontWeight" Value="Thin"></Setter>
 	</Style>
 
 	<Style Selector="TextBlock.SemiAttention">
-		<Setter Property="Foreground" Value="{DynamicResource SemiAttentionForeground}" />
-		<Setter Property="FontWeight" Value="DemiBold" />
+		<Setter Property="Foreground" Value="{DynamicResource SemiAttentionForeground}"></Setter>
+		<Setter Property="FontWeight" Value="DemiBold"></Setter>
 	</Style>
 
 	<!-- <Style Selector="Image.SemiAttention"> -->
@@ -78,7 +81,8 @@
 								  SelectedItem="{TemplateBinding SelectedContent}"
 								  local:Helper.CarouselToTabControl="true"
 								  ItemTemplate="{TemplateBinding SelectedContentTemplate}"
-								  PageTransition="{x:Static PlatformSetup.TransitionForTab}" />
+								  PageTransition="{x:Static PlatformSetup.TransitionForTab}">
+						</Carousel>
 					</DockPanel>
 				</Border>
 			</ControlTemplate>
@@ -86,14 +90,14 @@
 	</Style>
 
 	<Style Selector="TabControl.MainTab /template/ Border > DockPanel > Border">
-		<Setter Property="Background" Value="#40000000" />
+		<Setter Property="Background" Value="#40000000"></Setter>
 	</Style>
 
 	<Style Selector="TabControl.HeadTab /template/ Border > DockPanel > Border">
-		<Setter Property="Background" Value="#40000000" />
-		<Setter Property="HorizontalAlignment" Value="Center" />
-		<Setter Property="CornerRadius" Value="5" />
-		<Setter Property="Padding" Value="8" />
+		<Setter Property="Background" Value="#40000000"></Setter>
+		<Setter Property="HorizontalAlignment" Value="Center"></Setter>
+		<Setter Property="CornerRadius" Value="5"></Setter>
+		<Setter Property="Padding" Value="8"></Setter>
 	</Style>
 
 	<Style Selector="TabControl.Center">
@@ -112,16 +116,74 @@
 							                HorizontalAlignment="Center"/>
 						</Border>
 						<Carousel Name="PART_SelectedContentHost"
-							  Margin="{TemplateBinding Padding}"
-							  ItemsSource="{TemplateBinding ItemsSource}"
-							  SelectedItem="{TemplateBinding SelectedContent}"
-							  local:Helper.CarouselToTabControl="true"
-							  ItemTemplate="{TemplateBinding SelectedContentTemplate}"
-							  PageTransition="{x:Static PlatformSetup.TransitionForTab}" />
+						          Margin="{TemplateBinding Padding}"
+						          ItemsSource="{TemplateBinding ItemsSource}"
+						          SelectedItem="{TemplateBinding SelectedContent}"
+						          local:Helper.CarouselToTabControl="true"
+						          ItemTemplate="{TemplateBinding SelectedContentTemplate}"
+						          PageTransition="{x:Static PlatformSetup.TransitionForTab}" />
 					</DockPanel>
 				</Border>
 			</ControlTemplate>
 		</Setter>
 	</Style>
-
+	
+	<Style Selector="TabControl.Luke">
+		<Setter Property="Template">
+			<ControlTemplate>
+				<Border BorderBrush="{TemplateBinding BorderBrush}"
+				        BorderThickness="{TemplateBinding BorderThickness}"
+				        CornerRadius="{TemplateBinding CornerRadius}"
+				        Background="{TemplateBinding Background}"
+				        HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+				        VerticalAlignment="{TemplateBinding VerticalAlignment}">
+					<DockPanel>
+						<Grid Background="Transparent" HorizontalAlignment="Center" DockPanel.Dock="{TemplateBinding TabStripPlacement}" Width="360" Height="120">
+							<Border x:Name="PART_Bar" />
+							<Canvas Margin="20 0 20 0">
+								<Grid x:Name="PART_Circle">
+									<Path x:Name="PART_Arc"/>
+									<Ellipse Fill="{DynamicResource HomePageBackground}"/>
+									<Ellipse Fill="CadetBlue" Margin="6"/>
+								</Grid>
+							</Canvas>
+							<ItemsPresenter Margin="20 0 20 0"  Name="PART_ItemsPresenter"
+							                ItemsPanel="{TemplateBinding ItemsPanel}"
+							                HorizontalAlignment="Center"/>
+						</Grid>
+						<Carousel Name="PART_SelectedContentHost"
+							  Margin="{TemplateBinding Padding}"
+							  ItemsSource="{TemplateBinding ItemsSource}"
+							  SelectedItem="{TemplateBinding SelectedContent}"
+							  local:Helper.CarouselToTabControl="true"
+							  ItemTemplate="{TemplateBinding SelectedContentTemplate}"
+							  PageTransition="{x:Static PlatformSetup.TransitionForTab}">
+						</Carousel>
+					</DockPanel>
+				</Border>
+			</ControlTemplate>
+		</Setter>
+		<Style Selector="^ /template/ Path#PART_Arc">
+			<Setter Property="Data" Value="{StaticResource ArcData}" />
+			<Setter Property="Width" Value="100"/>
+			<Setter Property="Height" Value="100"/>
+			<Setter Property="Fill" Value="{DynamicResource HomePageBackground}"/>
+			<Setter Property="Margin" Value="-10 90 -10 -1"/>
+		</Style>
+		<Style Selector="^ /template/ Grid#PART_Circle">
+			<Setter Property="Width" Value="80"/>
+			<Setter Property="Height" Value="80"/>
+			<Setter Property="Canvas.Left" Value="0"/>
+			<Setter Property="Transitions">
+				<Transitions>
+					<DoubleTransition Property="Canvas.Left" Duration="0:0:0.5"></DoubleTransition>
+				</Transitions>
+			</Setter>
+		</Style>
+		<Style Selector="^ /template/ Border#PART_Bar">
+			<Setter Property="Background" Value="#DDDDDD"/>
+			<Setter Property="Margin" Value="0 40 0 0"/>
+			<Setter Property="CornerRadius" Value="10"/>
+		</Style>
+	</Style>
 </Styles>

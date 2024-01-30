@@ -1,0 +1,30 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:i="https://github.com/projektanker/icons.avalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="ShellBottomCustomNavigator.Views.Widgets.UserProfileWidgetView"
+             Height="200">
+	<Border CornerRadius="0, 0, 12, 12" Margin="0, 0, 0, 30" Background="{DynamicResource ProfileBackground}">
+		<StackPanel>
+
+			<Ellipse Width="80" Height="80"
+			         HorizontalAlignment="Center"
+			         Margin="0, 25, 8, 0"
+			         Stroke="#395f91"
+			         StrokeThickness="5">
+				<Ellipse.Fill>
+					<ImageBrush Source="/Assets/omid-img.jpg" />
+				</Ellipse.Fill>
+			</Ellipse>
+
+			<TextBlock Text="Omid Mafakher" FontWeight="Heavy" HorizontalAlignment="Center"></TextBlock>
+			<WrapPanel HorizontalAlignment="Center">
+				<i:Icon Value="fa-solid fa-location-dot" />
+				<TextBlock Text="Versailles, France" FontWeight="UltraLight"></TextBlock>
+			</WrapPanel>
+		</StackPanel>
+	</Border>
+</UserControl>
+
