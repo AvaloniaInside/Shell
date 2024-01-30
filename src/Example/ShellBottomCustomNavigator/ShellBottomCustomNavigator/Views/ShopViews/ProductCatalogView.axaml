@@ -1,0 +1,64 @@
+<Page xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:converters="clr-namespace:ShellBottomCustomNavigator.Converters"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="ShellBottomCustomNavigator.Views.ShopViews.ProductCatalogView"
+             NavigationBar.Header="{Binding Title}">
+	<Page.Resources>
+		<converters:BitmapAssetValueConverter x:Key="variableImage"/>
+	</Page.Resources>
+	<NavigationBar.Item>
+		<Button Content="Filter"
+		        Command="{Binding FilterCommand}"
+		        Background="#00000000"></Button>
+	</NavigationBar.Item>
+	<ScrollViewer>
+		<ItemsControl ItemsSource="{Binding Products}">
+			<ItemsControl.ItemsPanel>
+				<ItemsPanelTemplate>
+					<VirtualizingStackPanel></VirtualizingStackPanel>
+				</ItemsPanelTemplate>
+			</ItemsControl.ItemsPanel>
+			<ItemsControl.ItemTemplate>
+				<DataTemplate>
+					<Button Navigator.To="/main/product/detail"
+							CommandParameter="{Binding .}"
+							HorizontalAlignment="Stretch">
+						<Button.Template>
+							<ControlTemplate>
+								<Border Background="#40000000" Margin="8" Padding="4" CornerRadius="6">
+									<Grid RowDefinitions="auto,auto,auto,auto,*" ColumnDefinitions="120,*">
+										<Border Grid.RowSpan="4" Background="White" Margin="5" CornerRadius="4">
+											<Image Source="{Binding PictureUrl, Converter={StaticResource variableImage}}" Margin="4"></Image>
+										</Border>
+										<WrapPanel Grid.Row="0" Grid.Column="1">
+											<TextBlock Text="{Binding SupplierName}"></TextBlock>
+											<TextBlock Text=" - "></TextBlock>
+											<TextBlock Text="{Binding Name}"></TextBlock>
+										</WrapPanel>
+
+										<TextBlock Grid.Row="1" Grid.Column="1"
+												   Text="{Binding MainCategory}"
+												   Classes="SubTitle"></TextBlock>
+
+										<WrapPanel Grid.Row="2" Grid.Column="1">
+											<TextBlock Text="Price: " Classes="SubTitle"></TextBlock>
+											<TextBlock Text="{Binding Price, StringFormat={}{0:C}}" Classes="SemiAttention"></TextBlock>
+											<TextBlock Text="{Binding CurrencyCode}"></TextBlock>
+
+											<TextBlock Text=" XPress delivery"></TextBlock>
+											<Image Source="/Assets/Icons/truck-fast-solid.png" Width="18" Stretch="Uniform" Classes="SemiAttention" />
+										</WrapPanel>
+										<TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding Price}"></TextBlock>
+									</Grid>
+								</Border>
+							</ControlTemplate>
+						</Button.Template>
+					</Button>
+				</DataTemplate>
+			</ItemsControl.ItemTemplate>
+		</ItemsControl>
+	</ScrollViewer>
+</Page>
