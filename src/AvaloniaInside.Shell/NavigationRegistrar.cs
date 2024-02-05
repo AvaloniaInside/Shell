@@ -57,5 +57,5 @@ public class NavigationRegistrar : INavigationRegistrar
 	}
 
 	public bool TryGetNode(string path, out NavigationNode node) =>
-		Navigations.TryGetValue(path, out node);
+		Navigations.TryGetValue(path.ToLower(), out node);
 }
