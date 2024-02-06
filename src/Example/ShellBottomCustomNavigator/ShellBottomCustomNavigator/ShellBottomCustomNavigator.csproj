@@ -1,0 +1,49 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <LangVersion>latest</LangVersion>
+        <AvaloniaUseCompiledBindingsByDefault>false</AvaloniaUseCompiledBindingsByDefault>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <AvaloniaResource Include="Assets\**"/>
+        <TrimmerRootDescriptor Include="Roots.xml" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Avalonia" Version="11.0.7" />
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.7" />
+        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.7" />
+        <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.7" />
+        <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.7" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+        <PackageReference Include="Projektanker.Icons.Avalonia" Version="9.0.1" />
+        <PackageReference Include="Projektanker.Icons.Avalonia.FontAwesome" Version="9.0.1" />
+        <PackageReference Include="ReactiveUI" Version="19.5.41" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\AvaloniaInside.Shell\AvaloniaInside.Shell.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Views\PetsTabControlView.axaml.cs">
+        <DependentUpon>PetsTabControlView.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Views\ProfileView.axaml.cs">
+        <DependentUpon>ProfileView.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Views\DogView.axaml.cs">
+        <DependentUpon>DogView.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Include="Resources\Products.json" />
+    </ItemGroup>
+</Project>

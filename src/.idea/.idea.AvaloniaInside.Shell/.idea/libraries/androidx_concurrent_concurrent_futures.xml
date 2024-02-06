@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="androidx.concurrent.concurrent-futures">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../../../Nuget/xamarin.androidx.concurrent.futures/1.1.0.16/jar/androidx.concurrent.concurrent-futures.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
