@@ -1,3 +1,4 @@
+using System;
 using Avalonia;
 using AvaloniaInside.Shell.Presenters;
 using Splat;
@@ -6,7 +7,7 @@ namespace AvaloniaInside.Shell;
 
 public static class AppBuilderExtensions
 {
-	public static AppBuilder UseShell(this AppBuilder builder) =>
+	public static AppBuilder UseShell(this AppBuilder builder, Func<INavigationViewLocator>? viewLocatorFactory = null) =>
 		builder.AfterPlatformServicesSetup(_ =>
 		{
 			if (Locator.CurrentMutable is null)
@@ -16,7 +17,16 @@ public static class AppBuilderExtensions
 
 			Locator.CurrentMutable.Register<INavigationRegistrar, NavigationRegistrar>();
 			Locator.CurrentMutable.Register<IPresenterProvider, PresenterProvider>();
-			Locator.CurrentMutable.Register<INavigationViewLocator, DefaultNavigationViewLocator>();
+
+			if (viewLocatorFactory != null)
+			{
+				Locator.CurrentMutable.Register(viewLocatorFactory, typeof(INavigationViewLocator));
+			}
+			else
+			{
+				Locator.CurrentMutable.Register<INavigationViewLocator, DefaultNavigationViewLocator>();
+			}
+			
 			Locator.CurrentMutable.Register<INavigationUpdateStrategy>(() =>
 				new DefaultNavigationUpdateStrategy(Locator.Current.GetService<IPresenterProvider>()!));
 
@@ -30,4 +40,16 @@ public static class AppBuilderExtensions
 					Locator.Current.GetService<INavigationViewLocator>()!);
 			});
 		});
+
+	public static AppBuilder UseShell(this AppBuilder builder, Func<NavigationNode, object> viewFactory)
+		=> builder.UseShell(() => new DelegateNavigationViewLocator(viewFactory));
+
+	private class DelegateNavigationViewLocator(Func<NavigationNode, object> viewFactory)
+		    : INavigationViewLocator
+	    {
+		    public object GetView(NavigationNode navigationItem)
+		    {
+			    return viewFactory(navigationItem);
+		    }
+	    }
 }
