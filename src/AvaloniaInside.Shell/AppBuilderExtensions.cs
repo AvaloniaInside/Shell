@@ -18,11 +18,7 @@ public static class AppBuilderExtensions
 			Locator.CurrentMutable.Register<INavigationRegistrar, NavigationRegistrar>();
 			Locator.CurrentMutable.Register<IPresenterProvider, PresenterProvider>();
 
-			if (viewLocatorFactory != null)
-			{
-				Locator.CurrentMutable.Register(viewLocatorFactory, typeof(INavigationViewLocator));
-			}
-			else
+			if (viewLocatorFactory is null)
 			{
 				Locator.CurrentMutable.Register<INavigationViewLocator, DefaultNavigationViewLocator>();
 			}
@@ -32,12 +28,14 @@ public static class AppBuilderExtensions
 
 			Locator.CurrentMutable.Register<INavigator>(() =>
 			{
+				var viewLocator = viewLocatorFactory != null ? viewLocatorFactory.Invoke() : Locator.Current.GetService<INavigationViewLocator>()!;
 				var registrar = Locator.Current.GetService<INavigationRegistrar>()!;
 				return new Navigator(
 					registrar,
 					new RelativeNavigateStrategy(registrar),
 					Locator.Current.GetService<INavigationUpdateStrategy>()!,
-					Locator.Current.GetService<INavigationViewLocator>()!);
+					viewLocator
+					);
 			});
 		});
 
