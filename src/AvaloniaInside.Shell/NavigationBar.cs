@@ -140,7 +140,7 @@ public class NavigationBar : TemplatedControl
 
 	#endregion
 
-	#region Hide
+	#region Visible
 
 	public static readonly AttachedProperty<bool> VisibleProperty =
 		AvaloniaProperty.RegisterAttached<NavigationBar, AvaloniaObject, bool>("Visible", defaultValue: true);
@@ -240,10 +240,10 @@ public class NavigationBar : TemplatedControl
 
 			if (itemPresenter.Content is StyledElement elementContent)
 				elementContent.DataContext = element.DataContext ?? element;
-			
+
 			return;
-		} 
-		
+		}
+
 		itemPresenter.Content = view;
 	}
 
