@@ -363,6 +363,7 @@ public partial class ShellView : TemplatedControl
         await (_contentView?.PushViewAsync(view, navigateType, cancellationToken) ?? Task.CompletedTask);
         SelectSideMenuItem();
         UpdateBindings();
+        UpdateSideMenu();
     }
 
     public async Task RemoveViewAsync(object view,
