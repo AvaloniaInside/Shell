@@ -5,11 +5,12 @@ using Avalonia.Controls;
 using Avalonia.iOS;
 using Avalonia.Media;
 using Avalonia.ReactiveUI;
+using AvaloniaInside.Shell;
 
 namespace ShellBottomCustomNavigator.iOS;
 
-// The UIApplicationDelegate for the application. This class is responsible for launching the 
-// User Interface of the application, as well as listening (and optionally responding) to 
+// The UIApplicationDelegate for the application. This class is responsible for launching the
+// User Interface of the application, as well as listening (and optionally responding) to
 // application events from iOS.
 [Register("AppDelegate")]
 #pragma warning disable CA1711 // Identifiers should not have incorrect suffix
@@ -20,6 +21,7 @@ public partial class AppDelegate : AvaloniaAppDelegate<App>
     {
         return base.CustomizeAppBuilder(builder)
             .WithInterFont()
+            .UseShell()
             .UseReactiveUI();
     }
 }

@@ -36,7 +36,7 @@
 			</ResourceDictionary.ThemeDictionaries>
 		</ResourceDictionary>
 	</Styles.Resources>
-	
+
 	<Design.PreviewWith>
 		<Border Padding="20">
 			<!-- Add Controls for Previewer Here -->
@@ -75,7 +75,7 @@
 						<ItemsPresenter Name="PART_ItemsPresenter"
 										ItemsPanel="{TemplateBinding ItemsPanel}"
 										DockPanel.Dock="{TemplateBinding TabStripPlacement}" />
-						<Carousel Name="PART_SelectedContentHost"
+						<Carousel Name="PART_SelectedContentHost_Alt"
 								  Margin="{TemplateBinding Padding}"
 								  ItemsSource="{TemplateBinding ItemsSource}"
 								  SelectedItem="{TemplateBinding SelectedContent}"
@@ -115,7 +115,7 @@
 							                ItemsPanel="{TemplateBinding ItemsPanel}"
 							                HorizontalAlignment="Center"/>
 						</Border>
-						<Carousel Name="PART_SelectedContentHost"
+						<Carousel Name="PART_SelectedContentHost_Alt"
 						          Margin="{TemplateBinding Padding}"
 						          ItemsSource="{TemplateBinding ItemsSource}"
 						          SelectedItem="{TemplateBinding SelectedContent}"
@@ -127,7 +127,7 @@
 			</ControlTemplate>
 		</Setter>
 	</Style>
-	
+
 	<Style Selector="TabControl.Luke">
 		<Setter Property="Template">
 			<ControlTemplate>
@@ -151,7 +151,7 @@
 							                ItemsPanel="{TemplateBinding ItemsPanel}"
 							                HorizontalAlignment="Center"/>
 						</Grid>
-						<Carousel Name="PART_SelectedContentHost"
+						<Carousel Name="PART_SelectedContentHost_Alt"
 							  Margin="{TemplateBinding Padding}"
 							  ItemsSource="{TemplateBinding ItemsSource}"
 							  SelectedItem="{TemplateBinding SelectedContent}"
