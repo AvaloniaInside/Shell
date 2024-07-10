@@ -20,7 +20,6 @@ public partial class ShellView
 
 	public double SideMenuSize => ScreenSize == ScreenSizeType.Small ? DesiredSize.Width - 35 : DefaultSideMenuSize;
 
-
 	public static readonly StyledProperty<double> DefaultSideMenuSizeProperty = AvaloniaProperty.Register<ShellView,double>(nameof(DefaultSideMenuSize), 250);
 
 	public double DefaultSideMenuSize
@@ -233,6 +232,24 @@ public partial class ShellView
 
 	#endregion
 
+	#region Attached properties
+
+	#region OverrideSideMenuBehave
+
+	public static readonly AttachedProperty<SideMenuBehaveType?> OverrideSideMenuBehaveProperty =
+		AvaloniaProperty.RegisterAttached<ShellView, AvaloniaObject, SideMenuBehaveType?>("OverrideSideMenuBehave",
+			defaultValue: null);
+
+	public static SideMenuBehaveType? GetOverrideSideMenuBehave(AvaloniaObject element) =>
+		element.GetValue(OverrideSideMenuBehaveProperty);
+
+	public static void SetOverrideSideMenuBehave(AvaloniaObject element, SideMenuBehaveType? parameter) =>
+		element.SetValue(OverrideSideMenuBehaveProperty, parameter);
+
+	#endregion
+
+	#endregion
+
 	#region Behavior
 
 	protected virtual Task MenuActionAsync(CancellationToken cancellationToken)
@@ -273,6 +290,11 @@ public partial class ShellView
 
 	private SideMenuBehaveType GetCurrentBehave()
 	{
+		var view = this._contentView?.CurrentView;
+
+		if (view is StyledElement element && GetOverrideSideMenuBehave(element) is { } overrideBehave)
+			return overrideBehave;
+
 		return ScreenSize switch
 		{
 			ScreenSizeType.Small => SmallScreenSideMenuBehave,
