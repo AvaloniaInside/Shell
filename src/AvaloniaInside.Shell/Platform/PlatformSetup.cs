@@ -11,6 +11,8 @@ public class PlatformSetup
     {
         get
         {
+	        return DefaultIosPageSlide.Instance;
+
             if (OperatingSystem.IsAndroid())
                 return AndroidDefaultPageSlide.Instance;
             if (OperatingSystem.IsIOS())
@@ -27,6 +29,8 @@ public class PlatformSetup
     {
         get
         {
+	        return DefaultIosPageSlide.Instance;
+
             if (OperatingSystem.IsAndroid())
                 return MaterialListPageSlide.Instance;
             if (OperatingSystem.IsIOS())
@@ -48,5 +52,23 @@ public class PlatformSetup
             //Default for the moment
             return MaterialListPageSlide.Instance;
         }
+    }
+
+    public static IPageTransition TransitionForModal
+    {
+	    get
+	    {
+		    return AlertTransition.Instance;
+
+		    if (OperatingSystem.IsAndroid())
+			    return AndroidDefaultPageSlide.Instance;
+		    if (OperatingSystem.IsIOS())
+			    return AlertTransition.Instance;
+		    if (OperatingSystem.IsWindows())
+			    return DrillInNavigationTransition.Instance;;
+
+		    //Default for the moment
+		    return DrillInNavigationTransition.Instance;
+	    }
     }
 }

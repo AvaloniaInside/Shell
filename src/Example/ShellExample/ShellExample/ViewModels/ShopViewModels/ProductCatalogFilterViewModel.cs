@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using AvaloniaInside.Shell;
+using DynamicData;
 using ReactiveUI;
 using ShellExample.Models;
 
@@ -22,8 +23,9 @@ public class ProductCatalogFilterViewModel : ViewModelBase
 		_navigationService = navigationService;
 		var items = DummyPlace.Products.Select(s => s.MainCategory)
 			.Distinct()
-			.Order();
-		Categories = new ObservableCollection<string>(items);
+			.OrderBy(o=>o);
+		Categories = new ObservableCollection<string>();
+		Categories.AddRange(items);
 
 		CloseCommand = ReactiveCommand.CreateFromTask(CloseAsync);
 		ClearCommand = ReactiveCommand.CreateFromTask(ClearAsync);

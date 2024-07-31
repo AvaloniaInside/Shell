@@ -31,7 +31,7 @@ public class EntranceNavigationTransition : PlatformBasePageTransition
     public Easing Easing2 { get; set; } = Easing.Parse("0.85, 0.0, 0.75, 1.0");
     public Easing Easing3 { get; set; } = Easing.Parse("0.85, 0.0, 0.0, 1.0");
 
-    protected override CompositionAnimationGroup GetOrCreateEnteranceAnimation(CompositionVisual element, double widthDistance, double heightDistance)
+    protected override CompositionAnimationGroup GetOrCreateEntranceAnimation(CompositionVisual element, double widthDistance, double heightDistance)
     {
         var compositor = element.Compositor;
 

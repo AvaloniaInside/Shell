@@ -35,7 +35,7 @@ public class AndroidDefaultPageSlide : PlatformBasePageTransition
     /// </summary>
     public override Easing Easing { get; set; } = new FastOutExtraSlowInEasing();
 
-    protected override CompositionAnimationGroup GetOrCreateEnteranceAnimation(CompositionVisual element, double widthDistance, double heightDistance)
+    protected override CompositionAnimationGroup GetOrCreateEntranceAnimation(CompositionVisual element, double widthDistance, double heightDistance)
     {
         var compositor = element.Compositor;
 

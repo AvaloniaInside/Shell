@@ -43,6 +43,7 @@ public class SettingViewModel : ViewModelBase
             new TransitionItem{ Name = "Android Default", Transition = AndroidDefaultPageSlide.Instance },
             new TransitionItem{ Name = "Android Material", Transition = MaterialListPageSlide.Instance },
             new TransitionItem{ Name = "iOS", Transition = DefaultIosPageSlide.Instance },
+            new TransitionItem{ Name = "iOS Modal", Transition = IosModalSlide.Instance },
             new TransitionItem{ Name = "Windows EntranceNavigation", Transition = EntranceNavigationTransition.Instance },
             new TransitionItem{ Name = "Windows DrillInNavigation", Transition = DrillInNavigationTransition.Instance },
             new TransitionItem{ Name = "Windows ListSlideNavigation", Transition = ListSlideNavigationTransition.Instance },

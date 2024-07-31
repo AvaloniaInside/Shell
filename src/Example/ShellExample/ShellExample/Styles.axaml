@@ -60,6 +60,8 @@
 	<!-- </Style> -->
 
 	<Style Selector="TabControl">
+		<Setter Property="Padding" Value="0"></Setter>
+		<Setter Property="Background" Value="{DynamicResource HomePageBackground}"></Setter>
 		<Setter Property="Template">
 			<ControlTemplate>
 				<Border BorderBrush="{TemplateBinding BorderBrush}"

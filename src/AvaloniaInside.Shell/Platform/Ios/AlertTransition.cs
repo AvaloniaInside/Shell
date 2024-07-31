@@ -1,41 +1,41 @@
-﻿using Avalonia.Animation.Easings;
-using Avalonia.Rendering.Composition.Animations;
-using Avalonia.Rendering.Composition;
-using Avalonia;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using AvaloniaInside.Shell.Platform.Ios;
+using Avalonia;
+using Avalonia.Animation.Easings;
+using Avalonia.Rendering.Composition;
+using Avalonia.Rendering.Composition.Animations;
 
-namespace AvaloniaInside.Shell.Platform.Windows;
+namespace AvaloniaInside.Shell.Platform.Ios;
+
 public class AlertTransition : PlatformBasePageTransition
 {
     public static readonly AlertTransition Instance = new();
 
-    private const float EndingCue = 0.7f;
-    private const float StartingCue = 0.3f;
+    private const float EndingCue = 0.9f;
+    private const float StartingCue = 0.1f;
 
     /// <summary>
     /// Gets the duration of the animation.
     /// </summary>
-    public override TimeSpan Duration { get; set; } = TimeSpan.FromSeconds(0.25);
+    public override TimeSpan Duration { get; set; } = TimeSpan.FromSeconds(.25);
 
     /// <summary>
     /// Scale factor to animate in
     /// </summary>
-    public float ZoomInFactor { get; set; } = 1.25f;
+    public float ZoomInFactor { get; set; } = 1f;
 
     /// <summary>
     /// Scale factor to animate out
     /// </summary>
-    public float ZoomOutFactor { get; set; } = 0.75f;
+    public float ZoomOutFactor { get; set; } = 1.1f;
 
     /// <summary>
     /// Gets or sets element entrance easing.
     /// </summary>
-    public override Easing Easing { get; set; } = Easing.Parse("0.85, 0.0, 0.0, 1.0");
+    public override Easing Easing { get; set; } = Easing.Parse("1.0, 0.0, 0.0, 0.85");
 
-    protected override CompositionAnimationGroup GetOrCreateEnteranceAnimation(CompositionVisual element, double widthDistance, double heightDistance)
+    protected override CompositionAnimationGroup GetOrCreateEntranceAnimation(CompositionVisual element, double widthDistance, double heightDistance)
     {
         var compositor = element.Compositor;
 
