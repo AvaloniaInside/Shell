@@ -11,8 +11,6 @@ public class PlatformSetup
     {
         get
         {
-	        return DefaultIosPageSlide.Instance;
-
             if (OperatingSystem.IsAndroid())
                 return AndroidDefaultPageSlide.Instance;
             if (OperatingSystem.IsIOS())
@@ -29,8 +27,6 @@ public class PlatformSetup
     {
         get
         {
-	        return DefaultIosPageSlide.Instance;
-
             if (OperatingSystem.IsAndroid())
                 return MaterialListPageSlide.Instance;
             if (OperatingSystem.IsIOS())
@@ -58,8 +54,6 @@ public class PlatformSetup
     {
 	    get
 	    {
-		    return AlertTransition.Instance;
-
 		    if (OperatingSystem.IsAndroid())
 			    return AndroidDefaultPageSlide.Instance;
 		    if (OperatingSystem.IsIOS())

@@ -5,11 +5,11 @@
 		<ResourceDictionary>
 			<ResourceDictionary.ThemeDictionaries>
 				<ResourceDictionary x:Key='Light'>
-					<SolidColorBrush x:Key='AppBackground'>Black</SolidColorBrush>
+					<SolidColorBrush x:Key='AppBackground' Color="{OnPlatform White, iOS=Black}"></SolidColorBrush>
 					<SolidColorBrush x:Key='PageBackground'>White</SolidColorBrush>
 				</ResourceDictionary>
 				<ResourceDictionary x:Key='Dark'>
-					<SolidColorBrush x:Key='AppBackground'>White</SolidColorBrush>
+					<SolidColorBrush x:Key='AppBackground'>Black</SolidColorBrush>
 					<SolidColorBrush x:Key='PageBackground'>Black</SolidColorBrush>
 				</ResourceDictionary>
 			</ResourceDictionary.ThemeDictionaries>
@@ -162,8 +162,8 @@
 			<ControlTemplate>
 				<Viewbox Stretch="UniformToFill">
                     <Canvas Width="16" Height="16" Margin="5" Background="#00000000">
-                        <Line StartPoint="7,2" EndPoint="2,7" StrokeThickness="3" Stroke="{DynamicResource ButtonForeground}"></Line>
-                        <Line StartPoint="2,7" EndPoint="7,12" StrokeThickness="3" Stroke="{DynamicResource ButtonForeground}"></Line>
+                        <Line StartPoint="7,2" EndPoint="2,8" StrokeThickness="3" Stroke="{DynamicResource ButtonForeground}"></Line>
+                        <Line StartPoint="2,6" EndPoint="7,12" StrokeThickness="3" Stroke="{DynamicResource ButtonForeground}"></Line>
                     </Canvas>
 				</Viewbox>
 			</ControlTemplate>
