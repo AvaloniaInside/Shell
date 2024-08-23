@@ -1,41 +1,20 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-	<Style Selector="StackContentView">
-		<Setter Property="Template">
-			<ControlTemplate>
-				<Border Padding="{TemplateBinding Padding}"
-						Background="{TemplateBinding Background}"
-						BorderBrush="{TemplateBinding BorderBrush}"
-						BorderThickness="{TemplateBinding BorderThickness}"
-						CornerRadius="{TemplateBinding CornerRadius}">
-					<ItemsPresenter Name="PART_ItemsPresenter"
-									ItemsPanel="{TemplateBinding ItemsPanel}" />
-				</Border>
-			</ControlTemplate>
-		</Setter>
-		<Setter Property="ItemsPanel">
-			<ItemsPanelTemplate>
-				<StackContentViewPanel></StackContentViewPanel>
-			</ItemsPanelTemplate>
-		</Setter>
-	</Style>
 
-	<Style Selector="StackContentViewItem">
-		<Setter Property="Template">
-			<ControlTemplate>
-				<ContentPresenter Name="PART_ContentPresenter"
-								  Padding="{TemplateBinding Padding}"
-								  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-								  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-								  Background="{TemplateBinding Background}"
-								  BorderBrush="{TemplateBinding BorderBrush}"
-								  BorderThickness="{TemplateBinding BorderThickness}"
-								  Content="{TemplateBinding Content}"
-								  ContentTemplate="{TemplateBinding ContentTemplate}"
-								  CornerRadius="{TemplateBinding CornerRadius}" />
-			</ControlTemplate>
-		</Setter>
-	</Style>
+	<Styles.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.ThemeDictionaries>
+				<ResourceDictionary x:Key='Light'>
+					<SolidColorBrush x:Key='AppBackground' Color="{OnPlatform White, iOS=Black}"></SolidColorBrush>
+					<SolidColorBrush x:Key='PageBackground'>White</SolidColorBrush>
+				</ResourceDictionary>
+				<ResourceDictionary x:Key='Dark'>
+					<SolidColorBrush x:Key='AppBackground'>Black</SolidColorBrush>
+					<SolidColorBrush x:Key='PageBackground'>Black</SolidColorBrush>
+				</ResourceDictionary>
+			</ResourceDictionary.ThemeDictionaries>
+		</ResourceDictionary>
+	</Styles.Resources>
 
 	<Style Selector="NavigationBar">
 		<Setter Property="Template">
@@ -67,7 +46,7 @@
 	<Style Selector="ShellView">
 		<Setter Property="Template">
 			<ControlTemplate>
-				<Panel>
+				<Panel Background="{TemplateBinding Background}">
 					<SplitView Name="PART_SplitView" DisplayMode="Inline">
 						<SplitView.Pane>
 							<SideMenu Name="PART_SideMenu"
@@ -84,7 +63,7 @@
 							               TopSafePadding="{TemplateBinding TopSafePadding}"
 							               TopSafeSpace="{TemplateBinding TopSafeSpace}"
 							               ApplyTopSafePadding="{TemplateBinding ApplyTopSafePadding}"/>
-							<StackContentView Name="PART_ContentView" 
+							<StackContentView Name="PART_ContentView"
 											  Grid.Row="1"
 											  PageTransition="{TemplateBinding DefaultPageTransition}"></StackContentView>
 							<Border Grid.Row="2"
@@ -122,7 +101,8 @@
 					</Rectangle>
 
 					<StackContentView Name="PART_Modal"
-					                  IsVisible="{Binding ElementName=PART_Modal, Path=HasContent}">
+					                  IsVisible="{Binding ElementName=PART_Modal, Path=HasContent}"
+					                  PageTransition="{TemplateBinding ModalPageTransition}">
 					</StackContentView>
 				</Panel>
 			</ControlTemplate>
@@ -182,8 +162,8 @@
 			<ControlTemplate>
 				<Viewbox Stretch="UniformToFill">
                     <Canvas Width="16" Height="16" Margin="5" Background="#00000000">
-                        <Line StartPoint="7,2" EndPoint="2,7" StrokeThickness="3" Stroke="{DynamicResource ButtonForeground}"></Line>
-                        <Line StartPoint="2,7" EndPoint="7,12" StrokeThickness="3" Stroke="{DynamicResource ButtonForeground}"></Line>
+                        <Line StartPoint="7,2" EndPoint="2,8" StrokeThickness="3" Stroke="{DynamicResource ButtonForeground}"></Line>
+                        <Line StartPoint="2,6" EndPoint="7,12" StrokeThickness="3" Stroke="{DynamicResource ButtonForeground}"></Line>
                     </Canvas>
 				</Viewbox>
 			</ControlTemplate>
@@ -202,5 +182,13 @@
 				</Viewbox>
 			</ControlTemplate>
 		</Setter>
+	</Style>
+
+	<Style Selector="Page">
+		<Setter Property="Background" Value="{DynamicResource PageBackground}" />
+	</Style>
+
+	<Style Selector="ShellView">
+		<Setter Property="Background" Value="{DynamicResource AppBackground}" />
 	</Style>
 </Styles>

@@ -11,12 +11,12 @@ using Avalonia.Animation;
 namespace AvaloniaInside.Shell.Platform;
 public abstract class PlatformBasePageTransition : IPageTransition
 {
-    private CompositionAnimationGroup? _enteranceAnimation;
+    private CompositionAnimationGroup? _entranceAnimation;
     private CompositionAnimationGroup? _exitAnimation;
     private CompositionAnimationGroup? _sendBackAnimation;
     private CompositionAnimationGroup? _bringBackAnimation;
 
-    private double _lastDistance = 0;
+    private readonly double _lastDistance = 0;
 
     /// <summary>
     /// Gets the duration of the animation.
@@ -28,7 +28,9 @@ public abstract class PlatformBasePageTransition : IPageTransition
     /// </summary>
     public virtual Easing Easing { get; set; } = Easing.Parse("0.42, 0.0, 0.58, 1.0");
 
-    protected abstract CompositionAnimationGroup GetOrCreateEnteranceAnimation(CompositionVisual element, double distance, double heightDistance);
+    protected virtual bool ShouldHideAfterExit { get; set; } = true;
+
+    protected abstract CompositionAnimationGroup GetOrCreateEntranceAnimation(CompositionVisual element, double distance, double heightDistance);
 
     protected abstract CompositionAnimationGroup GetOrCreateExitAnimation(CompositionVisual element, double distance, double heightDistance);
 
@@ -52,7 +54,7 @@ public abstract class PlatformBasePageTransition : IPageTransition
 
         if (distance != _lastDistance)
         {
-            _enteranceAnimation = null;
+            _entranceAnimation = null;
             _exitAnimation = null;
             _sendBackAnimation = null;
             _bringBackAnimation = null;
@@ -60,7 +62,7 @@ public abstract class PlatformBasePageTransition : IPageTransition
 
         if (to != null) to.IsVisible = true;
         await RunAnimationAsync(parentComposition, fromElement, toElement, forward, parent.Bounds.Width, parent.Bounds.Height, cancellationToken);
-        if (from != null) from.IsVisible = false;
+        if (from != null && ShouldHideAfterExit) from.IsVisible = false;
     }
 
     protected virtual Task RunAnimationAsync(
@@ -75,7 +77,7 @@ public abstract class PlatformBasePageTransition : IPageTransition
         if (toElement != null)
         {
             var animation = forward
-                ? _enteranceAnimation ??= GetOrCreateEnteranceAnimation(parentComposition, widthDistance, heightDistance)
+                ? _entranceAnimation ??= GetOrCreateEntranceAnimation(parentComposition, widthDistance, heightDistance)
                 : _bringBackAnimation ??= GetOrCreateBringBackAnimation(parentComposition, widthDistance, heightDistance);
 
             toElement.StartAnimationGroup(animation);

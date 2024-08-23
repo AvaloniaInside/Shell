@@ -18,7 +18,7 @@ public class ListSlideNavigationTransition : PlatformBasePageTransition
 
     public float FadeFactor { get; set; } = 0.7f;
 
-    protected override CompositionAnimationGroup GetOrCreateEnteranceAnimation(CompositionVisual element, double widthDistance, double heightDistance)
+    protected override CompositionAnimationGroup GetOrCreateEntranceAnimation(CompositionVisual element, double widthDistance, double heightDistance)
     {
         var compositor = element.Compositor;
 

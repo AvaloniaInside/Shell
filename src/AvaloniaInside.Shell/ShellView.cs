@@ -8,6 +8,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
+using AvaloniaInside.Shell.Platform;
 using AvaloniaInside.Shell.Platform.Windows;
 using ReactiveUI;
 using Splat;
@@ -180,7 +181,7 @@ public partial class ShellView : TemplatedControl
 
     #endregion
 
-    #region ApplyBottomSafePadding
+    #region DefaultPageTransition
 
     /// <summary>
     /// Defines the <see cref="DefaultPageTransitionProperty"/> property.
@@ -188,7 +189,7 @@ public partial class ShellView : TemplatedControl
     public static readonly StyledProperty<IPageTransition?> DefaultPageTransitionProperty =
         AvaloniaProperty.Register<ShellView, IPageTransition?>(
             nameof(DefaultPageTransition),
-            defaultValue: new DrillInNavigationTransition());
+            defaultValue: PlatformSetup.TransitionForPage);
 
     /// <summary>
     /// Gets or sets the animation played when content appears and disappears.
@@ -197,6 +198,27 @@ public partial class ShellView : TemplatedControl
     {
         get => GetValue(DefaultPageTransitionProperty);
         set => SetValue(DefaultPageTransitionProperty, value);
+    }
+
+    #endregion
+
+    #region ModalPageTransition
+
+    /// <summary>
+    /// Defines the <see cref="DefaultPageTransitionProperty"/> property.
+    /// </summary>
+    public static readonly StyledProperty<IPageTransition?> ModalPageTransitionProperty =
+	    AvaloniaProperty.Register<ShellView, IPageTransition?>(
+		    nameof(ModalPageTransition),
+		    defaultValue: PlatformSetup.TransitionForModal);
+
+    /// <summary>
+    /// Gets or sets the animation played when content appears and disappears.
+    /// </summary>
+    public IPageTransition? ModalPageTransition
+    {
+	    get => GetValue(ModalPageTransitionProperty);
+	    set => SetValue(ModalPageTransitionProperty, value);
     }
 
     #endregion

@@ -33,7 +33,7 @@
 			</ResourceDictionary.ThemeDictionaries>
 		</ResourceDictionary>
 	</Styles.Resources>
-	
+
 	<Design.PreviewWith>
 		<Border Padding="20">
 			<!-- Add Controls for Previewer Here -->
@@ -60,6 +60,8 @@
 	<!-- </Style> -->
 
 	<Style Selector="TabControl">
+		<Setter Property="Padding" Value="0"></Setter>
+		<Setter Property="Background" Value="{DynamicResource HomePageBackground}"></Setter>
 		<Setter Property="Template">
 			<ControlTemplate>
 				<Border BorderBrush="{TemplateBinding BorderBrush}"
@@ -72,7 +74,7 @@
 						<ItemsPresenter Name="PART_ItemsPresenter"
 										ItemsPanel="{TemplateBinding ItemsPanel}"
 										DockPanel.Dock="{TemplateBinding TabStripPlacement}" />
-						<Carousel Name="PART_SelectedContentHost"
+						<Carousel Name="PART_SelectedContentHost_Alt"
 								  Margin="{TemplateBinding Padding}"
 								  ItemsSource="{TemplateBinding ItemsSource}"
 								  SelectedItem="{TemplateBinding SelectedContent}"
@@ -111,7 +113,7 @@
 							                ItemsPanel="{TemplateBinding ItemsPanel}"
 							                HorizontalAlignment="Center"/>
 						</Border>
-						<Carousel Name="PART_SelectedContentHost"
+						<Carousel Name="PART_SelectedContentHost_Alt"
 							  Margin="{TemplateBinding Padding}"
 							  ItemsSource="{TemplateBinding ItemsSource}"
 							  SelectedItem="{TemplateBinding SelectedContent}"

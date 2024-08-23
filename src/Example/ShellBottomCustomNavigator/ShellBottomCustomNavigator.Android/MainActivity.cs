@@ -3,6 +3,7 @@ using Android.Content.PM;
 using Avalonia;
 using Avalonia.Android;
 using Avalonia.ReactiveUI;
+using AvaloniaInside.Shell;
 
 namespace ShellBottomCustomNavigator.Android;
 
@@ -18,6 +19,7 @@ public class MainActivity : AvaloniaMainActivity<App>
     {
         return base.CustomizeAppBuilder(builder)
             .WithInterFont()
+            .UseShell()
             .UseReactiveUI();
     }
 }

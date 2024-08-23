@@ -35,7 +35,7 @@ public class DrillInNavigationTransition : PlatformBasePageTransition
     /// </summary>
     public override Easing Easing { get; set; } = Easing.Parse("0.85, 0.0, 0.0, 1.0");
 
-    protected override CompositionAnimationGroup GetOrCreateEnteranceAnimation(CompositionVisual element, double widthDistance, double heightDistance)
+    protected override CompositionAnimationGroup GetOrCreateEntranceAnimation(CompositionVisual element, double widthDistance, double heightDistance)
     {
         var compositor = element.Compositor;
 
