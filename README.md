@@ -7,21 +7,21 @@ Avalonia Inside Shell reduces the complexity of mobile/desktop application devel
     A single place to describe the visual hierarchy of an application.
     A common navigation user experience.
     A URI-based navigation scheme that permits navigation to any page in the application
-    
+
 
 We welcome feedback, suggestions, and contributions from anyone who is interested in this project. We appreciate your support and patience as we work towards releasing a stable version of this project.
 
 
 ## Screenshots
 
-<img src="https://user-images.githubusercontent.com/956077/226295190-cbe81c7d-4054-4c07-9e5c-7ee7149c1468.png" width="300"/> <img src="https://user-images.githubusercontent.com/956077/226295294-3d4f1f9e-941d-4248-b941-a0c35ca0533a.png" width="300"/>  
+<img src="https://user-images.githubusercontent.com/956077/226295190-cbe81c7d-4054-4c07-9e5c-7ee7149c1468.png" width="300"/> <img src="https://user-images.githubusercontent.com/956077/226295294-3d4f1f9e-941d-4248-b941-a0c35ca0533a.png" width="300"/>
 
 ## Installation
 
 To use AvaloniaInside.Shell in your Avalonia project, you can install the package via NuGet using the following command in the Package Manager Console:
 
 ```bash
-dotnet add package AvaloniaInside.Shell --version 1.1.3
+dotnet add package AvaloniaInside.Shell --version 1.2.0
 ```
 
 Alternatively, you can also install the package through Visual Studio's NuGet Package Manager.
@@ -80,7 +80,7 @@ And to navigate to a specific page, we can use the Navigator property of the She
 await MyShellView.Navigator.NavigateAsync("/main/home/confirmation", cancellationToken);
 ```
 
-### NavigationBar 
+### NavigationBar
 ![image](https://user-images.githubusercontent.com/956077/227613963-9b1a10b5-c2b0-4dcb-ba43-cd72f3a27333.png)
 
 Each page that is currently on top of the navigation stack has access to the navigation bar's title and navigation item. In hierarchical hosts, the currently selected item in the host will be the one that has access to the navigation bar. For example, in the case of /home/pets/cat, the page associated with the cat would be able to modify the navigation bar. This can be done by setting the NavigationBar.Header and NavigationBar.Item properties, as shown in the code snippet below:
@@ -108,7 +108,7 @@ Each page that is currently on top of the navigation stack has access to the nav
 #### Host
 
 `Host` can be used to group pages under a common root, such as a `TabControl`.
-It has a `Page` property that specifies the view associated with the host, as well as an optional `Default` property that specifies the default child route. as well as a `Children` property that specifies any child `Route` objects. 
+It has a `Page` property that specifies the view associated with the host, as well as an optional `Default` property that specifies the default child route. as well as a `Children` property that specifies any child `Route` objects.
 
 #### SideMenuItem
 
@@ -128,7 +128,7 @@ It has a `Page` property that specifies the view associated with the host, as we
 
     <ShellView Name="ShellViewMain" DefaultRoute="/main">
         <Host Path="main" Page="views:MainTabControl"> ... </Host>
-        
+
         <!-- Side Menu Header  -->
         <ShellView.SideMenuHeader>
 		<widgets:UserProfileWidgetView></widgets:UserProfileWidgetView>
@@ -141,13 +141,13 @@ It has a `Page` property that specifies the view associated with the host, as we
         <SideMenuItem Path="/main/product" Title="Products" Icon="/Assets/Icons/tag-solid.png"></SideMenuItem>
         <SideMenuItem Path="/main/setting" Title="Settings" Icon="/Assets/Icons/user-solid.png"></SideMenuItem>
         <SideMenuItem Path="/second" Title="Second Click" Icon="/Assets/Icons/check-solid.png"></SideMenuItem>
-        
+
         <!-- SideMenu Content -->
         <ShellView.SideMenuContents>
 		<widgets:WeatherView Margin="0, 20, 0, 0" />
 		<widgets:CalendarWidgetView Margin="0, 20, 0, 0" />
 	</ShellView.SideMenuContents>
-        
+
         <!-- SideMenu Footer -->
 	<ShellView.SideMenuFooter>
 		<Border Background="#11000000" Height="25">
