@@ -1,9 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
-        <RuntimeIdentifier>browser-wasm</RuntimeIdentifier>
+		<TargetFramework>net8.0-browser</TargetFramework>
+		<RuntimeIdentifier>browser-wasm</RuntimeIdentifier>
+		<OutputType>Exe</OutputType>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <WasmMainJSPath>AppBundle\main.js</WasmMainJSPath>
-        <OutputType>Exe</OutputType>
     </PropertyGroup>
 
     <ItemGroup>

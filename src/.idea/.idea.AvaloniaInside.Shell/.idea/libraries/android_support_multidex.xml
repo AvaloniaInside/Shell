@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="android-support-multidex">
-    <CLASSES>
-      <root url="jar://C:/Program Files/dotnet/packs/Microsoft.Android.Sdk.Windows/33.0.95/tools/android-support-multidex.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

@@ -5,9 +5,9 @@ using Avalonia.Styling;
 
 namespace ShellBottomCustomNavigator.Views;
 
-public partial class PetsTabControlView : TabControl, IStyleable
+public partial class PetsTabControlView : TabControl
 {
-	public Type StyleKey => typeof(TabControl);
+	protected override Type StyleKeyOverride => typeof(TabControl);
 
 	public PetsTabControlView()
 	{

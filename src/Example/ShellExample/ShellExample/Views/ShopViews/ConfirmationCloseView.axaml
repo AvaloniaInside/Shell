@@ -3,20 +3,27 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-      x:Class="ShellExample.Views.ShopViews.ConfirmationCloseView">
+      x:Class="ShellExample.Views.ShopViews.ConfirmationCloseView"
+      VerticalAlignment="Center"
+      HorizontalAlignment="Center">
 	<Border Background="White" CornerRadius="5">
-		<Grid RowDefinitions="40,*,50">
-			<TextBlock Text="Confirmation!" FontSize="24" Foreground="Black" Margin="15"></TextBlock>
-			<Canvas Grid.Row="1" Background="#10000000" Width="400" Height="250">
-				<TextBlock Foreground="Black" TextWrapping="Wrap" Width="400" VerticalAlignment="Stretch" Margin="10">
-					Are you sure you want to close it?
-				</TextBlock>
-			</Canvas>
-			<Border Grid.Row="2" Background="#55000000" VerticalAlignment="Bottom">
-				<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="8">
-					<Button Content="No" Click="NoClick"></Button>
-					<Button Content=" Yes " Click="YesClick"></Button>
-				</StackPanel>
+		<Grid RowDefinitions="40,*,40">
+			<TextBlock Text="Confirmation!"
+			           FontSize="18"
+			           Foreground="Black"
+			           Margin="15 20 15 4"
+			           HorizontalAlignment="Center"></TextBlock>
+			<TextBlock Grid.Row="1" Foreground="Black" TextWrapping="Wrap"
+			           VerticalAlignment="Stretch"
+			           HorizontalAlignment="Center"
+			           Margin="20 2 20 20">
+				Are you sure you want to close it?
+			</TextBlock>
+			<Border Grid.Row="2" Background="#55000000" VerticalAlignment="Stretch">
+				<Grid ColumnDefinitions="*,*">
+					<Button Grid.Column="0" Content=" No " Click="NoClick" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"></Button>
+					<Button Grid.Column="1" Content=" Yes " Click="YesClick" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"></Button>
+				</Grid>
 			</Border>
 		</Grid>
 	</Border>
