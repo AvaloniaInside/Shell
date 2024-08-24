@@ -5,9 +5,9 @@ using Avalonia.Styling;
 
 namespace ShellExample.Views;
 
-public partial class MainTabControl : TabControl, IStyleable
+public partial class MainTabControl : TabControl
 {
-    public Type StyleKey => typeof(TabControl);
+    protected override Type StyleKeyOverride => typeof(TabControl);
 
     public MainTabControl()
     {

@@ -2,13 +2,14 @@
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <TargetFramework>net8.0-android</TargetFramework>
-        <SupportedOSPlatformVersion>33</SupportedOSPlatformVersion>
+        <SupportedOSPlatformVersion>34</SupportedOSPlatformVersion>
         <Nullable>enable</Nullable>
         <ApplicationId>com.CompanyName.ShellExample</ApplicationId>
         <ApplicationVersion>1</ApplicationVersion>
         <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
         <AndroidPackageFormat>apk</AndroidPackageFormat>
-        <TargetFrameworkVersion>v12.0</TargetFrameworkVersion>
+        <TargetFrameworkVersion>v15.0</TargetFrameworkVersion>
+		<AcceptAndroidSDKLicenses>true</AcceptAndroidSDKLicenses>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
       <AndroidEnableMultiDex>True</AndroidEnableMultiDex>

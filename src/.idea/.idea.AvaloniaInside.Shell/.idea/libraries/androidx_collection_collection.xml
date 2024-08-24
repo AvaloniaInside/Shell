@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="androidx.collection.collection">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../../../../Nuget/xamarin.androidx.collection/1.1.0.10/jar/androidx.collection.collection.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

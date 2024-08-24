@@ -76,7 +76,6 @@
 										DockPanel.Dock="{TemplateBinding TabStripPlacement}" />
 						<Carousel Name="PART_SelectedContentHost_Alt"
 								  Margin="{TemplateBinding Padding}"
-								  ItemsSource="{TemplateBinding ItemsSource}"
 								  SelectedItem="{TemplateBinding SelectedContent}"
 								  local:Helper.CarouselToTabControl="true"
 								  ItemTemplate="{TemplateBinding SelectedContentTemplate}"
@@ -115,7 +114,6 @@
 						</Border>
 						<Carousel Name="PART_SelectedContentHost_Alt"
 							  Margin="{TemplateBinding Padding}"
-							  ItemsSource="{TemplateBinding ItemsSource}"
 							  SelectedItem="{TemplateBinding SelectedContent}"
 							  local:Helper.CarouselToTabControl="true"
 							  ItemTemplate="{TemplateBinding SelectedContentTemplate}"
@@ -125,5 +123,4 @@
 			</ControlTemplate>
 		</Setter>
 	</Style>
-
 </Styles>

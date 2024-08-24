@@ -6,16 +6,17 @@ using Avalonia.Styling;
 
 namespace ShellBottomCustomNavigator.Views;
 
-public partial class MainTabControl : TabControl, IStyleable
+public partial class MainTabControl : TabControl
 {
-    public Type StyleKey => typeof(TabControl);
+	protected override Type StyleKeyOverride => typeof(TabControl);
+
     private Grid _circle;
     public MainTabControl()
     {
         InitializeComponent();
 
         var aaa = Styles;
-        
+
         this.SelectionChanged += (sender, args) =>
         {
             if (_circle == null) return;
@@ -32,7 +33,7 @@ public partial class MainTabControl : TabControl, IStyleable
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        
+
         _circle = e.NameScope.Get<Grid>("PART_Circle");
         this.SelectedIndex = 0;
     }
