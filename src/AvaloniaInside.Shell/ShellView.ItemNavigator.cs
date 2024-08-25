@@ -40,7 +40,7 @@ public partial class ShellView
 		var path = $"{basePath}/{route.Path}";
 		var host = route as Host;
 
-		if (host != null && !host.Page.IsSubclassOf(typeof(ItemsControl)))
+		if (host != null && !HostedItemsHelper.CanBeHosted(host.Page))
 			throw new AggregateException("Host must inherits from ItemsControl");
 
 		Navigator.Registrar.RegisterRoute(

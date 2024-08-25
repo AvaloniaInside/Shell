@@ -10,14 +10,14 @@ namespace AvaloniaInside.Shell;
 
 public class NavigationBar : TemplatedControl
 {
-	public static readonly DirectProperty<NavigationBar, ICommand> SideMenuCommandProperty =
-		AvaloniaProperty.RegisterDirect<NavigationBar, ICommand>(
+	public static readonly DirectProperty<NavigationBar, ICommand?> SideMenuCommandProperty =
+		AvaloniaProperty.RegisterDirect<NavigationBar, ICommand?>(
 			nameof(SideMenuCommand),
 			o => o.SideMenuCommand,
 			(o, v) => o.SideMenuCommand = v);
 
-	public static readonly DirectProperty<NavigationBar, ICommand> BackCommandProperty =
-		AvaloniaProperty.RegisterDirect<NavigationBar, ICommand>(
+	public static readonly DirectProperty<NavigationBar, ICommand?> BackCommandProperty =
+		AvaloniaProperty.RegisterDirect<NavigationBar, ICommand?>(
 			nameof(BackCommand),
 			o => o.BackCommand,
 			(o, v) => o.BackCommand = v);
@@ -33,13 +33,19 @@ public class NavigationBar : TemplatedControl
 	private ContentControl? _items;
 
 	private object? _pendingHeader;
-    private NavigateType? _pendingNavType;
 
-    public ShellView? ShellView { get; internal set; }
+    public static readonly StyledProperty<ShellView?> ShellViewProperty =
+	    AvaloniaProperty.Register<NavigationBar, ShellView?>(nameof(ShellView));
 
-	private ICommand _backCommand;
+    public ShellView? ShellView
+    {
+	    get => GetValue(ShellViewProperty);
+	    set => SetValue(ShellViewProperty, value);
+    }
 
-	public ICommand BackCommand
+	private ICommand? _backCommand;
+
+	public ICommand? BackCommand
 	{
 		get => _backCommand;
 		set
@@ -49,9 +55,9 @@ public class NavigationBar : TemplatedControl
 		}
 	}
 
-	private ICommand _sideMenuCommand;
+	private ICommand? _sideMenuCommand;
 
-	public ICommand SideMenuCommand
+	public ICommand? SideMenuCommand
 	{
 		get => _sideMenuCommand;
 		set
@@ -72,6 +78,27 @@ public class NavigationBar : TemplatedControl
 				UpdateButtons();
 		}
 	}
+
+	#region CurrentView
+
+	public static readonly DirectProperty<NavigationBar, object?> CurrentViewProperty =
+		AvaloniaProperty.RegisterDirect<NavigationBar, object?>(
+			nameof(CurrentView),
+			o => o.CurrentView,
+			(o, v) => o.CurrentView = v);
+
+	private object? _currentView;
+	public object? CurrentView
+	{
+		get => _currentView;
+		set
+		{
+			if (SetAndRaise(CurrentViewProperty, ref _currentView, value))
+                UpdateView(value);
+		}
+	}
+
+	#endregion
 
 	#region TopSafeSpace
 
@@ -155,6 +182,32 @@ public class NavigationBar : TemplatedControl
 
 	#endregion
 
+	protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+	{
+		base.OnPropertyChanged(change);
+		if (change.Property == ShellViewProperty)
+		{
+			ShellViewUpdated();
+		}
+	}
+
+	protected virtual void ShellViewUpdated()
+	{
+		if (ShellView is not { } shellView) return;
+
+		_backCommand = shellView.BackCommand;
+		_sideMenuCommand = shellView.SideMenuCommand;
+
+		this[!TopSafePaddingProperty] = shellView[!ShellView.TopSafePaddingProperty];
+		this[!TopSafeSpaceProperty] = shellView[!ShellView.TopSafeSpaceProperty];
+		this[!ApplyTopSafePaddingProperty] = shellView[!ShellView.ApplyTopSafePaddingProperty];
+
+		if (shellView.ContentView?.CurrentView is { } currentView)
+			UpdateView(currentView);
+
+		this[!CurrentViewProperty] = shellView.ContentView?[!StackContentView.CurrentViewProperty];
+	}
+
 	protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
 	{
 		base.OnApplyTemplate(e);
@@ -166,19 +219,16 @@ public class NavigationBar : TemplatedControl
 			_actionButton.Command = _backCommand;
 
 		if (_pendingHeader != null)
-			_ = UpdateAsync(_pendingHeader, _pendingNavType ?? NavigateType.Normal, CancellationToken.None);
+			UpdateView(_pendingHeader);
 	}
 
-	public Task UpdateAsync(object view, NavigateType navigateType, CancellationToken cancellationToken)
+	private void UpdateView(object? view)
 	{
 		if (_header == null && _items == null)
 		{
 			_pendingHeader = view;
-            _pendingNavType = navigateType;
-			return Task.CompletedTask;
+			return;
 		}
-
-		//TODO: Animation can apply for specific navigate type
 
 		if (_header != null)
 			UpdateHeader(view, _header);
@@ -192,7 +242,6 @@ public class NavigationBar : TemplatedControl
 			IsVisible = true;
 
 		UpdateButtons();
-		return Task.CompletedTask;
 	}
 
 	protected virtual void UpdateButtons()

@@ -80,14 +80,15 @@ public class DefaultNavigationUpdateStrategy : INavigationUpdateStrategy
 
 	private void SubscribeForUpdateIfNeeded(object? instance)
 	{
-		if (instance is not SelectingItemsControl selectingItemsControl) return;
-		selectingItemsControl.SelectionChanged += SelectingItemsControlOnSelectionChanged;
+		if (HostedItemsHelper.GetSelectableHostedItems(instance) is {} hosted)
+			hosted.SelectionChanged += SelectingItemsControlOnSelectionChanged;
+
 	}
 
 	private void UnSubscribeForUpdateIfNeeded(object instance)
 	{
-		if (instance is not SelectingItemsControl selectingItemsControl) return;
-		selectingItemsControl.SelectionChanged -= SelectingItemsControlOnSelectionChanged;
+		if (HostedItemsHelper.GetSelectableHostedItems(instance) is {} hosted)
+			hosted.SelectionChanged -= SelectingItemsControlOnSelectionChanged;
 	}
 
 	private void SelectingItemsControlOnSelectionChanged(object? sender, SelectionChangedEventArgs e)

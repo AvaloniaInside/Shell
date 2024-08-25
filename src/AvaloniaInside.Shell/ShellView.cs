@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Avalonia;
 using Avalonia.Animation;
 using Avalonia.Controls;
@@ -9,7 +10,6 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
 using AvaloniaInside.Shell.Platform;
-using AvaloniaInside.Shell.Platform.Windows;
 using ReactiveUI;
 using Splat;
 
@@ -46,14 +46,24 @@ public partial class ShellView : TemplatedControl
     private StackContentView? _modalView;
     private SideMenu? _sideMenu;
 
-    private bool _loadedFlag = false;
-    private bool _topLevelEventFlag = false;
+    private bool _loadedFlag;
+    private bool _topLevelEventFlag;
 
     #endregion
 
     #region Properties
 
-    public NavigationBar NavigationBar => _navigationBar;
+    public NavigationBar? NavigationBar =>
+	    _navigationBar ??
+	    (Navigator.CurrentChain?.Instance as Page)?.NavigationBar;
+
+    public NavigationBar? AttachedNavigationBar => _navigationBar;
+
+    public StackContentView? ContentView => _contentView;
+
+    public ICommand BackCommand { get; set; }
+
+    public ICommand SideMenuCommand { get; set; }
 
     #region ScreenSize
 
@@ -265,7 +275,10 @@ public partial class ShellView : TemplatedControl
             .GetService<INavigator>() ?? throw new ArgumentException("Cannot find INavigationService");
         Navigator.RegisterShell(this);
 
-        var isMobile = OperatingSystem.IsAndroid() || OperatingSystem.IsIOS();
+        BackCommand = ReactiveCommand.CreateFromTask(BackActionAsync);
+        SideMenuCommand = ReactiveCommand.CreateFromTask(MenuActionAsync);
+
+        _isMobile = OperatingSystem.IsAndroid() || OperatingSystem.IsIOS();
         if (!_isMobile)
         {
             Classes.Add("Mobile");
@@ -305,22 +318,13 @@ public partial class ShellView : TemplatedControl
     {
         base.OnApplyTemplate(e);
         _splitView = e.NameScope.Find<SplitView>("PART_SplitView");
+        _navigationBar = e.NameScope.Find<NavigationBar>("PART_NavigationBar");
         _contentView = e.NameScope.Find<StackContentView>("PART_ContentView");
         _modalView = e.NameScope.Find<StackContentView>("PART_Modal");
-        _navigationBar = e.NameScope.Find<NavigationBar>("PART_NavigationBar");
         _sideMenu = e.NameScope.Find<SideMenu>("PART_SideMenu");
 
         SetupUi();
 
-        if (_splitView != null)
-        {
-            _splitView.PaneClosing += SplitViewOnPaneClosing;
-        }
-
-        if (_sideMenu != null)
-        {
-            _sideMenu.Items = _sideMenuItems;
-        }
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -341,15 +345,23 @@ public partial class ShellView : TemplatedControl
 
     private void SetupUi()
     {
-        if (_navigationBar != null)
-        {
-            _navigationBar.ShellView = this;
-            _navigationBar.BackCommand = ReactiveCommand.CreateFromTask(BackActionAsync);
-            _navigationBar.SideMenuCommand = ReactiveCommand.CreateFromTask(MenuActionAsync);
-        }
-
         OnSafeEdgeSetup();
         UpdateSideMenu();
+
+        if (_navigationBar is { } navigationBar)
+        {
+	        navigationBar.ShellView = this;
+        }
+
+        if (_splitView != null)
+        {
+	        _splitView.PaneClosing += SplitViewOnPaneClosing;
+        }
+
+        if (_sideMenu != null)
+        {
+	        _sideMenu.Items = _sideMenuItems;
+        }
     }
 
     protected virtual void OnSafeEdgeSetup()
@@ -378,7 +390,8 @@ public partial class ShellView : TemplatedControl
 
     #region View Stack Manager
 
-    public async Task PushViewAsync(object view,
+    public async Task PushViewAsync(
+	    object view,
         NavigateType navigateType,
         CancellationToken cancellationToken = default)
     {
@@ -482,7 +495,7 @@ public partial class ShellView : TemplatedControl
 
     private void UpdateBindings()
     {
-        var view = _contentView.CurrentView;
+        var view = _contentView?.CurrentView;
         if (view is StyledElement element)
         {
             this[!ApplyTopSafePaddingProperty] = element[!EnableSafeAreaForTopProperty];

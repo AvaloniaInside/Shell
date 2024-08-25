@@ -1,0 +1,46 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<ControlTheme x:Key="{x:Type SideMenu}" TargetType="SideMenu">
+		<Setter Property="Template">
+			<ControlTemplate>
+				<Grid RowDefinitions="Auto,*,Auto">
+					<ContentPresenter Name="PART_Header"
+					                  ContentTemplate="{TemplateBinding HeaderTemplate}"
+					                  Content="{TemplateBinding Header}"></ContentPresenter>
+					<ScrollViewer Grid.Row="1">
+						<StackPanel Orientation="Vertical">
+							<ListBox Name="PART_Items"
+							         ItemsSource="{TemplateBinding Items}"
+							         SelectedItem="{TemplateBinding SelectedItem, Mode=TwoWay}">
+								<ListBox.ItemsPanel>
+									<ItemsPanelTemplate>
+										<StackPanel></StackPanel>
+									</ItemsPanelTemplate>
+								</ListBox.ItemsPanel>
+								<ListBox.ItemTemplate>
+									<DataTemplate>
+										<StackPanel Orientation="Horizontal" Height="22" Spacing="8">
+											<Image Source="{Binding Icon}"
+											       IsVisible="{Binding !!Icon}"
+											       VerticalAlignment="Center"></Image>
+											<TextBlock Text="{Binding Title}"
+											           VerticalAlignment="Center"></TextBlock>
+										</StackPanel>
+									</DataTemplate>
+								</ListBox.ItemTemplate>
+							</ListBox>
+							<ItemsControl Name="PART_Contents"
+							              ItemsSource="{TemplateBinding Contents}"
+							              ItemTemplate="{TemplateBinding ContentsTemplate}" />
+						</StackPanel>
+					</ScrollViewer>
+					<ContentPresenter Grid.Row="2"
+					                  Name="PART_Footer"
+					                  ContentTemplate="{TemplateBinding FooterTemplate}"
+					                  Content="{TemplateBinding Footer}"></ContentPresenter>
+				</Grid>
+			</ControlTemplate>
+		</Setter>
+	</ControlTheme>
+</ResourceDictionary>
+

@@ -260,30 +260,30 @@ public partial class ShellView
 
 	protected virtual void UpdateSideMenu()
 	{
-		if (_splitView == null || _navigationBar == null) return;
+		if (_splitView == null || NavigationBar == null) return;
 
 		switch (GetCurrentBehave())
 		{
 			case SideMenuBehaveType.Default:
 				_splitView.OpenPaneLength = SideMenuPresented ? SideMenuSize : 0;
 				_splitView.IsPaneOpen = SideMenuPresented;
-				_navigationBar.HasSideMenuOption = true;
+				NavigationBar.HasSideMenuOption = true;
 				break;
 			case SideMenuBehaveType.Keep:
 				_splitView.OpenPaneLength = SideMenuSize;
 				_splitView.IsPaneOpen = true;
-				_navigationBar.HasSideMenuOption = false;
+				NavigationBar.HasSideMenuOption = false;
 				break;
 			case SideMenuBehaveType.Closed:
 				_splitView.OpenPaneLength = 0;
 				_splitView.IsPaneOpen = true;
-				_navigationBar.HasSideMenuOption = true;
+				NavigationBar.HasSideMenuOption = true;
 				break;
             case SideMenuBehaveType.Removed:
 				_splitView.OpenPaneLength = 0;
 				_splitView.CompactPaneLength = 0;
                 _splitView.IsPaneOpen = false;
-                _navigationBar.HasSideMenuOption = false;
+                NavigationBar.HasSideMenuOption = false;
                 break;
         }
 	}

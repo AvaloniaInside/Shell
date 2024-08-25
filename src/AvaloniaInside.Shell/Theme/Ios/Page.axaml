@@ -1,0 +1,22 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<ControlTheme x:Key="{x:Type Page}" TargetType="Page">
+		<Setter Property="Background" Value="{DynamicResource PageBackground}" />
+		<Setter Property="Template">
+			<ControlTemplate>
+				<Border Background="{TemplateBinding Background}" CornerRadius="14">
+					<Grid RowDefinitions="Auto,*">
+						<NavigationBar Name="PART_NavigationBar"
+						               Grid.Row="0"
+						               ShellView="{TemplateBinding Shell}"
+						               Height="30" />
+
+						<ContentPresenter Grid.Row="1"
+						                  Content="{TemplateBinding Content}"></ContentPresenter>
+					</Grid>
+				</Border>
+			</ControlTemplate>
+		</Setter>
+	</ControlTheme>
+</ResourceDictionary>
+

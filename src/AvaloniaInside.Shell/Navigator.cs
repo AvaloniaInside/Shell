@@ -22,6 +22,8 @@ public partial class Navigator : INavigator
 
     public Uri CurrentUri => _stack.Current?.Uri ?? Registrar.RootUri;
 
+    public NavigationChain? CurrentChain => _stack.Current;
+
     public INavigationRegistrar Registrar { get; }
 
     public Navigator(
@@ -99,7 +101,7 @@ public partial class Navigator : INavigator
             await fromPage.OnNavigatingAsync(args, cancellationToken);
             if (args.Cancel) return;
 
-            //Check for overrides 
+            //Check for overrides
 
             if (argument != args.Argument)
             {
@@ -292,11 +294,11 @@ public partial class Navigator : INavigator
         NavigateAndWaitAsync(path, navigateType, null, false, sender, withAnimation, overrideTransition, cancellationToken);
     public Task<NavigateResult> NavigateAndWaitAsync(
         string path,
-        object? argument, 
-        object? sender, 
+        object? argument,
+        object? sender,
         NavigateType navigateType,
         bool withAnimation,
-        IPageTransition? overrideTransition = null, 
+        IPageTransition? overrideTransition = null,
         CancellationToken cancellationToken = default) =>
         NavigateAndWaitAsync(path, navigateType, argument, true, sender, withAnimation, overrideTransition, cancellationToken);
 

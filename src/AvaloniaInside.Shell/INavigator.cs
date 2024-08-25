@@ -11,6 +11,8 @@ public interface INavigator
 
 	INavigationRegistrar Registrar { get; }
 
+	NavigationChain? CurrentChain { get; }
+
 	void RegisterShell(ShellView shellView);
 
 	bool HasItemInStack();
