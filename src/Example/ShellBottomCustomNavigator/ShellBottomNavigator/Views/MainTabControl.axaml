@@ -1,0 +1,80 @@
+<TabControl xmlns="https://github.com/avaloniaui"
+            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			xmlns:i="https://github.com/projektanker/icons.avalonia"
+            xmlns:converters="clr-namespace:ShellBottomNavigator.Converters"
+            xmlns:views="clr-namespace:ShellBottomNavigator.Views"
+            mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+            x:Class="ShellBottomNavigator.Views.MainTabControl"
+            TabStripPlacement="Bottom"
+            Classes="Luke MainTab"
+            ShellView.EnableSafeAreaForBottom="False">
+	<TabControl.ItemContainerTheme>
+        <ControlTheme TargetType="{x:Type TabItem}">
+            <Setter Property="Width" Value="80"/>
+            <Setter Property="UseLayoutRounding" Value="True"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Grid Background="{TemplateBinding Background}" Margin="0,40,0,0" >
+                        <Viewbox x:Name="PART_IconArea">
+                            <i:Icon x:Name="PART_Icon"/>
+                        </Viewbox>
+                        <TextBlock x:Name="PART_Name" DataContext="{Binding Instance}"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter>
+            <Style Selector="^ /template/ Viewbox#PART_IconArea">
+                <Setter Property="Margin" Value="0,0,0,0"></Setter>
+                <Setter Property="Width" Value="40"/>
+                <Setter Property="Height" Value="40"/>
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <ThicknessTransition Property="Margin" Duration="0:0:0.5"/>
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/  i|Icon#PART_Icon">
+                <Setter Property="Value" Value="{Binding Instance.Icon}"/>
+            </Style>
+            <Style  Selector="^ /template/  TextBlock#PART_Name">
+                <Setter Property="Text" Value="{Binding Path=(NavigationBar.Header)}"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="Foreground" Value="#00000000"/>
+                <Setter Property="Margin" Value="0 60 0 0"/>
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <ThicknessTransition Property="Margin" Duration="0:0:0.5"/>
+                        <BrushTransition Property="Foreground" Duration="0:0:0.5"/>
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^:selected">
+                <Style Selector="^ /template/  Viewbox#PART_IconArea">
+                    <Setter Property="Margin" Value="0,-80,0,0"/>
+                </Style>
+                <Style Selector="^ /template/  TextBlock#PART_Name">
+                    <Setter Property="Margin" Value="0,45,0,0"/>
+                    <Setter Property="Foreground" Value="#333333"></Setter>
+                </Style>
+            </Style>
+        </ControlTheme>
+	</TabControl.ItemContainerTheme>
+	<TabControl.ContentTemplate>
+		<DataTemplate>
+			<ContentPresenter Content="{Binding Instance}"></ContentPresenter>
+		</DataTemplate>
+	</TabControl.ContentTemplate>
+	<TabControl.Styles>
+		<Style Selector="TabControl.MainTab /template/ Border > DockPanel > Border">
+			<Setter Property="Padding"
+			        Value="{Binding BottomSafePadding, RelativeSource={RelativeSource AncestorType={x:Type ShellView}}}"></Setter>
+		</Style>
+		<Style Selector="TabControl.MainTab /template/ Border > DockPanel > ItemsPresenter">
+			<Setter Property="HorizontalAlignment" Value="Center" />
+		</Style>
+	</TabControl.Styles>
+</TabControl>

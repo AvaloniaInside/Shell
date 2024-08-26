@@ -1,0 +1,55 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="ShellBottomNavigator.Views.Widgets.CalendarWidgetView">
+	<Border Padding="14" Background="{DynamicResource WidgetBackground}">
+		<StackPanel>
+			<TextBlock Text="{Binding JustNow}" FontWeight="ExtraBlack"></TextBlock>
+
+			<Border CornerRadius="6"
+			        Background="#11ffffff"
+			        Padding="6"
+			        Margin="0, 8"
+			        BoxShadow="0 0 2 0.2 #66FFFFFF">
+				<Grid RowDefinitions="*, *" ColumnDefinitions="6, *, *">
+					<Border CornerRadius="8" Background="Pink" Grid.RowSpan="2"></Border>
+					<TextBlock Grid.Row="0" Grid.Column="1" Text="11:00" FontWeight="UltraLight" Margin="4"></TextBlock>
+					<TextBlock Grid.Row="0" Grid.Column="2" Text="12:00" FontWeight="UltraLight" Margin="4"></TextBlock>
+					<TextBlock Grid.Row="1" Grid.Column="1" Text="Presenting demo" FontWeight="Heavy" Margin="4"></TextBlock>
+					<TextBlock Grid.Row="1" Grid.Column="2" Text="1h" FontWeight="UltraLight" Margin="4"></TextBlock>
+				</Grid>
+			</Border>
+
+			<Border CornerRadius="6"
+			        Background="#11ffffff"
+			        Padding="6"
+			        Margin="0, 8"
+			        BoxShadow="0 0 2 0.2 #66FFFFFF">
+				<Grid RowDefinitions="*, *" ColumnDefinitions="6, *, *">
+					<Border CornerRadius="8" Background="#c0ddff" Grid.RowSpan="2"></Border>
+					<TextBlock Grid.Row="0" Grid.Column="1" Text="12:00" FontWeight="UltraLight" Margin="4"></TextBlock>
+					<TextBlock Grid.Row="0" Grid.Column="2" Text="12:30" FontWeight="UltraLight" Margin="4"></TextBlock>
+					<TextBlock Grid.Row="1" Grid.Column="1" Text="Online meeting" FontWeight="Heavy" Margin="4"></TextBlock>
+					<TextBlock Grid.Row="1" Grid.Column="2" Text="30min" FontWeight="UltraLight" Margin="4"></TextBlock>
+				</Grid>
+			</Border>
+
+			<Border CornerRadius="6"
+			        Background="#11ffffff"
+			        Padding="6"
+			        Margin="0, 8"
+			        BoxShadow="0 0 2 0.2 #66FFFFFF">
+				<Grid RowDefinitions="*, *" ColumnDefinitions="6, *, *">
+					<Border CornerRadius="8" Background="#c0ddff" Grid.RowSpan="2"></Border>
+					<TextBlock Grid.Row="0" Grid.Column="1" Text="15:00" FontWeight="UltraLight" Margin="4"></TextBlock>
+					<TextBlock Grid.Row="0" Grid.Column="2" Text="16:30" FontWeight="UltraLight" Margin="4"></TextBlock>
+					<TextBlock Grid.Row="1" Grid.Column="1" Text="Planning" FontWeight="Heavy" Margin="4"></TextBlock>
+					<TextBlock Grid.Row="1" Grid.Column="2" Text="1h30" FontWeight="UltraLight" Margin="4"></TextBlock>
+				</Grid>
+			</Border>
+		</StackPanel>
+	</Border>
+</UserControl>
+

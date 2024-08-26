@@ -1,0 +1,43 @@
+<Page xmlns="https://github.com/avaloniaui"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+      xmlns:converters="clr-namespace:ShellBottomNavigator.Converters"
+      x:Class="ShellBottomNavigator.Views.ShopViews.ProductDetailView"
+	  NavigationBar.Header="{Binding Product.Title}"
+	  Background="#40000000">
+	<Page.Resources>
+		<converters:BitmapAssetValueConverter x:Key="variableImage"/>
+	</Page.Resources>
+
+	<ScrollViewer>
+		<Grid RowDefinitions="auto,auto,auto,auto,*" Margin="4">
+			<Border Background="White" Margin="5" CornerRadius="8">
+				<Image Source="{Binding Product.PictureUrl, Converter={StaticResource variableImage}}"
+					   Margin="10"
+					   MaxHeight="250"></Image>
+			</Border>
+
+			<WrapPanel Grid.Row="1">
+				<TextBlock Text="{Binding Product.SupplierName}" FontSize="18"></TextBlock>
+				<TextBlock Text=" - " FontSize="18"></TextBlock>
+				<TextBlock Text="{Binding Product.Name}" FontSize="18"></TextBlock>
+			</WrapPanel>
+
+			<TextBlock Grid.Row="2"
+					   Text="{Binding Product.MainCategory}"
+					   Classes="SubTitle"></TextBlock>
+
+			<WrapPanel Grid.Row="3">
+				<TextBlock Text="Price: " Classes="SubTitle"></TextBlock>
+				<TextBlock Text="{Binding Product.Price, StringFormat={}{0:C}}" Classes="SemiAttention"></TextBlock>
+				<TextBlock Text="{Binding Product.CurrencyCode}"></TextBlock>
+
+				<TextBlock Text=" XPress delivery"></TextBlock>
+				<Image Source="/Assets/Icons/truck-fast-solid.png" Width="18" Stretch="Uniform" Classes="SemiAttention" />
+			</WrapPanel>
+			<TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding Product.Price}"></TextBlock>
+		</Grid>
+	</ScrollViewer>
+</Page>
