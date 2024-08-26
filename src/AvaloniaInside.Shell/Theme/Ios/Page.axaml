@@ -6,17 +6,13 @@
 			<ControlTemplate>
 				<Border Background="{TemplateBinding Background}" CornerRadius="14">
 					<Grid RowDefinitions="Auto,*">
-						<NavigationBar Name="PART_NavigationBar"
-						               Grid.Row="0"
-						               ShellView="{TemplateBinding Shell}"
-						               Height="30" />
-
+						<ContentPresenter Name="PART_NavigationBarPlaceHolder" Grid.Row="0"></ContentPresenter>
 						<ContentPresenter Grid.Row="1"
-						                  Content="{TemplateBinding Content}"></ContentPresenter>
+						                  Content="{TemplateBinding Content}">
+						</ContentPresenter>
 					</Grid>
 				</Border>
 			</ControlTemplate>
 		</Setter>
 	</ControlTheme>
 </ResourceDictionary>
-

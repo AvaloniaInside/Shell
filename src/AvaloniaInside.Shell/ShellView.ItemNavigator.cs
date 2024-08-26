@@ -2,7 +2,6 @@ using System;
 using System.Collections.Specialized;
 using System.Linq;
 using Avalonia.Collections;
-using Avalonia.Controls;
 using Avalonia.Metadata;
 using AvaloniaInside.Shell.Data;
 

@@ -1,11 +1,6 @@
 ﻿using Avalonia.Media;
 using Avalonia;
 using Projektanker.Icons.Avalonia;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ShellExample.Views;
 internal class FontIconImageSource : DrawingImage

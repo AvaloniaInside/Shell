@@ -35,7 +35,7 @@ public static class HostedItemsHelper
 	}
 
 	public static bool CanBeHosted(Type viewType) =>
-		viewType.IsSubclassOf(typeof(ItemsControl)) || viewType.IsSubclassOf(typeof(IHostedItems));
+		viewType.IsSubclassOf(typeof(ItemsControl)) || typeof(IHostedItems).IsAssignableFrom(viewType);
 
 	public static bool CanBeHosted(object view) =>
 		view is ItemsControl or SelectingItemsControl or IHostedItems or ISelectableHostedItems;

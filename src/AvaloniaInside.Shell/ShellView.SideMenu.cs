@@ -218,6 +218,7 @@ public partial class ShellView
 			nameof(SideMenuSelectedItem),
 			o => o.SideMenuSelectedItem,
 			(o, v) => o.SideMenuSelectedItem = v);
+
 	public SideMenuItem? SideMenuSelectedItem
 	{
 		get => _sideMenuSelectedItem;

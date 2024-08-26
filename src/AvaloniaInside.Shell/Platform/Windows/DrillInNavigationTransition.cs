@@ -5,7 +5,6 @@ using Avalonia;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using AvaloniaInside.Shell.Platform.Ios;
 
 namespace AvaloniaInside.Shell.Platform.Windows;
 public class DrillInNavigationTransition : PlatformBasePageTransition

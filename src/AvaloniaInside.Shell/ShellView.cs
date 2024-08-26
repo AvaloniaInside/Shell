@@ -15,7 +15,7 @@ using Splat;
 
 namespace AvaloniaInside.Shell;
 
-public partial class ShellView : TemplatedControl
+public partial class ShellView : TemplatedControl, INavigationBarProvider
 {
     #region Enums
 

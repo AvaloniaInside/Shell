@@ -3,8 +3,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Collections;
-using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 
 namespace AvaloniaInside.Shell.Presenters;
 

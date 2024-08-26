@@ -1,11 +1,6 @@
 ﻿using Android.App;
 using Android.Content;
-using Android.OS;
 using Application = Android.App.Application;
-using Avalonia;
-using Avalonia.Android;
-using Avalonia.ReactiveUI;
-using AvaloniaInside.Shell;
 
 namespace ShellExample.Android;
 
