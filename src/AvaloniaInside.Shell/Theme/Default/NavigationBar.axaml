@@ -29,6 +29,8 @@
 			</ControlTemplate>
 		</Setter>
 
+		<Setter Property="Height" Value="36"></Setter>
+
 		<Style Selector="^ /template/  Button.BackButton">
 			<Setter Property="Template">
 				<ControlTemplate>

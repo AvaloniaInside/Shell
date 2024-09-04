@@ -30,11 +30,13 @@
 	           LargeScreenSideMenuMode="Inline"
 	           LargeScreenSideMenuBehave="Keep"
 
+	           NavigationBarAttachType="ToFirstHostThenPage"
+
 			   DefaultPageTransition="{Binding CurrentTransition}">
 
 		<Route Path="welcome" Page="views:WelcomeView"></Route>
 
-		<Host Path="main" Page="HostedTabPage" Type="ReplaceRoot">
+		<Host Path="main" Page="TabPage" Type="ReplaceRoot">
 			<Route Path="home" Page="views:HomePage">
 				<Route Path="confirmation" Page="views:SimpleDialog" Type="Modal"></Route>
 			</Route>

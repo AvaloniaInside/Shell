@@ -65,4 +65,14 @@ public class PlatformSetup
 		    return DrillInNavigationTransition.Instance;
 	    }
     }
+
+    public static NavigationBarAttachType NavigationBarAttachType
+    {
+	    get
+	    {
+		    if (OperatingSystem.IsIOS())
+			    return NavigationBarAttachType.ToFirstHostThenPage;
+		    return NavigationBarAttachType.ToShell;
+	    }
+    }
 }

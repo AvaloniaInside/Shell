@@ -17,7 +17,7 @@
 						</SplitView.Pane>
 
 						<Grid RowDefinitions="Auto,*,Auto">
-							<NavigationBar Name="PART_NavigationBar" />
+							<ContentPresenter Name="PART_NavigationBarPlaceHolder"></ContentPresenter>
 							<StackContentView Name="PART_ContentView"
 							                  Grid.Row="1"
 							                  PageTransition="{TemplateBinding DefaultPageTransition}">

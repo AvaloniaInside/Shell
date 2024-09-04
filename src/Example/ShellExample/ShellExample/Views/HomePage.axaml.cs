@@ -22,6 +22,4 @@ public partial class HomePage : Page
 		DataContext = new ViewModels.HomePageViewModel(Navigator);
 		return Task.CompletedTask;
 	}
-
-    public string Icon => "fa-solid fa-house";
 }

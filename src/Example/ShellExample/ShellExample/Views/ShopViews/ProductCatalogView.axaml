@@ -3,12 +3,16 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:converters="clr-namespace:ShellExample.Converters"
+             xmlns:i="https://github.com/projektanker/icons.avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="ShellExample.Views.ShopViews.ProductCatalogView"
              NavigationBar.Header="{Binding Title}">
 	<Page.Resources>
 		<converters:BitmapAssetValueConverter x:Key="variableImage"/>
 	</Page.Resources>
+	<NavigationBar.HeaderIcon>
+		<i:Icon Value="fa-solid fa-tag" />
+	</NavigationBar.HeaderIcon>
 	<NavigationBar.Item>
 		<Button Content="Filter"
 		        Command="{Binding FilterCommand}"

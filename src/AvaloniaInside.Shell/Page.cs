@@ -17,7 +17,7 @@ public class Page : UserControl, INavigationLifecycle, INavigatorLifecycle, INav
 	private ContentPresenter? _navigationBarPlaceHolder;
 	private NavigationBar? _navigationBar;
 
-	public NavigationBar? NavigationBar => FindNavigationBar(true) ?? Shell?.AttachedNavigationBar;
+	public NavigationBar? NavigationBar => Shell?.NavigationBar;
 
 	public NavigationBar? AttachedNavigationBar => _navigationBar;
 
@@ -27,51 +27,52 @@ public class Page : UserControl, INavigationLifecycle, INavigatorLifecycle, INav
 		set => SetValue(ShellProperty, value);
 	}
 
-    public INavigator? Navigator => Shell?.Navigator;
+	public INavigator? Navigator => Shell?.Navigator;
 
-    protected override Type StyleKeyOverride => typeof(Page);
+	public NavigationChain Chain { get; internal set; }
 
-    public virtual Task AppearAsync(CancellationToken cancellationToken) => Task.CompletedTask;
-    public virtual Task ArgumentAsync(object args, CancellationToken cancellationToken) => Task.CompletedTask;
-    public virtual Task DisappearAsync(CancellationToken cancellationToken) => Task.CompletedTask;
-    public virtual Task InitialiseAsync(CancellationToken cancellationToken) => Task.CompletedTask;
-    public virtual Task TerminateAsync(CancellationToken cancellationToken) => Task.CompletedTask;
-    public virtual Task OnNavigateAsync(NaviagateEventArgs args, CancellationToken cancellationToken) => Task.CompletedTask;
-    public virtual Task OnNavigatingAsync(NaviagatingEventArgs args, CancellationToken cancellationToken) => Task.CompletedTask;
+	protected override Type StyleKeyOverride => typeof(Page);
 
-    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
-    {
-	    base.OnApplyTemplate(e);
-	    _navigationBarPlaceHolder = e.NameScope.Find<ContentPresenter>("PART_NavigationBarPlaceHolder");
-	    _navigationBar = e.NameScope.Find<NavigationBar>("PART_NavigationBar");
-    }
+	public virtual Task AppearAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+	public virtual Task ArgumentAsync(object args, CancellationToken cancellationToken) => Task.CompletedTask;
+	public virtual Task DisappearAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+	public virtual Task InitialiseAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+	public virtual Task TerminateAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 
-    protected override void OnLoaded(RoutedEventArgs e)
-    {
-	    base.OnLoaded(e);
+	public virtual Task OnNavigateAsync(NaviagateEventArgs args, CancellationToken cancellationToken) =>
+		Task.CompletedTask;
 
-	    if (_navigationBarPlaceHolder == null) return;
-	    if (FindNavigationBar(true) != null) return;
+	public virtual Task OnNavigatingAsync(NaviagatingEventArgs args, CancellationToken cancellationToken) =>
+		Task.CompletedTask;
 
-	    _navigationBarPlaceHolder.Content = _navigationBar = new NavigationBar()
-	    {
-		    ShellView = Shell
-	    };
-    }
+	protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+	{
+		base.OnApplyTemplate(e);
+		_navigationBarPlaceHolder = e.NameScope.Find<ContentPresenter>("PART_NavigationBarPlaceHolder");
+	}
 
-    private NavigationBar? FindNavigationBar(bool includeSelf)
-    {
-	    if (includeSelf && _navigationBar != null) return _navigationBar;
-	    if (Shell?.AttachedNavigationBar is { } shellAttachedNavigationBar) return shellAttachedNavigationBar;
-	    if (Navigator?.CurrentChain?.GetAscendingNodes() is not { } nodes) return null;
+	protected override void OnLoaded(RoutedEventArgs e)
+	{
+		base.OnLoaded(e);
+		ApplyNavigationBar();
+		AttachedNavigationBar?.UpdateView(this);
+	}
 
-	    foreach (var item in nodes)
-	    {
-		    if (!item.Hosted) return null;
-		    if (item.Instance is INavigationBarProvider { AttachedNavigationBar: { } navigationBar })
-			    return navigationBar;
-	    }
+	private void ApplyNavigationBar()
+	{
+		if (_navigationBarPlaceHolder == null || _navigationBar != null)
+			return;
 
-	    return null;
-    }
+		if (Shell?.NavigationBarAttachType is not ({ } type and not NavigationBarAttachType.ToShell))
+			return;
+
+		if ((type == NavigationBarAttachType.ToLastPage && Chain is HostNavigationChain) ||
+		    (type == NavigationBarAttachType.ToFirstHostThenPage && Chain?.Back is HostNavigationChain))
+			return;
+
+		_navigationBarPlaceHolder.Content = _navigationBar = new NavigationBar
+		{
+			ShellView = Shell
+		};
+	}
 }

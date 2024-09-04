@@ -165,6 +165,19 @@ public class NavigationBar : TemplatedControl
 
 	#endregion
 
+	#region Header
+
+	public static readonly AttachedProperty<object> HeaderIconProperty =
+		AvaloniaProperty.RegisterAttached<NavigationBar, AvaloniaObject, object>("HeaderIcon");
+
+	public static object GetHeaderIcon(AvaloniaObject element) =>
+		element.GetValue(HeaderIconProperty);
+
+	public static void SetHeaderIcon(AvaloniaObject element, object parameter) =>
+		element.SetValue(HeaderIconProperty, parameter);
+
+	#endregion
+
 	#region Visible
 
 	public static readonly AttachedProperty<bool> VisibleProperty =
@@ -220,7 +233,7 @@ public class NavigationBar : TemplatedControl
 			UpdateView(_pendingHeader);
 	}
 
-	private void UpdateView(object? view)
+	internal void UpdateView(object? view)
 	{
 		if (_header == null && _items == null)
 		{

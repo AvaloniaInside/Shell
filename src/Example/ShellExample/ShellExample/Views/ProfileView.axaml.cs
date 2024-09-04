@@ -14,7 +14,5 @@ public partial class ProfileView : Page
 	{
 		AvaloniaXamlLoader.Load(this);
 	}
-
-	public string Icon => "fa-solid fa-user";
 }
 

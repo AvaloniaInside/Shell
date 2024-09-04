@@ -12,7 +12,7 @@ public partial class Navigator : INavigator
     private readonly INavigateStrategy _navigateStrategy;
     private readonly INavigationUpdateStrategy _updateStrategy;
     private readonly INavigationViewLocator _viewLocator;
-    private readonly NavigationStack _stack = new();
+    private readonly NavigationStack _stack;
     private readonly Dictionary<NavigationChain, TaskCompletionSource<NavigateResult>> _waitingList = new();
 
     private bool _navigating;
@@ -36,6 +36,7 @@ public partial class Navigator : INavigator
         _navigateStrategy = navigateStrategy;
         _updateStrategy = updateStrategy;
         _viewLocator = viewLocator;
+        _stack = new(viewLocator);
 
         _updateStrategy.HostItemChanged += UpdateStrategyOnHostItemChanged;
     }
@@ -77,7 +78,6 @@ public partial class Navigator : INavigator
             return;
         }
 
-        var instances = new List<object>();
         var finalNavigateType =
             !origin.AbsolutePath.Equals(newUri.AbsolutePath) && Registrar.TryGetNode(origin.AbsolutePath, out var originalNode)
                 ? navigateType ?? originalNode.Navigate
@@ -119,19 +119,16 @@ public partial class Navigator : INavigator
         var stackChanges = _stack.Push(
             node,
             finalNavigateType,
-            newUri,
-            instanceFor =>
-            {
-                var instance = _viewLocator.GetView(instanceFor);
-                SetShellToPage(instance);
-                instances.Add(instance);
-                return instance;
-            });
+            newUri);
+
+        foreach (var newChain in stackChanges.NewNavigationChains)
+        {
+	        SetupPage(newChain);
+        }
 
         await _updateStrategy.UpdateChangesAsync(
             ShellView,
             stackChanges,
-            instances,
             finalNavigateType,
             argument,
             hasArgument,
@@ -160,10 +157,12 @@ public partial class Navigator : INavigator
         _navigating = false;
     }
 
-    private void SetShellToPage(object instance)
+    private void SetupPage(NavigationChain chain)
     {
-        if (instance is Page page)
-            page.Shell = ShellView;
+	    if (chain.Instance is not Page page) return;
+
+	    page.Shell = ShellView;
+	    page.Chain = chain;
     }
 
     private async Task SwitchHostedItem(

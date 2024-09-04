@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Controls;
@@ -20,7 +21,6 @@ public class DefaultNavigationUpdateStrategy : INavigationUpdateStrategy
 	public async Task UpdateChangesAsync(
 		ShellView shellView,
 		NavigationStackChanges changes,
-		List<object> newInstances,
 		NavigateType navigateType,
 		object? argument,
 		bool hasArgument,
@@ -28,7 +28,7 @@ public class DefaultNavigationUpdateStrategy : INavigationUpdateStrategy
 	{
 		var isSame = changes.Previous == changes.Front;
 
-		foreach (var instance in newInstances)
+		foreach (var instance in changes.NewNavigationChains.Select(s => s.Instance))
 		{
 			if (instance is INavigationLifecycle navigationLifecycle)
 				await navigationLifecycle.InitialiseAsync(cancellationToken);
