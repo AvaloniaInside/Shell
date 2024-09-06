@@ -10,6 +10,7 @@ using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
+using Avalonia.Interactivity;
 using Avalonia.Layout;
 
 namespace AvaloniaInside.Shell;
@@ -120,7 +121,8 @@ public class TabPage : Page, ISelectableHostedItems
 						current == null ? [] : new List<object> { current },
 						value == null ? [] : new List<object> { value }));
 
-				AttachedNavigationBar?.UpdateView(Navigator?.CurrentChain?.Instance);
+				if (AttachedNavigationBar is { } navBar && value is NavigationChain chain)
+					navBar.UpdateView(chain.Instance);
 			}
 		}
 	}
@@ -190,13 +192,7 @@ public class TabPage : Page, ISelectableHostedItems
 
 	#endregion
 
-	protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
-	{
-		base.OnApplyTemplate(e);
-		_tabStripPlaceHolder = e.NameScope.Find<ContentPresenter>("PART_TabStripPlaceHolder");
-
-		ApplyTabStripTemplate();
-	}
+	#region Setup and Theme
 
 	protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
 	{
@@ -205,6 +201,21 @@ public class TabPage : Page, ISelectableHostedItems
 		{
 			ApplyTabStripTemplate();
 		}
+	}
+
+	protected override void OnLoaded(RoutedEventArgs e)
+	{
+		base.OnLoaded(e);
+		if (AttachedNavigationBar is { } navBar && SelectedItem is NavigationChain chain)
+			navBar.UpdateView(chain.Instance);
+	}
+
+	protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+	{
+		base.OnApplyTemplate(e);
+		_tabStripPlaceHolder = e.NameScope.Find<ContentPresenter>("PART_TabStripPlaceHolder");
+
+		ApplyTabStripTemplate();
 	}
 
 	protected virtual void ApplyTabStripTemplate()
@@ -232,4 +243,6 @@ public class TabPage : Page, ISelectableHostedItems
 		if (propertyInfo == null) return;
 		propertyInfo.SetValue(member, newValue);
 	}
+
+	#endregion
 }

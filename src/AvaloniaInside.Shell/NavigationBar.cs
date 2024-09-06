@@ -3,6 +3,7 @@ using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using Avalonia.Interactivity;
 
 namespace AvaloniaInside.Shell;
 
@@ -202,6 +203,14 @@ public class NavigationBar : TemplatedControl
 		}
 	}
 
+	protected override void OnLoaded(RoutedEventArgs e)
+	{
+		base.OnLoaded(e);
+
+		if (_pendingHeader != null)
+			UpdateView(_pendingHeader);
+	}
+
 	protected virtual void ShellViewUpdated()
 	{
 		if (ShellView is not { } shellView) return;
@@ -215,8 +224,6 @@ public class NavigationBar : TemplatedControl
 
 		if (shellView.ContentView?.CurrentView is { } currentView)
 			UpdateView(currentView);
-
-		this[!CurrentViewProperty] = shellView.ContentView?[!StackContentView.CurrentViewProperty];
 	}
 
 	protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
@@ -253,13 +260,14 @@ public class NavigationBar : TemplatedControl
 			IsVisible = true;
 
 		UpdateButtons();
+		_pendingHeader = null;
 	}
 
 	protected virtual void UpdateButtons()
 	{
 		if (ShellView == null) return;
 
-		var navService = ShellView.Navigator;
+		var navService = ShellView?.Navigator;
 		var hasItem = navService?.HasItemInStack() ?? false;
 
 		if (_actionButton == null) return;
@@ -284,7 +292,7 @@ public class NavigationBar : TemplatedControl
 		}
 	}
 
-	protected virtual void UpdateItems(object view, ContentControl itemPresenter)
+	protected virtual void UpdateItems(object? view, ContentControl itemPresenter)
 	{
 		if (view is not AvaloniaObject)
 		{
@@ -307,7 +315,7 @@ public class NavigationBar : TemplatedControl
 		itemPresenter.Content = view;
 	}
 
-	protected virtual void UpdateHeader(object view, ContentControl itemPresenter)
+	protected virtual void UpdateHeader(object? view, ContentControl itemPresenter)
 	{
 		if (view is not AvaloniaObject)
 		{
