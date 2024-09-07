@@ -1,31 +1,23 @@
-<TabControl xmlns="https://github.com/avaloniaui"
-            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-			xmlns:i="https://github.com/projektanker/icons.avalonia"
-            mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-            x:Class="ShellExample.Views.PetsTabControlView"
-            TabStripPlacement="Top"
-            Classes="Center HeadTab"
-            NavigationBar.Header="Pets">
-	<TabControl.ItemTemplate>
+<TabPage xmlns="https://github.com/avaloniaui"
+         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+         xmlns:i="https://github.com/projektanker/icons.avalonia"
+         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+         x:Class="ShellExample.Views.PetsTabControlView"
+         TabStripPlacement="Top"
+         Classes="HeadTab"
+         NavigationBar.Header="Pets">
+	<NavigationBar.HeaderIcon>
+		<i:Icon Value="fa-solid fa-paw"></i:Icon>
+	</NavigationBar.HeaderIcon>
+	<TabPage.ItemTemplate>
 		<DataTemplate>
-			<Grid RowDefinitions="*,*" Width="80">
-				<i:Icon Value="{Binding Instance.Icon}"
-				       HorizontalAlignment="Center"
-				       Height="24"
-				       Margin="2"/>
-				<TextBlock Grid.Row="1"
-				           DataContext="{Binding Instance}"
-				           Text="{Binding Path=(NavigationBar.Header)}"
-				           FontSize="14"
-				           HorizontalAlignment="Center"></TextBlock>
-			</Grid>
+			<TextBlock DataContext="{Binding Instance}"
+			           Text="{Binding Path=(NavigationBar.Header)}"
+			           FontSize="14"
+			           HorizontalAlignment="Center">
+			</TextBlock>
 		</DataTemplate>
-	</TabControl.ItemTemplate>
-	<TabControl.ContentTemplate>
-		<DataTemplate>
-			<ContentPresenter Content="{Binding Instance}"></ContentPresenter>
-		</DataTemplate>
-	</TabControl.ContentTemplate>
-</TabControl>
+	</TabPage.ItemTemplate>
+</TabPage>

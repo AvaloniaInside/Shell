@@ -5,11 +5,7 @@ using AvaloniaInside.Shell.Platform.Android;
 using AvaloniaInside.Shell.Platform.Ios;
 using AvaloniaInside.Shell.Platform.Windows;
 using ReactiveUI;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ShellExample.ViewModels;
 public class SettingViewModel : ViewModelBase

@@ -1,0 +1,62 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<ControlTheme x:Key="{x:Type NavigationBar}" TargetType="NavigationBar">
+		<Setter Property="Template">
+			<ControlTemplate TargetType="NavigationBar">
+				<Border Background="{TemplateBinding Background}"
+				        Padding="{TemplateBinding Padding}"
+				        Margin="{TemplateBinding Margin}"
+				        MinHeight="35">
+					<Grid RowDefinitions="Auto,*">
+						<Border Grid.Row="0"
+						        Height="{TemplateBinding TopSafeSpace}"
+						        IsVisible="{TemplateBinding ApplyTopSafePadding}">
+						</Border>
+						<Button Name="PART_ActionButton"
+						        HorizontalAlignment="Left"
+						        VerticalAlignment="Center"
+						        HorizontalContentAlignment="Center"
+						        VerticalContentAlignment="Center"
+						        Width="35"
+						        Grid.Row="1">
+						</Button>
+						<TransitioningContentControl Grid.Row="1" Name="PART_Header" HorizontalAlignment="Center"
+						                             VerticalAlignment="Center" />
+						<TransitioningContentControl Grid.Row="1" Name="PART_Items" HorizontalAlignment="Right"
+						                             VerticalAlignment="Center" />
+					</Grid>
+				</Border>
+			</ControlTemplate>
+		</Setter>
+
+		<Setter Property="Height" Value="36"></Setter>
+
+		<Style Selector="^ /template/  Button.BackButton">
+			<Setter Property="Template">
+				<ControlTemplate>
+					<Viewbox Stretch="UniformToFill">
+						<Canvas Width="16" Height="16" Margin="5" Background="#00000000">
+							<Line StartPoint="7,2" EndPoint="2,8" StrokeThickness="3" Stroke="{DynamicResource ButtonForeground}"></Line>
+							<Line StartPoint="2,6" EndPoint="7,12" StrokeThickness="3" Stroke="{DynamicResource ButtonForeground}"></Line>
+						</Canvas>
+					</Viewbox>
+				</ControlTemplate>
+			</Setter>
+		</Style>
+
+		<Style Selector="^ /template/  Button.SideMenuButton">
+			<Setter Property="RenderTransform" Value="rotate(180deg)" />
+			<Setter Property="Template">
+				<ControlTemplate>
+					<Viewbox Stretch="UniformToFill">
+						<Canvas Width="16" Height="16" Margin="5" Background="#00000000">
+							<Line StartPoint="1,4" EndPoint="15,4" StrokeThickness="3" Stroke="{DynamicResource ButtonForeground}"></Line>
+							<Line StartPoint="1,8" EndPoint="15,8" StrokeThickness="3" Stroke="{DynamicResource ButtonForeground}"></Line>
+							<Line StartPoint="1,12" EndPoint="15,12" StrokeThickness="3" Stroke="{DynamicResource ButtonForeground}"></Line>
+						</Canvas>
+					</Viewbox>
+				</ControlTemplate>
+			</Setter>
+		</Style>
+	</ControlTheme>
+</ResourceDictionary>

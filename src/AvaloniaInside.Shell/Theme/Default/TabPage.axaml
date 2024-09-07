@@ -1,0 +1,59 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<ControlTheme x:Key="{x:Type TabPage}" TargetType="TabPage">
+		<Setter Property="Background" Value="{DynamicResource PageBackground}" />
+		<Setter Property="Template">
+			<ControlTemplate>
+				<Border BorderBrush="{TemplateBinding BorderBrush}"
+				        BorderThickness="{TemplateBinding BorderThickness}"
+				        CornerRadius="{TemplateBinding CornerRadius}"
+				        Background="{TemplateBinding Background}"
+				        HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+				        VerticalAlignment="{TemplateBinding VerticalAlignment}">
+					<DockPanel>
+						<ContentPresenter Name="PART_NavigationBarPlaceHolder"
+						                  DockPanel.Dock="Top"></ContentPresenter>
+
+						<ContentPresenter Name="PART_TabStripPlaceHolder"
+						                  DockPanel.Dock="{TemplateBinding TabStripPlacement}"></ContentPresenter>
+
+						<Carousel Name="PART_Carousel"
+						          Margin="{TemplateBinding Padding}"
+						          SelectedItem="{TemplateBinding SelectedItem}"
+						          ItemTemplate="{TemplateBinding SelectedContentTemplate}"
+						          PageTransition="{x:Static PlatformSetup.TransitionForTab}"
+						          ItemsSource="{TemplateBinding ItemsSource}"/>
+					</DockPanel>
+				</Border>
+			</ControlTemplate>
+		</Setter>
+		<Setter Property="TabStripTemplate">
+			<ControlTemplate>
+				<TabStrip SelectedItem="{TemplateBinding SelectedItem, Mode=TwoWay}"
+				          ItemTemplate="{TemplateBinding ItemTemplate}"
+				          ItemsPanel="{TemplateBinding ItemsPanel}"
+				          ItemsSource="{TemplateBinding ItemsSource}"></TabStrip>
+			</ControlTemplate>
+		</Setter>
+		<Setter Property="SelectedContentTemplate">
+			<DataTemplate DataType="{x:Type NavigationChain}">
+				<ContentPresenter Content="{Binding Instance}"></ContentPresenter>
+			</DataTemplate>
+		</Setter>
+		<Setter Property="ItemTemplate">
+			<DataTemplate DataType="{x:Type NavigationChain}">
+				<Grid RowDefinitions="*,*" Width="70">
+					<ContentPresenter Grid.Row="0"
+					                  DataContext="{Binding Instance}"
+					                  Content="{Binding Path=(NavigationBar.HeaderIcon)}"></ContentPresenter>
+					<TextBlock Grid.Row="1"
+					           DataContext="{Binding Instance}"
+					           Text="{Binding Path=(NavigationBar.Header)}"
+					           FontSize="14"
+					           HorizontalAlignment="Center"></TextBlock>
+				</Grid>
+			</DataTemplate>
+		</Setter>
+	</ControlTheme>
+</ResourceDictionary>
+

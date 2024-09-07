@@ -1,21 +1,29 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Avalonia;
 using Avalonia.Animation;
 using Avalonia.Controls;
+using Avalonia.Controls.Metadata;
+using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
 using AvaloniaInside.Shell.Platform;
-using AvaloniaInside.Shell.Platform.Windows;
 using ReactiveUI;
 using Splat;
 
 namespace AvaloniaInside.Shell;
 
-public partial class ShellView : TemplatedControl
+[TemplatePart("PART_NavigationBarPlaceHolder", typeof(ContentPresenter))]
+[TemplatePart("PART_ContentView", typeof(StackContentView))]
+[TemplatePart("PART_SplitView", typeof(SplitView))]
+[TemplatePart("PART_SideMenu", typeof(SideMenu))]
+[TemplatePart("PART_Modal", typeof(StackContentView))]
+public partial class ShellView : TemplatedControl, INavigationBarProvider
 {
     #region Enums
 
@@ -38,22 +46,29 @@ public partial class ShellView : TemplatedControl
 
     #region Variables
 
-    private readonly bool _isMobile;
-
     private SplitView? _splitView;
     private StackContentView? _contentView;
     private NavigationBar? _navigationBar;
     private StackContentView? _modalView;
     private SideMenu? _sideMenu;
+    private ContentPresenter? _navigationBarPlaceHolder;
 
-    private bool _loadedFlag = false;
-    private bool _topLevelEventFlag = false;
+    private bool _loadedFlag;
+    private bool _topLevelEventFlag;
 
     #endregion
 
     #region Properties
 
-    public NavigationBar NavigationBar => _navigationBar;
+    public NavigationBar? NavigationBar => FindNavigationBar();
+
+    public NavigationBar? AttachedNavigationBar => _navigationBar;
+
+    public StackContentView? ContentView => _contentView;
+
+    public ICommand BackCommand { get; set; }
+
+    public ICommand SideMenuCommand { get; set; }
 
     #region ScreenSize
 
@@ -80,7 +95,7 @@ public partial class ShellView : TemplatedControl
 
     #region DefaultRoute
 
-    public static DirectProperty<ShellView, string?> DefaultRouteProperty = AvaloniaProperty
+    public static readonly DirectProperty<ShellView, string?> DefaultRouteProperty = AvaloniaProperty
         .RegisterDirect<ShellView, string?>(
             nameof(DefaultRoute),
             o => o.DefaultRoute,
@@ -223,6 +238,27 @@ public partial class ShellView : TemplatedControl
 
     #endregion
 
+    #region NavigationBarAttachType
+
+    /// <summary>
+    /// Defines the <see cref="NavigationBarAttachTypeProperty"/> property.
+    /// </summary>
+    public static readonly StyledProperty<NavigationBarAttachType> NavigationBarAttachTypeProperty =
+	    AvaloniaProperty.Register<ShellView, NavigationBarAttachType>(
+		    nameof(NavigationBarAttachType),
+		    defaultValue: PlatformSetup.NavigationBarAttachType);
+
+    /// <summary>
+    /// Gets or sets the type of attach navigation bar.
+    /// </summary>
+    public NavigationBarAttachType NavigationBarAttachType
+    {
+	    get => GetValue(NavigationBarAttachTypeProperty);
+	    set => SetValue(NavigationBarAttachTypeProperty, value);
+    }
+
+    #endregion
+
     #endregion
 
     #region Attached properties
@@ -261,12 +297,15 @@ public partial class ShellView : TemplatedControl
 
     public ShellView()
     {
-        Navigator = Locator.Current
+	    Navigator = Locator.Current
             .GetService<INavigator>() ?? throw new ArgumentException("Cannot find INavigationService");
         Navigator.RegisterShell(this);
 
+        BackCommand = ReactiveCommand.CreateFromTask(BackActionAsync);
+        SideMenuCommand = ReactiveCommand.CreateFromTask(MenuActionAsync);
+
         var isMobile = OperatingSystem.IsAndroid() || OperatingSystem.IsIOS();
-        if (!_isMobile)
+        if (!isMobile)
         {
             Classes.Add("Mobile");
             _sideMenuPresented = true;
@@ -305,22 +344,13 @@ public partial class ShellView : TemplatedControl
     {
         base.OnApplyTemplate(e);
         _splitView = e.NameScope.Find<SplitView>("PART_SplitView");
+        _navigationBar = e.NameScope.Find<NavigationBar>("PART_NavigationBar");
         _contentView = e.NameScope.Find<StackContentView>("PART_ContentView");
         _modalView = e.NameScope.Find<StackContentView>("PART_Modal");
-        _navigationBar = e.NameScope.Find<NavigationBar>("PART_NavigationBar");
         _sideMenu = e.NameScope.Find<SideMenu>("PART_SideMenu");
+        _navigationBarPlaceHolder = e.NameScope.Find<ContentPresenter>("PART_NavigationBarPlaceHolder");
 
         SetupUi();
-
-        if (_splitView != null)
-        {
-            _splitView.PaneClosing += SplitViewOnPaneClosing;
-        }
-
-        if (_sideMenu != null)
-        {
-            _sideMenu.Items = _sideMenuItems;
-        }
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -341,15 +371,24 @@ public partial class ShellView : TemplatedControl
 
     private void SetupUi()
     {
-        if (_navigationBar != null)
-        {
-            _navigationBar.ShellView = this;
-            _navigationBar.BackCommand = ReactiveCommand.CreateFromTask(BackActionAsync);
-            _navigationBar.SideMenuCommand = ReactiveCommand.CreateFromTask(MenuActionAsync);
-        }
-
         OnSafeEdgeSetup();
         UpdateSideMenu();
+        SetupNavigationBar();
+
+        if (_navigationBar is { } navigationBar)
+        {
+	        navigationBar.ShellView = this;
+        }
+
+        if (_splitView != null)
+        {
+	        _splitView.PaneClosing += SplitViewOnPaneClosing;
+        }
+
+        if (_sideMenu != null)
+        {
+	        _sideMenu.Items = _sideMenuItems;
+        }
     }
 
     protected virtual void OnSafeEdgeSetup()
@@ -368,21 +407,45 @@ public partial class ShellView : TemplatedControl
         });
     }
 
+    private void SetupNavigationBar()
+    {
+	    if (_navigationBarPlaceHolder != null &&
+	        NavigationBarAttachType == NavigationBarAttachType.ToShell &&
+	        _navigationBar == null)
+	    {
+		    _navigationBarPlaceHolder.Content = _navigationBar = new NavigationBar
+		    {
+			    ShellView = this
+		    };
+	    }
+    }
+
     #endregion
 
     #region Services and navigation
 
     public INavigator Navigator { get; }
 
+    private NavigationBar? FindNavigationBar()
+    {
+	    if (NavigationBarAttachType == NavigationBarAttachType.ToShell) return _navigationBar;
+	    return Navigator.CurrentChain?.GetAscendingNodes()
+		    .Select(s => s.Instance)
+		    .OfType<Page>()
+		    .FirstOrDefault(f => f.AttachedNavigationBar != null)?.AttachedNavigationBar;
+    }
+
     #endregion
 
     #region View Stack Manager
 
-    public async Task PushViewAsync(object view,
+    public async Task PushViewAsync(
+	    object view,
         NavigateType navigateType,
         CancellationToken cancellationToken = default)
     {
         await (_contentView?.PushViewAsync(view, navigateType, cancellationToken) ?? Task.CompletedTask);
+        AttachedNavigationBar?.UpdateView(Navigator.CurrentChain?.Instance);
         SelectSideMenuItem();
         UpdateBindings();
         UpdateSideMenu();
@@ -482,7 +545,7 @@ public partial class ShellView : TemplatedControl
 
     private void UpdateBindings()
     {
-        var view = _contentView.CurrentView;
+        var view = _contentView?.CurrentView;
         if (view is StyledElement element)
         {
             this[!ApplyTopSafePaddingProperty] = element[!EnableSafeAreaForTopProperty];

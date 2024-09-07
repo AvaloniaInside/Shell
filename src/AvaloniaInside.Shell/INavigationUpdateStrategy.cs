@@ -11,7 +11,6 @@ public interface INavigationUpdateStrategy
 	Task UpdateChangesAsync(
 		ShellView shellView,
 		NavigationStackChanges changes,
-		List<object> newInstances,
 		NavigateType navigateType,
 		object? argument,
 		bool hasArgument,

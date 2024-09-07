@@ -1,8 +1,6 @@
 ﻿using Avalonia.Animation;
 using AvaloniaInside.Shell.Platform;
-using AvaloniaInside.Shell.Platform.Windows;
 using ReactiveUI;
-using static ShellExample.ViewModels.SettingViewModel;
 
 namespace ShellExample.ViewModels;
 

@@ -1,4 +1,3 @@
-using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using AvaloniaInside.Shell;
 
@@ -15,7 +14,5 @@ public partial class ProfileView : Page
 	{
 		AvaloniaXamlLoader.Load(this);
 	}
-
-	public string Icon => "fa-solid fa-user";
 }
 

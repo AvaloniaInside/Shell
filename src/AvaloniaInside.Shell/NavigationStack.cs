@@ -4,40 +4,41 @@ using System.Linq;
 
 namespace AvaloniaInside.Shell;
 
-public class NavigationStack
+public class NavigationStack(INavigationViewLocator viewLocator)
 {
 	public NavigationChain? Current { get; set; }
 
-	public NavigationStackChanges Push(NavigationNode node, NavigateType type, Uri uri,
-		Func<NavigationNode, object> instance)
+	public NavigationStackChanges Push(
+		NavigationNode node,
+		NavigateType type,
+		Uri uri)
 	{
-		var chain = type switch
+		var changes = type switch
 		{
-			NavigateType.ReplaceRoot => PushReplaceRoot(node, type, instance),
-			NavigateType.Normal or NavigateType.Modal => PushNormal(node, type, instance),
-			NavigateType.Replace => PushReplace(node, type, instance),
-			NavigateType.Top => PushTop(node, type, instance),
-			NavigateType.Clear => PushClear(node, type, instance),
-			NavigateType.Pop => Pop(node, type, uri, instance),
-			NavigateType.HostedItemChange => HostedItemChange(node, type, uri, instance)
+			NavigateType.ReplaceRoot => PushReplaceRoot(node, type),
+			NavigateType.Normal or NavigateType.Modal => PushNormal(node, type),
+			NavigateType.Replace => PushReplace(node, type),
+			NavigateType.Top => PushTop(node, type),
+			NavigateType.Clear => PushClear(node, type),
+			NavigateType.Pop => Pop(node, type, uri),
+			NavigateType.HostedItemChange => HostedItemChange(node, type, uri)
 		};
 
-		if (chain.Front != null)
-			chain.Front.Uri = uri;
+		if (changes.Front != null)
+			changes.Front.Uri = uri;
 
-		if (chain.Front != null)
-			AscendingHostVerification(chain.Front, instance);
+		if (changes.Front != null)
+			AscendingHostVerification(changes, changes.Front);
 
-		return chain;
+		return changes;
 	}
 
 	private NavigationStackChanges Pop(
 		NavigationNode node,
 		NavigateType type,
-		Uri uri,
-		Func<NavigationNode, object> getInstance)
+		Uri uri)
 	{
-		if (Current == null) return PushTop(node, type, getInstance);
+		if (Current == null) return PushTop(node, type);
 
 		var previous = Current;
 		var list = new List<NavigationChain>();
@@ -58,15 +59,15 @@ public class NavigationStack
 			list.Add(chain);
 		}
 
-		return PushTop(node, type, getInstance);
+		return PushTop(node, type);
 	}
 
-	private NavigationStackChanges PushReplaceRoot(NavigationNode node, NavigateType type,
-		Func<NavigationNode, object> getInstance)
+	private NavigationStackChanges PushReplaceRoot(NavigationNode node, NavigateType type)
 	{
 		var popList = new List<NavigationChain>();
 		var chain = Current;
 		var previous = Current;
+		var changes = new NavigationStackChanges();
 
 		while (chain != null)
 		{
@@ -77,47 +78,50 @@ public class NavigationStack
 		foreach (var pop in popList)
 			pop.Back = null;
 
-		Current = new NavigationChain { Node = node, Instance = getInstance(node), Type = type };
-		return new NavigationStackChanges()
-		{
-			Front = Current,
-			Previous = previous,
-			Removed = popList
-		};
+		Current = NewInstanceAndChain(changes, node, type, null);
+
+		changes.Front = Current;
+		changes.Previous = previous;
+		changes.Removed = popList;
+
+		return changes;
 	}
 
-	private NavigationStackChanges PushNormal(NavigationNode node, NavigateType type,
-		Func<NavigationNode, object> getInstance)
+	private NavigationStackChanges PushNormal(
+		NavigationNode node,
+		NavigateType type)
 	{
-		Current = new NavigationChain { Node = node, Instance = getInstance(node), Type = type, Back = Current };
-		return new NavigationStackChanges()
-		{
-			Front = Current,
-			Previous = Current.Back
-		};
+		var changes = new NavigationStackChanges();
+
+		Current = NewInstanceAndChain(changes, node, type, Current);
+		changes.Front = Current;
+		changes.Previous = Current.Back;
+
+		return changes;
 	}
 
 
-	private NavigationStackChanges PushReplace(NavigationNode node, NavigateType type,
-		Func<NavigationNode, object> getInstance)
+	private NavigationStackChanges PushReplace(NavigationNode node, NavigateType type)
 	{
 		var pop = Current;
+		var changes = new NavigationStackChanges();
 
-		Current = new NavigationChain { Node = node, Instance = getInstance(node), Type = type, Back = pop?.Back };
-		return new NavigationStackChanges()
-		{
-			Previous = pop,
-			Front = Current,
-			Removed = pop != null ? new List<NavigationChain> { pop } : null
-		};
+		Current = NewInstanceAndChain(changes, node, type, pop?.Back);
+
+		changes.Front = Current;
+		changes.Previous = pop;
+		changes.Removed = pop != null ? new List<NavigationChain> { pop } : null;
+
+		return changes;
 	}
 
-	private NavigationStackChanges PushTop(NavigationNode node, NavigateType type,
-		Func<NavigationNode, object> getInstance)
+	private NavigationStackChanges PushTop(NavigationNode node, NavigateType type)
 	{
 		var previousChain = Current;
 		var current = Current;
 		NavigationChain? previous = null;
+		var changes = new NavigationStackChanges();
+
 		while (current != null)
 		{
 			if (current.Node == node)
@@ -141,21 +145,22 @@ public class NavigationStack
 			current = current.Back;
 		}
 
-		Current = new NavigationChain { Node = node, Instance = getInstance(node), Type = type, Back = Current };
-		return new NavigationStackChanges()
-		{
-			Previous = previousChain,
-			Front = Current
-		};
+		Current = NewInstanceAndChain(changes, node, type, Current);
+
+		changes.Front = Current;
+		changes.Previous = previousChain;
+
+		return changes;
 	}
 
-	private NavigationStackChanges PushClear(NavigationNode node, NavigateType type,
-		Func<NavigationNode, object> getInstance)
+	private NavigationStackChanges PushClear(NavigationNode node, NavigateType type)
 	{
 		var removedNodes = new List<NavigationChain>();
 		var previousChain = Current;
 		var current = Current;
 		NavigationChain? previous = null;
+		var changes = new NavigationStackChanges();
+
 		while (current != null)
 		{
 			if (current.Node == node)
@@ -178,21 +183,21 @@ public class NavigationStack
 			current = current.Back;
 		}
 
-		Current = new NavigationChain { Node = node, Instance = getInstance(node), Type = type, Back = Current };
-		return new NavigationStackChanges
-		{
-			Previous = previousChain,
-			Front = Current,
-			Removed = removedNodes
-		};
+		Current = NewInstanceAndChain(changes, node, type, Current);
+
+		changes.Front = Current;
+		changes.Previous = previousChain;
+		changes.Removed = removedNodes;
+
+		return changes;
 	}
 
 	private NavigationStackChanges HostedItemChange(
 		NavigationNode node,
 		NavigateType type,
-		Uri uri,
-		Func<NavigationNode, object> getInstance)
+		Uri uri)
 	{
+		var changes = new NavigationStackChanges();
 		var found = Current?.GetAscendingNodes()
 			.OfType<HostNavigationChain>()
 			.SelectMany(h => h.AggregatedNodes)
@@ -201,18 +206,11 @@ public class NavigationStack
 		if (found != null)
 		{
 			Current = found;
-			return new NavigationStackChanges() { Front = found };
+			changes.Front = found;
+			return changes;
 		}
 
-		//return PushNormal(node, type, getInstance);
-
-		Current = new NavigationChain
-		{
-			Node = node,
-			Instance = getInstance(node),
-			Type = type,
-			Back = Current
-		};
+		Current = NewInstanceAndChain(changes, node, type, Current);
 
 		var firstReachHost = default(HostNavigationChain);
 		foreach (var chain in Current.GetAscendingNodes())
@@ -224,7 +222,10 @@ public class NavigationStack
 		}
 
 		if (firstReachHost == null)
-			return new NavigationStackChanges { Front = Current };
+		{
+			changes.Front = Current;
+			return changes;
+		}
 
 		var all = firstReachHost.AggregatedNodes.ToList();
 		var lastChainUpdated = Current;
@@ -238,17 +239,18 @@ public class NavigationStack
 			}
 		}
 
-		return new NavigationStackChanges { Front = Current };
+		changes.Front = Current;
+		return changes;
 	}
 
-	private void AscendingHostVerification(NavigationChain chain, Func<NavigationNode, object> getInstance)
+	private void AscendingHostVerification(NavigationStackChanges changes, NavigationChain chain)
 	{
 		var parentNode = chain.Node.Parent;
 		if (parentNode == null) return;
 		if (parentNode.Type == NavigationNodeType.Page) return;
 		if (chain.Back?.Node == parentNode && chain.Back is HostNavigationChain verifyHostChain)
 		{
-			VerifyHostInitialised(chain, parentNode, verifyHostChain, getInstance);
+			VerifyHostInitialised(changes, chain, parentNode, verifyHostChain);
 
 			return;
 		}
@@ -258,22 +260,23 @@ public class NavigationStack
 			Back = chain.Back,
 			Node = parentNode,
 			Type = NavigateType.Normal,
-			Instance = getInstance(parentNode),
+			Instance = viewLocator.GetView(parentNode),
 			Uri = new Uri(chain.Uri, parentNode.Route)
 		};
+		changes.NewNavigationChains.Add(parentChain);
 
-		VerifyHostInitialised(chain, parentNode, parentChain, getInstance);
+		VerifyHostInitialised(changes, chain, parentNode, parentChain);
 
 		chain.Back = parentChain;
 
-		AscendingHostVerification(parentChain, getInstance);
+		AscendingHostVerification(changes, parentChain);
 	}
 
-	private static void VerifyHostInitialised(
+	private void VerifyHostInitialised(
+		NavigationStackChanges changes,
 		NavigationChain chain,
 		NavigationNode parentNode,
-		HostNavigationChain parentChain,
-		Func<NavigationNode, object> getInstance)
+		HostNavigationChain parentChain)
 	{
 		foreach (var hostChildNode in parentNode.Nodes)
 		{
@@ -294,11 +297,31 @@ public class NavigationStack
 			hostChildChain.Back = parentChain;
 			hostChildChain.Node = hostChildNode;
 			hostChildChain.Type = NavigateType.Normal;
-			hostChildChain.Instance = getInstance(hostChildNode);
+			hostChildChain.Instance = viewLocator.GetView(hostChildNode);
 			hostChildChain.Uri = new Uri(chain.Uri, hostChildNode.Route);
 			hostChildChain.Hosted = true;
 
+			changes.NewNavigationChains.Add(hostChildChain);
+
 			parentChain.Nodes.Add(hostChildChain);
 		}
+	}
+
+	private NavigationChain NewInstanceAndChain(
+		NavigationStackChanges changes,
+		NavigationNode node,
+		NavigateType type,
+		NavigationChain? back)
+	{
+		var instance = viewLocator.GetView(node);
+		var chain = new NavigationChain
+		{
+			Node = node,
+			Instance = instance,
+			Type = type,
+			Back = back
+		};
+		changes.NewNavigationChains.Add(chain);
+		return chain;
 	}
 }

@@ -1,7 +1,4 @@
-using Avalonia.Controls;
-using Avalonia.Media;
 using AvaloniaInside.Shell;
-using Projektanker.Icons.Avalonia;
 using System.Threading;
 using System.Threading.Tasks;
 
