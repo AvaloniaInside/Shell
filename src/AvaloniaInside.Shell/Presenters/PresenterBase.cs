@@ -30,7 +30,7 @@ public abstract class PresenterBase : IPresenter
 					collection.Add(hostedChildChain);
 				}
 
-				if (hostedItems is ISelectableHostedItems selectingItemsControl)
+				if (hostedItems is ISelectableHostItems selectingItemsControl)
 					selectingItemsControl.SelectedItem = current;
 			}
 			else

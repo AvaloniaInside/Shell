@@ -17,7 +17,7 @@ namespace AvaloniaInside.Shell;
 
 [TemplatePart("PART_TabStripPlaceHolder", typeof(ContentPresenter))]
 [TemplatePart("PART_Carousel", typeof(Carousel))]
-public class TabPage : Page, ISelectableHostedItems
+public class TabPage : Page, ISelectableHostItems
 {
 	public event EventHandler<SelectionChangedEventArgs>? SelectionChanged;
 

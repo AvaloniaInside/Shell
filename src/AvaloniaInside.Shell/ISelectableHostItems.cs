@@ -3,7 +3,7 @@ using Avalonia.Controls;
 
 namespace AvaloniaInside.Shell;
 
-public interface ISelectableHostedItems : IHostedItems
+public interface ISelectableHostItems : IHostItems
 {
 	event EventHandler<SelectionChangedEventArgs> SelectionChanged;
 	object? SelectedItem { get; set; }

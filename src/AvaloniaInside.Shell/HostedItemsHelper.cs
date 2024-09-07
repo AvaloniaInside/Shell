@@ -7,7 +7,7 @@ namespace AvaloniaInside.Shell;
 
 public static class HostedItemsHelper
 {
-	private class ItemsControlProxy(ItemsControl itemsControl) : IHostedItems
+	private class ItemsControlProxy(ItemsControl itemsControl) : IHostItems
 	{
 		public IEnumerable? ItemsSource
 		{
@@ -19,7 +19,7 @@ public static class HostedItemsHelper
 	}
 
 	private class SelectingItemsControlProxy(SelectingItemsControl itemsControl)
-		: ItemsControlProxy(itemsControl), ISelectableHostedItems
+		: ItemsControlProxy(itemsControl), ISelectableHostItems
 	{
 		public event EventHandler<SelectionChangedEventArgs>? SelectionChanged
 		{
@@ -35,16 +35,16 @@ public static class HostedItemsHelper
 	}
 
 	public static bool CanBeHosted(Type viewType) =>
-		viewType.IsSubclassOf(typeof(ItemsControl)) || typeof(IHostedItems).IsAssignableFrom(viewType);
+		viewType.IsSubclassOf(typeof(ItemsControl)) || typeof(IHostItems).IsAssignableFrom(viewType);
 
 	public static bool CanBeHosted(object view) =>
-		view is ItemsControl or SelectingItemsControl or IHostedItems or ISelectableHostedItems;
+		view is ItemsControl or SelectingItemsControl or IHostItems or ISelectableHostItems;
 
-	public static IHostedItems? GetHostedItems(object? control)
+	public static IHostItems? GetHostedItems(object? control)
 	{
 		if (GetSelectableHostedItems(control) is { } casted) return casted;
 
-		if (control is IHostedItems hostedItems)
+		if (control is IHostItems hostedItems)
 			return hostedItems;
 		if (control is ItemsControl itemsControl)
 			return new ItemsControlProxy(itemsControl);
@@ -52,9 +52,9 @@ public static class HostedItemsHelper
 		return null;
 	}
 
-	public static ISelectableHostedItems? GetSelectableHostedItems(object? control)
+	public static ISelectableHostItems? GetSelectableHostedItems(object? control)
 	{
-		if (control is ISelectableHostedItems selectableHostedItem)
+		if (control is ISelectableHostItems selectableHostedItem)
 			return selectableHostedItem;
 		if (control is SelectingItemsControl selectingItemsControl)
 			return new SelectingItemsControlProxy(selectingItemsControl);
