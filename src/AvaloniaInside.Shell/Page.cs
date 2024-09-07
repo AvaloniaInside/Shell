@@ -11,27 +11,37 @@ namespace AvaloniaInside.Shell;
 
 public class Page : UserControl, INavigationLifecycle, INavigatorLifecycle, INavigationBarProvider
 {
-	public static readonly StyledProperty<ShellView?> ShellProperty =
-		AvaloniaProperty.Register<Page, ShellView?>(nameof(Shell));
-
 	private ContentPresenter? _navigationBarPlaceHolder;
 	private NavigationBar? _navigationBar;
+
+	#region Properties
 
 	public NavigationBar? NavigationBar => Shell?.NavigationBar;
 
 	public NavigationBar? AttachedNavigationBar => _navigationBar;
-
-	public ShellView? Shell
-	{
-		get => GetValue(ShellProperty);
-		set => SetValue(ShellProperty, value);
-	}
 
 	public INavigator? Navigator => Shell?.Navigator;
 
 	public NavigationChain Chain { get; internal set; }
 
 	protected override Type StyleKeyOverride => typeof(Page);
+
+	#region Shell
+
+	public static readonly StyledProperty<ShellView?> ShellProperty =
+		AvaloniaProperty.Register<Page, ShellView?>(nameof(Shell));
+
+	public ShellView? Shell
+	{
+		get => GetValue(ShellProperty);
+		internal set => SetValue(ShellProperty, value);
+	}
+
+	#endregion
+
+	#endregion
+
+	#region Lifecycle
 
 	public virtual Task AppearAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 	public virtual Task ArgumentAsync(object args, CancellationToken cancellationToken) => Task.CompletedTask;
@@ -45,17 +55,21 @@ public class Page : UserControl, INavigationLifecycle, INavigatorLifecycle, INav
 	public virtual Task OnNavigatingAsync(NaviagatingEventArgs args, CancellationToken cancellationToken) =>
 		Task.CompletedTask;
 
-	protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
-	{
-		base.OnApplyTemplate(e);
-		_navigationBarPlaceHolder = e.NameScope.Find<ContentPresenter>("PART_NavigationBarPlaceHolder");
-	}
+	#endregion
+
+	#region Setup and template
 
 	protected override void OnLoaded(RoutedEventArgs e)
 	{
 		base.OnLoaded(e);
 		ApplyNavigationBar();
 		AttachedNavigationBar?.UpdateView(this);
+	}
+
+	protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+	{
+		base.OnApplyTemplate(e);
+		_navigationBarPlaceHolder = e.NameScope.Find<ContentPresenter>("PART_NavigationBarPlaceHolder");
 	}
 
 	private void ApplyNavigationBar()
@@ -75,4 +89,6 @@ public class Page : UserControl, INavigationLifecycle, INavigatorLifecycle, INav
 			ShellView = Shell
 		};
 	}
+
+	#endregion
 }

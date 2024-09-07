@@ -2,36 +2,24 @@ using System;
 using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
 
 namespace AvaloniaInside.Shell;
 
+[TemplatePart("PART_Header", typeof(ContentControl))]
+[TemplatePart("PART_ActionButton", typeof(Button))]
+[TemplatePart("PART_Items", typeof(ContentControl))]
 public class NavigationBar : TemplatedControl
 {
-	public static readonly DirectProperty<NavigationBar, ICommand?> SideMenuCommandProperty =
-		AvaloniaProperty.RegisterDirect<NavigationBar, ICommand?>(
-			nameof(SideMenuCommand),
-			o => o.SideMenuCommand,
-			(o, v) => o.SideMenuCommand = v);
-
-	public static readonly DirectProperty<NavigationBar, ICommand?> BackCommandProperty =
-		AvaloniaProperty.RegisterDirect<NavigationBar, ICommand?>(
-			nameof(BackCommand),
-			o => o.BackCommand,
-			(o, v) => o.BackCommand = v);
-
-	public static readonly DirectProperty<NavigationBar, bool> HasSideMenuOptionProperty =
-		AvaloniaProperty.RegisterDirect<NavigationBar, bool>(
-			nameof(HasSideMenuOption),
-			o => o.HasSideMenuOption,
-			(o, v) => o.HasSideMenuOption = v);
-
 	private ContentControl? _header;
 	private Button? _actionButton;
 	private ContentControl? _items;
 
 	private object? _pendingHeader;
+
+	#region ShellView
 
     public static readonly StyledProperty<ShellView?> ShellViewProperty =
 	    AvaloniaProperty.Register<NavigationBar, ShellView?>(nameof(ShellView));
@@ -39,8 +27,18 @@ public class NavigationBar : TemplatedControl
     public ShellView? ShellView
     {
 	    get => GetValue(ShellViewProperty);
-	    set => SetValue(ShellViewProperty, value);
+	    internal set => SetValue(ShellViewProperty, value);
     }
+
+    #endregion
+
+    #region BackCommand
+
+    public static readonly DirectProperty<NavigationBar, ICommand?> BackCommandProperty =
+	    AvaloniaProperty.RegisterDirect<NavigationBar, ICommand?>(
+		    nameof(BackCommand),
+		    o => o.BackCommand,
+		    (o, v) => o.BackCommand = v);
 
 	private ICommand? _backCommand;
 
@@ -54,6 +52,16 @@ public class NavigationBar : TemplatedControl
 		}
 	}
 
+	#endregion
+
+	#region SideMenuCommand
+
+	public static readonly DirectProperty<NavigationBar, ICommand?> SideMenuCommandProperty =
+		AvaloniaProperty.RegisterDirect<NavigationBar, ICommand?>(
+			nameof(SideMenuCommand),
+			o => o.SideMenuCommand,
+			(o, v) => o.SideMenuCommand = v);
+
 	private ICommand? _sideMenuCommand;
 
 	public ICommand? SideMenuCommand
@@ -66,6 +74,16 @@ public class NavigationBar : TemplatedControl
 		}
 	}
 
+	#endregion
+
+	#region HasSideMenuOption
+
+	public static readonly DirectProperty<NavigationBar, bool> HasSideMenuOptionProperty =
+		AvaloniaProperty.RegisterDirect<NavigationBar, bool>(
+			nameof(HasSideMenuOption),
+			o => o.HasSideMenuOption,
+			(o, v) => o.HasSideMenuOption = v);
+
 	private bool _hasSideMenuOption = true;
 
 	public bool HasSideMenuOption
@@ -77,6 +95,8 @@ public class NavigationBar : TemplatedControl
 				UpdateButtons();
 		}
 	}
+
+	#endregion
 
 	#region CurrentView
 
@@ -166,7 +186,7 @@ public class NavigationBar : TemplatedControl
 
 	#endregion
 
-	#region Header
+	#region HeaderIcon
 
 	public static readonly AttachedProperty<object> HeaderIconProperty =
 		AvaloniaProperty.RegisterAttached<NavigationBar, AvaloniaObject, object>("HeaderIcon");
@@ -193,6 +213,8 @@ public class NavigationBar : TemplatedControl
 	#endregion
 
 	#endregion
+
+	#region Setup and loading template
 
 	protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
 	{
@@ -229,7 +251,8 @@ public class NavigationBar : TemplatedControl
 	protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
 	{
 		base.OnApplyTemplate(e);
-		_header = e.NameScope.Find<ContentControl>("PART_Header") ?? throw new ArgumentNullException("PART_Header");
+		_header = e.NameScope.Find<ContentControl>("PART_Header") ??
+		          throw new Exception("PART_Header cannot found for NavigationBar");
 		_actionButton = e.NameScope.Find<Button>("PART_ActionButton");
 		_items = e.NameScope.Find<ContentControl>("PART_Items");
 
@@ -239,6 +262,10 @@ public class NavigationBar : TemplatedControl
 		if (_pendingHeader != null)
 			UpdateView(_pendingHeader);
 	}
+
+	#endregion
+
+	#region Updates
 
 	internal void UpdateView(object? view)
 	{
@@ -333,4 +360,6 @@ public class NavigationBar : TemplatedControl
 
 		itemPresenter.Content = view;
 	}
+
+	#endregion
 }

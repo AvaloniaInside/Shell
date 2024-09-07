@@ -25,6 +25,8 @@ public class TabPage : Page, ISelectableHostedItems
 
 	protected override Type StyleKeyOverride => typeof(TabPage);
 
+	#region TabStripTemplate
+
 	public static readonly StyledProperty<IControlTemplate?> TabStripTemplateProperty =
 		AvaloniaProperty.Register<TabPage, IControlTemplate?>(nameof(TabStripTemplate));
 
@@ -33,6 +35,8 @@ public class TabPage : Page, ISelectableHostedItems
 		get => GetValue(TabStripTemplateProperty);
 		set => SetValue(TabStripTemplateProperty, value);
 	}
+
+	#endregion
 
 	#region ItemTemplate
 
