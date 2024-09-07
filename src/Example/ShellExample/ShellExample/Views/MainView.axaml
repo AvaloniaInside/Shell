@@ -30,8 +30,6 @@
 	           LargeScreenSideMenuMode="Inline"
 	           LargeScreenSideMenuBehave="Keep"
 
-	           NavigationBarAttachType="ToFirstHostThenPage"
-
 			   DefaultPageTransition="{Binding CurrentTransition}">
 
 		<Route Path="welcome" Page="views:WelcomeView"></Route>
