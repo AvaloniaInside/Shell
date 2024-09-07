@@ -7,30 +7,30 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace AvaloniaInside.Shell
+namespace AvaloniaInside.Shell;
+
+[TypeConverter(typeof(BindingNavigateConverter))]
+public class BindingNavigate : AvaloniaObject, ICommand
 {
-    [TypeConverter(typeof(BindingNavigateConverter))]
-    public class BindingNavigate : AvaloniaObject, ICommand
-    {
-        private bool _singletonCanExecute = true;
-        private EventHandler? _singletonCanExecuteChanged;
+	private bool _singletonCanExecute = true;
+	private EventHandler? _singletonCanExecuteChanged;
 
-        public AvaloniaObject? Sender { get; internal set; }
-        public string Path { get; set; }
-        public NavigateType? Type { get; set; }
-        public IPageTransition? Transition { get; set; }
+	public AvaloniaObject? Sender { get; internal set; }
+	public string Path { get; set; }
+	public NavigateType? Type { get; set; }
+	public IPageTransition? Transition { get; set; }
 
-        public event EventHandler? CanExecuteChanged
-        {
-            add => _singletonCanExecuteChanged += value;
-            remove => _singletonCanExecuteChanged -= value;
-        }
+	public event EventHandler? CanExecuteChanged
+	{
+		add => _singletonCanExecuteChanged += value;
+		remove => _singletonCanExecuteChanged -= value;
+	}
 
-        public bool CanExecute(object? parameter) => _singletonCanExecute;
-        public void Execute(object? parameter) => ExecuteAsync(parameter, CancellationToken.None);
+	public bool CanExecute(object? parameter) => _singletonCanExecute;
+	public void Execute(object? parameter) => ExecuteAsync(parameter, CancellationToken.None);
 
-        public async Task ExecuteAsync(object? parameter, CancellationToken cancellationToken)
-        {
+	public async Task ExecuteAsync(object? parameter, CancellationToken cancellationToken)
+	{
             if (Sender is not Visual visual) return;
             if (visual.FindAncestorOfType<ShellView>() is not { } shell) return;
 
@@ -63,9 +63,8 @@ namespace AvaloniaInside.Shell
             }
         }
 
-        public static implicit operator BindingNavigate(string path) => new BindingNavigate
-        {
-            Path = path
-        };
-    }
+	public static implicit operator BindingNavigate(string path) => new BindingNavigate
+	{
+		Path = path
+	};
 }
