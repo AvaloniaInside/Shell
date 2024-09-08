@@ -4,11 +4,14 @@
 		<Setter Property="Background" Value="{DynamicResource PageBackground}" />
 		<Setter Property="Template">
 			<ControlTemplate>
-				<Border Background="{TemplateBinding Background}" CornerRadius="14">
+				<Border Background="{TemplateBinding Background}"
+				        CornerRadius="14">
 					<Grid RowDefinitions="Auto,*">
-						<ContentPresenter Name="PART_NavigationBarPlaceHolder" Grid.Row="0"></ContentPresenter>
+						<ContentPresenter Grid.Row="0"
+						                  Name="PART_NavigationBarPlaceHolder"></ContentPresenter>
 						<ContentPresenter Grid.Row="1"
-						                  Content="{TemplateBinding Content}">
+						                  Content="{TemplateBinding Content}"
+						                  Margin="{TemplateBinding PageSafePadding}">
 						</ContentPresenter>
 					</Grid>
 				</Border>

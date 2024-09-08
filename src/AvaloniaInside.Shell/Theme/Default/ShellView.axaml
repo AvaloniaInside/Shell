@@ -22,18 +22,6 @@
 							                  Grid.Row="1"
 							                  PageTransition="{TemplateBinding DefaultPageTransition}">
 							</StackContentView>
-							<Border Grid.Row="2"
-							        IsVisible="{TemplateBinding ApplyBottomSafePadding}"
-							        Height="{TemplateBinding BottomSafeSpace}">
-								<Border.Styles>
-									<Style Selector="Border[IsVisible=True]">
-										<Setter Property="RenderTransform" Value="scaleY(1)"></Setter>
-									</Style>
-									<Style Selector="Border[IsVisible=False]">
-										<Setter Property="RenderTransform" Value="scaleY(0)"></Setter>
-									</Style>
-								</Border.Styles>
-							</Border>
 						</Grid>
 					</SplitView>
 

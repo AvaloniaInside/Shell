@@ -12,26 +12,30 @@
 						        Height="{TemplateBinding TopSafeSpace}"
 						        IsVisible="{TemplateBinding ApplyTopSafePadding}">
 						</Border>
-						<Button Name="PART_ActionButton"
+						<Button Grid.Row="1"
+						        Name="PART_ActionButton"
+						        Margin="{TemplateBinding LeftSafePadding}"
 						        HorizontalAlignment="Left"
 						        VerticalAlignment="Center"
 						        HorizontalContentAlignment="Center"
 						        VerticalContentAlignment="Center"
-						        Width="35"
-						        Grid.Row="1">
+						        Width="35">
 						</Button>
-						<TransitioningContentControl Grid.Row="1" Name="PART_Header" HorizontalAlignment="Center"
+						<TransitioningContentControl Grid.Row="1"
+						                             Name="PART_Header"
+						                             HorizontalAlignment="Center"
 						                             VerticalAlignment="Center" />
-						<TransitioningContentControl Grid.Row="1" Name="PART_Items" HorizontalAlignment="Right"
+						<TransitioningContentControl Grid.Row="1"
+						                             Name="PART_Items"
+						                             Margin="{TemplateBinding RightSafePadding}"
+						                             HorizontalAlignment="Right"
 						                             VerticalAlignment="Center" />
 					</Grid>
 				</Border>
 			</ControlTemplate>
 		</Setter>
 
-		<Setter Property="Height" Value="36"></Setter>
-
-		<Style Selector="^ /template/  Button.BackButton">
+		<Style Selector="^ /template/ Button.BackButton">
 			<Setter Property="Template">
 				<ControlTemplate>
 					<Viewbox Stretch="UniformToFill">
@@ -44,7 +48,7 @@
 			</Setter>
 		</Style>
 
-		<Style Selector="^ /template/  Button.SideMenuButton">
+		<Style Selector="^ /template/ Button.SideMenuButton">
 			<Setter Property="RenderTransform" Value="rotate(180deg)" />
 			<Setter Property="Template">
 				<ControlTemplate>

@@ -11,18 +11,18 @@
 				        HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
 				        VerticalAlignment="{TemplateBinding VerticalAlignment}">
 					<DockPanel>
-						<ContentPresenter Name="PART_NavigationBarPlaceHolder"
-						                  DockPanel.Dock="Top"></ContentPresenter>
-
 						<ContentPresenter Name="PART_TabStripPlaceHolder"
 						                  DockPanel.Dock="{TemplateBinding TabStripPlacement}"></ContentPresenter>
+
+						<ContentPresenter Name="PART_NavigationBarPlaceHolder"
+						                  DockPanel.Dock="Top"></ContentPresenter>
 
 						<Carousel Name="PART_Carousel"
 						          Margin="{TemplateBinding Padding}"
 						          SelectedItem="{TemplateBinding SelectedItem}"
 						          ItemTemplate="{TemplateBinding SelectedContentTemplate}"
 						          PageTransition="{x:Static PlatformSetup.TransitionForTab}"
-						          ItemsSource="{TemplateBinding ItemsSource}"/>
+						          ItemsSource="{TemplateBinding ItemsSource}" />
 					</DockPanel>
 				</Border>
 			</ControlTemplate>
@@ -32,7 +32,8 @@
 				<TabStrip SelectedItem="{TemplateBinding SelectedItem, Mode=TwoWay}"
 				          ItemTemplate="{TemplateBinding ItemTemplate}"
 				          ItemsPanel="{TemplateBinding ItemsPanel}"
-				          ItemsSource="{TemplateBinding ItemsSource}"></TabStrip>
+				          ItemsSource="{TemplateBinding ItemsSource}"
+				          Padding="{TemplateBinding TabSafePadding}"></TabStrip>
 			</ControlTemplate>
 		</Setter>
 		<Setter Property="SelectedContentTemplate">

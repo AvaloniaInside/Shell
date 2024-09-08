@@ -19,6 +19,17 @@ public class NavigationBar : TemplatedControl
 
 	private object? _pendingHeader;
 
+	public NavigationBar(ShellView shellView)
+	{
+		ShellView = shellView;
+	}
+
+	public NavigationBar(Page page)
+	{
+		Page = page;
+		ShellView = page.Shell;
+	}
+
 	#region ShellView
 
     public static readonly StyledProperty<ShellView?> ShellViewProperty =
@@ -27,7 +38,20 @@ public class NavigationBar : TemplatedControl
     public ShellView? ShellView
     {
 	    get => GetValue(ShellViewProperty);
-	    internal set => SetValue(ShellViewProperty, value);
+	    private set => SetValue(ShellViewProperty, value);
+    }
+
+    #endregion
+
+    #region Page
+
+    public static readonly StyledProperty<Page?> PageProperty =
+	    AvaloniaProperty.Register<NavigationBar, Page?>(nameof(Page));
+
+    public Page? Page
+    {
+	    get => GetValue(PageProperty);
+	    private set => SetValue(PageProperty, value);
     }
 
     #endregion
@@ -119,28 +143,28 @@ public class NavigationBar : TemplatedControl
 
 	#endregion
 
-	#region TopSafeSpace
+	#region SafePadding
 
-	public static readonly StyledProperty<double> TopSafeSpaceProperty =
-		AvaloniaProperty.Register<NavigationBar, double>(nameof(TopSafeSpace));
+	public static readonly StyledProperty<Thickness> SafePaddingProperty =
+		AvaloniaProperty.Register<NavigationBar, Thickness>(nameof(SafePadding));
 
-	public double TopSafeSpace
+	public Thickness SafePadding
 	{
-		get => GetValue(TopSafeSpaceProperty);
-		set => SetValue(TopSafeSpaceProperty, value);
+		get => GetValue(SafePaddingProperty);
+		set => SetValue(SafePaddingProperty, value);
 	}
 
 	#endregion
 
-	#region TopSafePadding
+	#region PlatformHeight
 
-	public static readonly StyledProperty<Thickness> TopSafePaddingProperty =
-		AvaloniaProperty.Register<NavigationBar, Thickness>(nameof(TopSafePadding));
+	public static readonly StyledProperty<double> PlatformHeightProperty =
+		AvaloniaProperty.Register<NavigationBar, double>(nameof(PlatformHeight), defaultValue: 36);
 
-	public Thickness TopSafePadding
+	public double PlatformHeight
 	{
-		get => GetValue(TopSafePaddingProperty);
-		set => SetValue(TopSafePaddingProperty, value);
+		get => GetValue(PlatformHeightProperty);
+		set => SetValue(PlatformHeightProperty, value);
 	}
 
 	#endregion
@@ -157,6 +181,110 @@ public class NavigationBar : TemplatedControl
 	}
 
 	#endregion
+
+	#region ApplyLeftSafePadding
+
+	public static readonly StyledProperty<bool> ApplyLeftSafePaddingProperty =
+		AvaloniaProperty.Register<NavigationBar, bool>(nameof(ApplyLeftSafePadding), defaultValue: true);
+
+	public bool ApplyLeftSafePadding
+	{
+		get => GetValue(ApplyLeftSafePaddingProperty);
+		set => SetValue(ApplyLeftSafePaddingProperty, value);
+	}
+
+	#endregion
+
+	#region ApplyRightSafePadding
+
+	public static readonly StyledProperty<bool> ApplyRightSafePaddingProperty =
+		AvaloniaProperty.Register<NavigationBar, bool>(nameof(ApplyRightSafePadding), defaultValue: true);
+
+	public bool ApplyRightSafePadding
+	{
+		get => GetValue(ApplyRightSafePaddingProperty);
+		set => SetValue(ApplyRightSafePaddingProperty, value);
+	}
+
+	#endregion
+
+    #region TopSafeSpace
+
+    public static readonly StyledProperty<double> TopSafeSpaceProperty =
+	    AvaloniaProperty.Register<NavigationBar, double>(nameof(TopSafeSpace));
+
+    public double TopSafeSpace
+    {
+	    get => GetValue(TopSafeSpaceProperty);
+	    set => SetValue(TopSafeSpaceProperty, value);
+    }
+
+    #endregion
+
+    #region TopSafePadding
+
+    public static readonly StyledProperty<Thickness> TopSafePaddingProperty =
+	    AvaloniaProperty.Register<NavigationBar, Thickness>(nameof(TopSafePadding));
+
+    public Thickness TopSafePadding
+    {
+	    get => GetValue(TopSafePaddingProperty);
+	    set => SetValue(TopSafePaddingProperty, value);
+    }
+
+    #endregion
+
+    #region LeftSafeSpace
+
+    public static readonly StyledProperty<double> LeftSafeSpaceProperty =
+	    AvaloniaProperty.Register<NavigationBar, double>(nameof(LeftSafeSpace));
+
+    public double LeftSafeSpace
+    {
+	    get => GetValue(LeftSafeSpaceProperty);
+	    set => SetValue(LeftSafeSpaceProperty, value);
+    }
+
+    #endregion
+
+    #region LeftSafePadding
+
+    public static readonly StyledProperty<Thickness> LeftSafePaddingProperty =
+	    AvaloniaProperty.Register<NavigationBar, Thickness>(nameof(LeftSafePadding));
+
+    public Thickness LeftSafePadding
+    {
+	    get => GetValue(LeftSafePaddingProperty);
+	    set => SetValue(LeftSafePaddingProperty, value);
+    }
+
+    #endregion
+
+    #region RightSafeSpace
+
+    public static readonly StyledProperty<double> RightSafeSpaceProperty =
+	    AvaloniaProperty.Register<NavigationBar, double>(nameof(RightSafeSpace));
+
+    public double RightSafeSpace
+    {
+	    get => GetValue(RightSafeSpaceProperty);
+	    set => SetValue(RightSafeSpaceProperty, value);
+    }
+
+    #endregion
+
+    #region RightSafePadding
+
+    public static readonly StyledProperty<Thickness> RightSafePaddingProperty =
+	    AvaloniaProperty.Register<NavigationBar, Thickness>(nameof(RightSafePadding));
+
+    public Thickness RightSafePadding
+    {
+	    get => GetValue(RightSafePaddingProperty);
+	    set => SetValue(RightSafePaddingProperty, value);
+    }
+
+    #endregion
 
 	#region Attached properties
 
@@ -219,9 +347,16 @@ public class NavigationBar : TemplatedControl
 	protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
 	{
 		base.OnPropertyChanged(change);
+
 		if (change.Property == ShellViewProperty)
 		{
 			ShellViewUpdated();
+		}
+		else if (change.Property == SafePaddingProperty ||
+		         change.Property == ApplyTopSafePaddingProperty ||
+		         change.Property == PlatformHeightProperty)
+		{
+			UpdateSafePaddingSizes();
 		}
 	}
 
@@ -231,6 +366,8 @@ public class NavigationBar : TemplatedControl
 
 		if (_pendingHeader != null)
 			UpdateView(_pendingHeader);
+
+		UpdateSafePaddingSizes();
 	}
 
 	protected virtual void ShellViewUpdated()
@@ -240,12 +377,25 @@ public class NavigationBar : TemplatedControl
 		_backCommand = shellView.BackCommand;
 		_sideMenuCommand = shellView.SideMenuCommand;
 
-		this[!TopSafePaddingProperty] = shellView[!ShellView.TopSafePaddingProperty];
-		this[!TopSafeSpaceProperty] = shellView[!ShellView.TopSafeSpaceProperty];
-		this[!ApplyTopSafePaddingProperty] = shellView[!ShellView.ApplyTopSafePaddingProperty];
+		this[!SafePaddingProperty] = shellView[!ShellView.SafePaddingProperty];
 
-		if (shellView.ContentView?.CurrentView is { } currentView)
-			UpdateView(currentView);
+		if (Page is { } page)
+		{
+			this[!ApplyTopSafePaddingProperty] = shellView[!ShellView.EnableSafeAreaForTopProperty];
+			this[!ApplyLeftSafePaddingProperty] = shellView[!ShellView.EnableSafeAreaForLeftProperty];
+			this[!ApplyRightSafePaddingProperty] = shellView[!ShellView.EnableSafeAreaForRightProperty];
+
+			UpdateView(page);
+		}
+		else
+		{
+			this[!ApplyTopSafePaddingProperty] = shellView[!ShellView.ApplyTopSafePaddingProperty];
+			this[!ApplyLeftSafePaddingProperty] = shellView[!ShellView.ApplyLeftSafePaddingProperty];
+			this[!ApplyRightSafePaddingProperty] = shellView[!ShellView.ApplyRightSafePaddingProperty];
+
+			if (shellView.ContentView?.CurrentView is { } currentView)
+				UpdateView(currentView);
+		}
 	}
 
 	protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
@@ -261,6 +411,8 @@ public class NavigationBar : TemplatedControl
 
 		if (_pendingHeader != null)
 			UpdateView(_pendingHeader);
+
+		UpdateSafePaddingSizes();
 	}
 
 	#endregion
@@ -359,6 +511,22 @@ public class NavigationBar : TemplatedControl
 		}
 
 		itemPresenter.Content = view;
+	}
+
+	#endregion
+
+	#region Sizing
+
+	protected virtual void UpdateSafePaddingSizes()
+	{
+		TopSafeSpace = SafePadding.Top;
+		TopSafePadding = new Thickness(0, SafePadding.Top, 0, 0);
+		LeftSafeSpace = SafePadding.Left;
+		LeftSafePadding = new Thickness(SafePadding.Left, 0, 0, 0);
+		RightSafeSpace = SafePadding.Right;
+		RightSafePadding = new Thickness(0, 0, SafePadding.Right, 0);
+
+		Height = PlatformHeight + (ApplyTopSafePadding ? SafePadding.Top : 0);
 	}
 
 	#endregion

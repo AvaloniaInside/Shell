@@ -1,9 +1,10 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using AvaloniaInside.Shell;
 
 namespace ShellExample.Views;
 
-public partial class MainView : UserControl
+public partial class MainView : ShellView
 {
 	public static MainView Current { get; private set; }
 
