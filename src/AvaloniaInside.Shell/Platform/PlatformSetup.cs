@@ -70,9 +70,7 @@ public class PlatformSetup
     {
 	    get
 	    {
-		    if (OperatingSystem.IsIOS())
-			    return NavigationBarAttachType.ToFirstHostThenPage;
-		    return NavigationBarAttachType.ToShell;
+		    return NavigationBarAttachType.ToFirstHostThenPage;
 	    }
     }
 }

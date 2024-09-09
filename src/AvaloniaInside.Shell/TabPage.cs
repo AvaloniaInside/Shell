@@ -249,4 +249,32 @@ public class TabPage : Page, ISelectableHostItems
 	}
 
 	#endregion
+
+	#region Sizing
+
+	protected override void UpdateSafePaddingSizes()
+	{
+		TopSafeSpace = SafePadding.Top;
+		TopSafePadding = new Thickness(0, SafePadding.Top, 0, 0);
+		BottomSafeSpace = SafePadding.Bottom;
+		BottomSafePadding = new Thickness(0, 0, 0, SafePadding.Bottom);
+		LeftSafeSpace = SafePadding.Left;
+		LeftSafePadding = new Thickness(SafePadding.Left, 0, 0, 0);
+		RightSafeSpace = SafePadding.Right;
+		RightSafePadding = new Thickness(0, 0, SafePadding.Right, 0);
+
+		PageSafePadding  = new Thickness(
+			TabStripPlacement != Dock.Left ? SafePadding.Left : 0,
+			0,
+			TabStripPlacement != Dock.Right ? SafePadding.Right : 0,
+			TabStripPlacement != Dock.Bottom ? SafePadding.Bottom : 0);
+
+		TabSafePadding  = new Thickness(
+			TabStripPlacement != Dock.Right ? SafePadding.Left : 0,
+			0,
+			TabStripPlacement != Dock.Left ? SafePadding.Right : 0,
+			TabStripPlacement != Dock.Top ? SafePadding.Bottom : 0);
+	}
+
+	#endregion
 }
