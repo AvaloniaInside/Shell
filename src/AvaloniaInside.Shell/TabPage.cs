@@ -254,26 +254,28 @@ public class TabPage : Page, ISelectableHostItems
 
 	protected override void UpdateSafePaddingSizes()
 	{
-		TopSafeSpace = SafePadding.Top;
-		TopSafePadding = new Thickness(0, SafePadding.Top, 0, 0);
-		BottomSafeSpace = SafePadding.Bottom;
-		BottomSafePadding = new Thickness(0, 0, 0, SafePadding.Bottom);
-		LeftSafeSpace = SafePadding.Left;
-		LeftSafePadding = new Thickness(SafePadding.Left, 0, 0, 0);
-		RightSafeSpace = SafePadding.Right;
-		RightSafePadding = new Thickness(0, 0, SafePadding.Right, 0);
+		var safePadding = !IsModal ? SafePadding : new Thickness(0, 0, 0, 0);
+
+		TopSafeSpace = safePadding.Top;
+		TopSafePadding = new Thickness(0, safePadding.Top, 0, 0);
+		BottomSafeSpace = safePadding.Bottom;
+		BottomSafePadding = new Thickness(0, 0, 0, safePadding.Bottom);
+		LeftSafeSpace = safePadding.Left;
+		LeftSafePadding = new Thickness(safePadding.Left, 0, 0, 0);
+		RightSafeSpace = safePadding.Right;
+		RightSafePadding = new Thickness(0, 0, safePadding.Right, 0);
 
 		PageSafePadding  = new Thickness(
-			TabStripPlacement != Dock.Left ? SafePadding.Left : 0,
+			TabStripPlacement != Dock.Left ? safePadding.Left : 0,
 			0,
-			TabStripPlacement != Dock.Right ? SafePadding.Right : 0,
-			TabStripPlacement != Dock.Bottom ? SafePadding.Bottom : 0);
+			TabStripPlacement != Dock.Right ? safePadding.Right : 0,
+			TabStripPlacement != Dock.Bottom ? safePadding.Bottom : 0);
 
 		TabSafePadding  = new Thickness(
-			TabStripPlacement != Dock.Right ? SafePadding.Left : 0,
+			TabStripPlacement != Dock.Right ? safePadding.Left : 0,
 			0,
-			TabStripPlacement != Dock.Left ? SafePadding.Right : 0,
-			TabStripPlacement != Dock.Top ? SafePadding.Bottom : 0);
+			TabStripPlacement != Dock.Left ? safePadding.Right : 0,
+			TabStripPlacement != Dock.Top ? safePadding.Bottom : 0);
 	}
 
 	#endregion

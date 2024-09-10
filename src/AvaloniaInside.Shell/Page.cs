@@ -3,12 +3,14 @@ using Avalonia.Controls;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia;
+using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
 
 namespace AvaloniaInside.Shell;
 
+[PseudoClasses(":modal")]
 public class Page : UserControl, INavigationLifecycle, INavigatorLifecycle, INavigationBarProvider
 {
 	private ContentPresenter? _navigationBarPlaceHolder;
@@ -22,8 +24,6 @@ public class Page : UserControl, INavigationLifecycle, INavigatorLifecycle, INav
 
 	public INavigator? Navigator => Shell?.Navigator;
 
-	public NavigationChain Chain { get; internal set; }
-
 	protected override Type StyleKeyOverride => typeof(Page);
 
 	#region Shell
@@ -35,6 +35,28 @@ public class Page : UserControl, INavigationLifecycle, INavigatorLifecycle, INav
 	{
 		get => GetValue(ShellProperty);
 		internal set => SetValue(ShellProperty, value);
+	}
+
+	#endregion
+
+	#region Chain
+
+	public static readonly DirectProperty<Page, NavigationChain?> BackCommandProperty =
+		AvaloniaProperty.RegisterDirect<Page, NavigationChain?>(
+			nameof(Chain),
+			o => o.Chain,
+			(o, v) => o.Chain = v);
+
+	private NavigationChain? _chain;
+
+	public NavigationChain? Chain
+	{
+		get => _chain;
+		set
+		{
+			if (SetAndRaise(BackCommandProperty, ref _chain, value))
+				IsModal = value?.Type == NavigateType.Modal;
+		}
 	}
 
 	#endregion
@@ -234,6 +256,25 @@ public class Page : UserControl, INavigationLifecycle, INavigatorLifecycle, INav
 
 	#endregion
 
+	#region IsModal
+
+	/// <summary>
+	/// Defines the <see cref="IsModal"/> property.
+	/// </summary>
+	public static readonly StyledProperty<bool> IsModalProperty =
+		AvaloniaProperty.Register<ToggleButton, bool>(nameof(IsModal), false);
+
+	/// <summary>
+	/// Gets or sets whether the <see cref="Page"/> is modal.
+	/// </summary>
+	public bool IsModal
+	{
+		get => GetValue(IsModalProperty);
+		internal set => SetValue(IsModalProperty, value);
+	}
+
+	#endregion
+
 	#endregion
 
 	#region Lifecycle
@@ -264,6 +305,8 @@ public class Page : UserControl, INavigationLifecycle, INavigatorLifecycle, INav
 		this[!ApplyBottomSafePaddingProperty] = this[!ShellView.EnableSafeAreaForBottomProperty];
 		this[!ApplyLeftSafePaddingProperty] = this[!ShellView.EnableSafeAreaForLeftProperty];
 		this[!ApplyRightSafePaddingProperty] = this[!ShellView.ApplyRightSafePaddingProperty];
+
+		IsModal = Chain.Type == NavigateType.Modal;
 	}
 
 	protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -278,6 +321,11 @@ public class Page : UserControl, INavigationLifecycle, INavigatorLifecycle, INav
 		}
 		else if (change.Property == SafePaddingProperty)
 		{
+			UpdateSafePaddingSizes();
+		}
+		else if (change.Property == IsModalProperty)
+		{
+			PseudoClasses.Set(":modal", IsModal);
 			UpdateSafePaddingSizes();
 		}
 	}
@@ -297,7 +345,7 @@ public class Page : UserControl, INavigationLifecycle, INavigatorLifecycle, INav
 			return;
 
 		if ((type == NavigationBarAttachType.ToLastPage && Chain is HostNavigationChain) ||
-		    (type == NavigationBarAttachType.ToFirstHostThenPage && Chain?.Back is HostNavigationChain))
+		    (type == NavigationBarAttachType.ToFirstHostThenPage && Chain.Back is HostNavigationChain))
 			return;
 
 		_navigationBarPlaceHolder.Content = _navigationBar = new NavigationBar(this);
@@ -309,17 +357,18 @@ public class Page : UserControl, INavigationLifecycle, INavigatorLifecycle, INav
 
 	protected virtual void UpdateSafePaddingSizes()
 	{
-		TopSafeSpace = SafePadding.Top;
-		TopSafePadding = new Thickness(0, SafePadding.Top, 0, 0);
-		BottomSafeSpace = SafePadding.Bottom;
-		BottomSafePadding = new Thickness(0, 0, 0, SafePadding.Bottom);
-		LeftSafeSpace = SafePadding.Left;
-		LeftSafePadding = new Thickness(SafePadding.Left, 0, 0, 0);
-		RightSafeSpace = SafePadding.Right;
-		RightSafePadding = new Thickness(0, 0, SafePadding.Right, 0);
+		var safePadding = !IsModal ? SafePadding : new Thickness(0, 0, 0, 0);
 
-		PageSafePadding  = new Thickness(SafePadding.Left, 0, SafePadding.Right, SafePadding.Bottom);
+		TopSafeSpace = safePadding.Top;
+		TopSafePadding = new Thickness(0, safePadding.Top, 0, 0);
+		BottomSafeSpace = safePadding.Bottom;
+		BottomSafePadding = new Thickness(0, 0, 0, safePadding.Bottom);
+		LeftSafeSpace = safePadding.Left;
+		LeftSafePadding = new Thickness(safePadding.Left, 0, 0, 0);
+		RightSafeSpace = safePadding.Right;
+		RightSafePadding = new Thickness(0, 0, safePadding.Right, 0);
 
+		PageSafePadding  = new Thickness(safePadding.Left, 0, safePadding.Right, safePadding.Bottom);
 	}
 
 	#endregion

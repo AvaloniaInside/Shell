@@ -519,14 +519,16 @@ public class NavigationBar : TemplatedControl
 
 	protected virtual void UpdateSafePaddingSizes()
 	{
-		TopSafeSpace = SafePadding.Top;
-		TopSafePadding = new Thickness(0, SafePadding.Top, 0, 0);
-		LeftSafeSpace = SafePadding.Left;
-		LeftSafePadding = new Thickness(SafePadding.Left, 0, 0, 0);
-		RightSafeSpace = SafePadding.Right;
-		RightSafePadding = new Thickness(0, 0, SafePadding.Right, 0);
+		var safePadding = Page?.IsModal != true ? SafePadding : new Thickness(0, 0, 0, 0);
 
-		Height = PlatformHeight + (ApplyTopSafePadding ? SafePadding.Top : 0);
+		TopSafeSpace = safePadding.Top;
+		TopSafePadding = new Thickness(0, safePadding.Top, 0, 0);
+		LeftSafeSpace = safePadding.Left;
+		LeftSafePadding = new Thickness(safePadding.Left, 0, 0, 0);
+		RightSafeSpace = safePadding.Right;
+		RightSafePadding = new Thickness(0, 0, safePadding.Right, 0);
+
+		Height = PlatformHeight + (ApplyTopSafePadding ? safePadding.Top : 0);
 	}
 
 	#endregion
