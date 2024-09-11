@@ -169,6 +169,27 @@ public partial class ShellView : TemplatedControl, INavigationBarProvider
 
     #endregion
 
+    #region NavigationBarForModal
+
+    /// <summary>
+    /// Defines the <see cref="NavigationBarAttachTypeProperty"/> property.
+    /// </summary>
+    public static readonly StyledProperty<bool> NavigationBarForModalProperty =
+	    AvaloniaProperty.Register<ShellView, bool>(
+		    nameof(NavigationBarForModal),
+		    defaultValue: false);
+
+    /// <summary>
+    /// Gets or sets the type of attach navigation bar.
+    /// </summary>
+    public bool NavigationBarForModal
+    {
+	    get => GetValue(NavigationBarForModalProperty);
+	    set => SetValue(NavigationBarForModalProperty, value);
+    }
+
+    #endregion
+
     #endregion
 
     #region Safe area properties
