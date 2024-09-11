@@ -11,6 +11,7 @@ using Avalonia.Interactivity;
 namespace AvaloniaInside.Shell;
 
 [PseudoClasses(":modal")]
+[TemplatePart("PART_TabStripPlaceHolder", typeof(ContentPresenter))]
 public class Page : UserControl, INavigationLifecycle, INavigatorLifecycle, INavigationBarProvider
 {
 	private ContentPresenter? _navigationBarPlaceHolder;
@@ -342,6 +343,9 @@ public class Page : UserControl, INavigationLifecycle, INavigatorLifecycle, INav
 			return;
 
 		if (Shell?.NavigationBarAttachType is not ({ } type and not NavigationBarAttachType.ToShell))
+			return;
+
+		if (IsModal && !Shell.NavigationBarForModal)
 			return;
 
 		if ((type == NavigationBarAttachType.ToLastPage && Chain is HostNavigationChain) ||
