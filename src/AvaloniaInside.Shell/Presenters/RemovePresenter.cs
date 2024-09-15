@@ -5,9 +5,11 @@ namespace AvaloniaInside.Shell.Presenters;
 
 public class RemovePresenter : PresenterBase
 {
-	public override Task PresentAsync(ShellView shellView,
+	public override Task PresentAsync(
+		ShellView shellView,
         NavigationChain chain,
         NavigateType navigateType,
+        NavigateEventArgs eventArgs,
         CancellationToken cancellationToken) =>
-		shellView?.RemoveViewAsync(chain.Instance, navigateType, cancellationToken) ?? Task.CompletedTask;
+		shellView.RemoveViewAsync(chain.Instance, navigateType, eventArgs, cancellationToken);
 }

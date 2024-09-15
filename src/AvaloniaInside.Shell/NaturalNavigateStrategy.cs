@@ -4,29 +4,23 @@ using System.Threading.Tasks;
 
 namespace AvaloniaInside.Shell;
 
-public class NaturalNavigateStrategy : INavigateStrategy
+public class NaturalNavigateStrategy(INavigationRegistrar navigationRegistrar) : INavigateStrategy
 {
-	private readonly INavigationRegistrar _navigationRegistrar;
-
-	public NaturalNavigateStrategy(INavigationRegistrar navigationRegistrar)
-	{
-		_navigationRegistrar = navigationRegistrar;
-	}
-
 	public virtual Task<Uri> NavigateAsync(
-		NavigationChain chain,
+		NavigationChain? chain,
 		Uri currentUri,
 		string path,
 		CancellationToken cancellationToken)
 	{
 		var newUrl = new Uri(currentUri, path);
-		if (!_navigationRegistrar.TryGetNode(newUrl.AbsolutePath, out var node))
+		if (!navigationRegistrar.TryGetNode(newUrl.AbsolutePath, out var node) ||
+		    node is null)
 			return Task.FromResult(newUrl);
 
 		var defaultNode = node.GetLastDefaultNode();
 		if (defaultNode == null) return Task.FromResult(newUrl);
 
-		var uri = new Uri(_navigationRegistrar.RootUri, defaultNode.Route);
+		var uri = new Uri(navigationRegistrar.RootUri, defaultNode.Route);
 		if (newUrl.Query.Length <= 1) return Task.FromResult(uri);
 
 		var query1 = newUrl.Query.Substring(1);
@@ -37,23 +31,23 @@ public class NaturalNavigateStrategy : INavigateStrategy
 
 		if (tagIndex1 > 0 && tagIndex2 > 0)
 			return Task.FromResult(new Uri(
-				_navigationRegistrar.RootUri,
+				navigationRegistrar.RootUri,
 				$"{newUrl.AbsolutePath}?{query1.Insert(tagIndex1, query2.Substring(0, tagIndex2))}"));
 		if (tagIndex1 > 0)
 			return Task.FromResult(new Uri(
-				_navigationRegistrar.RootUri,
+				navigationRegistrar.RootUri,
 				$"{newUrl.AbsolutePath}?{query1.Insert(tagIndex1, "&" + query2)}"));
 		if (tagIndex2 > 0)
 			return Task.FromResult(new Uri(
-				_navigationRegistrar.RootUri,
+				navigationRegistrar.RootUri,
 				$"{newUrl.AbsolutePath}?{query2.Insert(tagIndex2, "&" + query1)}"));
 
 		return Task.FromResult(new Uri(
-			_navigationRegistrar.RootUri,
+			navigationRegistrar.RootUri,
 			$"{newUrl.AbsolutePath}?{query1}&{query2}"));
 
 	}
 
-	public virtual Task<Uri?> BackAsync(NavigationChain chain, Uri currentUri, CancellationToken cancellationToken) =>
+	public virtual Task<Uri?> BackAsync(NavigationChain? chain, Uri currentUri, CancellationToken cancellationToken) =>
 		Task.FromResult<Uri?>(new Uri(currentUri, ".."));
 }

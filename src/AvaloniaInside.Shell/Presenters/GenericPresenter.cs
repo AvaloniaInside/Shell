@@ -9,13 +9,15 @@ public class GenericPresenter : PresenterBase
 		ShellView shellView,
 		NavigationChain chain,
         NavigateType navigateType,
+        NavigateEventArgs eventArgs,
         CancellationToken cancellationToken)
 	{
 		var hostControl = GetHostControl(chain);
 
-		await (shellView.PushViewAsync(
+		await shellView.PushViewAsync(
 			hostControl ?? chain.Instance,
             navigateType,
-            cancellationToken) ?? Task.CompletedTask);
+			eventArgs,
+            cancellationToken);
 	}
 }

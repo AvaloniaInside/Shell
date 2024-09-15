@@ -14,7 +14,10 @@ public partial class ShellView
 	private void ItemsOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
 	{
 		if (e.Action != NotifyCollectionChangedAction.Add) throw new Exception("Only add supported for the moment");
-		foreach (var item in e.NewItems.Cast<IItem>())
+		if (e.NewItems?.Cast<IItem>() is not { } newItems)
+			return;
+
+		foreach (var item in newItems)
 			OnAddItem(item);
 	}
 

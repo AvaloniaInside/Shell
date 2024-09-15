@@ -1,4 +1,3 @@
-using Avalonia.Animation;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -33,7 +32,6 @@ public interface INavigator
 		NavigateType? navigateType,
 		object? sender,
 		bool withAnimation,
-		IPageTransition? overrideTransition = null,
 		CancellationToken cancellationToken = default);
     Task NavigateAsync(
 		string path,
@@ -41,7 +39,6 @@ public interface INavigator
 		object? argument,
 		object? sender,
 		bool withAnimation,
-		IPageTransition? overrideTransition = null,
 		CancellationToken cancellationToken = default);
 
 
@@ -50,13 +47,11 @@ public interface INavigator
     Task BackAsync(
 		object? sender,
 		bool withAnimation,
-		IPageTransition? overrideTransition = null,
 		CancellationToken cancellationToken = default);
     Task BackAsync(
 		object? argument,
         object? sender,
         bool withAnimation,
-        IPageTransition? overrideTransition = null,
         CancellationToken cancellationToken = default);
 
     Task<NavigateResult> NavigateAndWaitAsync(string path, CancellationToken cancellationToken = default);
@@ -78,7 +73,6 @@ public interface INavigator
 		object? sender,
 		NavigateType navigateType,
 		bool withAnimation,
-		IPageTransition? overrideTransition = null,
 		CancellationToken cancellationToken = default);
     Task<NavigateResult> NavigateAndWaitAsync(
 		string path,
@@ -86,6 +80,5 @@ public interface INavigator
         object? sender,
         NavigateType navigateType,
         bool withAnimation,
-        IPageTransition? overrideTransition = null,
         CancellationToken cancellationToken = default);
 }

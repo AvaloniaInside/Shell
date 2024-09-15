@@ -10,10 +10,10 @@ public class RelativeNavigateStrategy : NaturalNavigateStrategy
 	{
 	}
 
-	public override Task<Uri?> BackAsync(NavigationChain chain, Uri currentUri, CancellationToken cancellationToken)
+	public override Task<Uri?> BackAsync(NavigationChain? chain, Uri currentUri, CancellationToken cancellationToken)
 	{
-		var current = chain.Back;
-		while (current is HostNavigationChain {} host)
+		var current = chain?.Back;
+		while (current is HostNavigationChain host)
 			current = host.Back;
 
 		return Task.FromResult(current?.Uri);

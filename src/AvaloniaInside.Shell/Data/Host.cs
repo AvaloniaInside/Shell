@@ -2,5 +2,5 @@ namespace AvaloniaInside.Shell.Data;
 
 public class Host : Route
 {
-	public string Default { get; set; }
+	public required string Default { get; set; }
 }

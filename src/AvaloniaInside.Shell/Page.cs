@@ -42,17 +42,19 @@ public class Page : UserControl, INavigationLifecycle, INavigatorLifecycle, INav
 
 	#region Chain
 
-	public static readonly DirectProperty<Page, NavigationChain?> BackCommandProperty =
-		AvaloniaProperty.RegisterDirect<Page, NavigationChain?>(
+	public static readonly DirectProperty<Page, NavigationChain> BackCommandProperty =
+		AvaloniaProperty.RegisterDirect<Page, NavigationChain>(
 			nameof(Chain),
 			o => o.Chain,
 			(o, v) => o.Chain = v);
 
-	private NavigationChain? _chain;
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+	private NavigationChain _chain;
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
-	public NavigationChain? Chain
+	public NavigationChain Chain
 	{
-		get => _chain;
+		get => _chain ?? throw new ArgumentNullException(nameof(Chain));
 		set
 		{
 			if (SetAndRaise(BackCommandProperty, ref _chain, value))
@@ -281,15 +283,15 @@ public class Page : UserControl, INavigationLifecycle, INavigatorLifecycle, INav
 	#region Lifecycle
 
 	public virtual Task AppearAsync(CancellationToken cancellationToken) => Task.CompletedTask;
-	public virtual Task ArgumentAsync(object args, CancellationToken cancellationToken) => Task.CompletedTask;
+	public virtual Task ArgumentAsync(object? args, CancellationToken cancellationToken) => Task.CompletedTask;
 	public virtual Task DisappearAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 	public virtual Task InitialiseAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 	public virtual Task TerminateAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 
-	public virtual Task OnNavigateAsync(NaviagateEventArgs args, CancellationToken cancellationToken) =>
+	public virtual Task OnNavigateAsync(NavigateEventArgs args, CancellationToken cancellationToken) =>
 		Task.CompletedTask;
 
-	public virtual Task OnNavigatingAsync(NaviagatingEventArgs args, CancellationToken cancellationToken) =>
+	public virtual Task OnNavigatingAsync(NavigatingEventArgs args, CancellationToken cancellationToken) =>
 		Task.CompletedTask;
 
 	#endregion

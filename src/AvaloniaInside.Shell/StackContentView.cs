@@ -11,10 +11,21 @@ namespace AvaloniaInside.Shell;
 public class StackContentView : Panel
 {
 	private readonly SemaphoreSlim _semaphoreSlim = new(1, 1);
-	private NavigateType? _pendingNavigateType;
+
+	#region HasContent
 
 	public static readonly StyledProperty<bool> HasContentProperty =
 		AvaloniaProperty.Register<Border, bool>(nameof(HasContent));
+
+	public bool HasContent
+	{
+		get => GetValue(HasContentProperty);
+		private set => SetValue(HasContentProperty, value);
+	}
+
+	#endregion
+
+	#region PageTransition
 
 	/// <summary>
 	/// Defines the <see cref="PageTransition"/> property.
@@ -33,11 +44,9 @@ public class StackContentView : Panel
 		set => SetValue(PageTransitionProperty, value);
 	}
 
-	public bool HasContent
-	{
-		get => GetValue(HasContentProperty);
-		private set => SetValue(HasContentProperty, value);
-	}
+	#endregion
+
+	#region CurrentView
 
 	public static readonly DirectProperty<StackContentView, object?> CurrentViewProperty =
 		AvaloniaProperty.RegisterDirect<StackContentView, object?>(
@@ -46,8 +55,12 @@ public class StackContentView : Panel
 
 	public object? CurrentView => Children.LastOrDefault();
 
-	public async Task PushViewAsync(object view,
+	#endregion
+
+	public async Task PushViewAsync(
+		object view,
 		NavigateType navigateType,
+		NavigateEventArgs eventArgs,
 		CancellationToken cancellationToken = default)
 	{
 		await _semaphoreSlim.WaitAsync(cancellationToken);
@@ -64,7 +77,7 @@ public class StackContentView : Panel
 			Children.Add(control);
 
 			await OnContentUpdateAsync(control, cancellationToken);
-			await UpdateCurrentViewAsync(current, control, navigateType, false, cancellationToken);
+			await UpdateCurrentViewAsync(current, control, navigateType, false, eventArgs, cancellationToken);
 
 			RaisePropertyChanged(CurrentViewProperty, current, CurrentView);
 		}
@@ -74,21 +87,36 @@ public class StackContentView : Panel
 		}
 	}
 
-	protected virtual Task UpdateCurrentViewAsync(
+	protected virtual async Task UpdateCurrentViewAsync(
 		object? from,
 		object? to,
 		NavigateType navigateType,
 		bool removed,
+		NavigateEventArgs eventArgs,
 		CancellationToken cancellationToken)
 	{
-		return PageTransition?.Start(
-			from as Visual,
-			to as Visual,
-			!removed,
-			cancellationToken) ?? Task.CompletedTask;
+		if (eventArgs.WithAnimation && PageTransition is {} transition)
+		{
+			await transition.Start(
+				from as Visual,
+				to as Visual,
+				!removed,
+				cancellationToken);
+		}
+		else
+		{
+			if (from is Visual f) f.IsVisible = false;
+			if (to is Visual t) t.IsVisible = true;
+		}
+
+		//TODO: Store transition
 	}
 
-	public async Task<bool> RemoveViewAsync(object view, NavigateType navigateType, CancellationToken cancellationToken)
+	public async Task<bool> RemoveViewAsync(
+		object view,
+		NavigateType navigateType,
+		NavigateEventArgs eventArgs,
+		CancellationToken cancellationToken)
 	{
 		await _semaphoreSlim.WaitAsync(cancellationToken);
 		try
@@ -99,10 +127,12 @@ public class StackContentView : Panel
 			if (CurrentView == view)
 			{
 				var to = Children.Count > 1 ? Children[^2] : null;
-				await UpdateCurrentViewAsync(view, to, navigateType, true, cancellationToken);
+				await UpdateCurrentViewAsync(view, to, navigateType, true, eventArgs, cancellationToken);
 			}
 
-			Children.Remove(view as Control);
+			if (view is Control control)
+				Children.Remove(control);
+
 			await OnContentUpdateAsync(CurrentView, cancellationToken);
 
 			RaisePropertyChanged(CurrentViewProperty, current, CurrentView);

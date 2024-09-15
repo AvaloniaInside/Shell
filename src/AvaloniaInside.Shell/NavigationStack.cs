@@ -21,7 +21,8 @@ public class NavigationStack(INavigationViewLocator viewLocator)
 			NavigateType.Top => PushTop(node, type),
 			NavigateType.Clear => PushClear(node, type),
 			NavigateType.Pop => Pop(node, type, uri),
-			NavigateType.HostedItemChange => HostedItemChange(node, type, uri)
+			NavigateType.HostedItemChange => HostedItemChange(node, type, uri),
+			_ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
 		};
 
 		if (changes.Front != null)

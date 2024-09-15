@@ -12,7 +12,7 @@ namespace AvaloniaInside.Shell;
 
 public class SideMenu : TemplatedControl
 {
-	private ListBox _listBox;
+	private ListBox? _listBox;
 
 	#region HeaderTemplate
 
@@ -72,7 +72,7 @@ public class SideMenu : TemplatedControl
 
 	#region Items
 
-	private IList<SideMenuItem> _items;
+	private IList<SideMenuItem> _items = [];
 	public static readonly DirectProperty<SideMenu, IList<SideMenuItem>> ItemsProperty =
 		AvaloniaProperty.RegisterDirect<SideMenu, IList<SideMenuItem>>(
 			nameof(Items),
@@ -141,8 +141,11 @@ public class SideMenu : TemplatedControl
 
 	private void SetupUi()
 	{
-		_listBox!.ItemsSource ??= new AvaloniaList<object>();
-		_listBox!.SelectionChanged += OnSelectionChanged;
+		if (_listBox is not { } listBox)
+			return;
+
+		listBox.ItemsSource ??= new AvaloniaList<object>();
+		listBox.SelectionChanged += OnSelectionChanged;
 	}
 
 	private void OnSelectionChanged(object? sender, SelectionChangedEventArgs e)

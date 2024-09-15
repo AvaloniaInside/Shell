@@ -1,4 +1,3 @@
-using Avalonia.Animation;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,7 +10,6 @@ public partial class Navigator : INavigator
 {
     private readonly INavigateStrategy _navigateStrategy;
     private readonly INavigationUpdateStrategy _updateStrategy;
-    private readonly INavigationViewLocator _viewLocator;
     private readonly NavigationStack _stack;
     private readonly Dictionary<NavigationChain, TaskCompletionSource<NavigateResult>> _waitingList = new();
 
@@ -35,7 +33,6 @@ public partial class Navigator : INavigator
         Registrar = navigationRegistrar;
         _navigateStrategy = navigateStrategy;
         _updateStrategy = updateStrategy;
-        _viewLocator = viewLocator;
         _stack = new(viewLocator);
 
         _updateStrategy.HostItemChanged += UpdateStrategyOnHostItemChanged;
@@ -69,24 +66,25 @@ public partial class Navigator : INavigator
         object? sender,
         NavigateType? navigateType,
         bool withAnimation,
-        IPageTransition? overrideTransition,
         CancellationToken cancellationToken = default)
     {
-        if (!Registrar.TryGetNode(newUri.AbsolutePath, out var node))
+        if (!Registrar.TryGetNode(newUri.AbsolutePath, out var node) || node is null)
         {
             Debug.WriteLine("Warning: Cannot find the path");
             return;
         }
 
         var finalNavigateType =
-            !origin.AbsolutePath.Equals(newUri.AbsolutePath) && Registrar.TryGetNode(origin.AbsolutePath, out var originalNode)
+            !origin.AbsolutePath.Equals(newUri.AbsolutePath) &&
+            Registrar.TryGetNode(origin.AbsolutePath, out var originalNode) &&
+            originalNode is not null
                 ? navigateType ?? originalNode.Navigate
                 : navigateType ?? node.Navigate;
 
         var fromPage = _stack.Current?.Instance as INavigatorLifecycle;
         if (fromPage != null)
         {
-            var args = new NaviagatingEventArgs
+            var args = new NavigatingEventArgs
             {
                 Sender = sender,
                 From = CurrentUri,
@@ -95,7 +93,6 @@ public partial class Navigator : INavigator
                 Argument = argument,
                 Navigate = finalNavigateType,
                 WithAnimation = withAnimation,
-                OverrideTransition = overrideTransition
             };
 
             await fromPage.OnNavigatingAsync(args, cancellationToken);
@@ -111,7 +108,6 @@ public partial class Navigator : INavigator
 
             finalNavigateType = args.Navigate;
             withAnimation = args.WithAnimation;
-            overrideTransition = args.OverrideTransition;
         }
 
         _navigating = true;
@@ -126,32 +122,32 @@ public partial class Navigator : INavigator
 	        SetupPage(newChain);
         }
 
+        var postArgument = new NavigateEventArgs
+        {
+	        Sender = sender,
+	        From = fromPage,
+	        To = _stack.Current?.Instance,
+	        FromUri = origin,
+	        ToUri = newUri,
+	        Argument = argument,
+	        Navigate = finalNavigateType,
+	        WithAnimation = withAnimation
+        };
+
         await _updateStrategy.UpdateChangesAsync(
             ShellView,
             stackChanges,
             finalNavigateType,
             argument,
             hasArgument,
+            postArgument,
             cancellationToken);
 
         CheckWaitingList(stackChanges, argument, hasArgument);
 
         if (fromPage != null)
         {
-            var args = new NaviagateEventArgs
-            {
-                Sender = sender,
-                From = fromPage,
-                To = _stack.Current?.Instance,
-                FromUri = origin,
-                ToUri = newUri,
-                Argument = argument,
-                Navigate = finalNavigateType,
-                WithAnimation = withAnimation,
-                OverrideTransition = overrideTransition
-            };
-
-            await fromPage.OnNavigateAsync(args, cancellationToken);
+	        await fromPage.OnNavigateAsync(postArgument, cancellationToken);
         }
 
         _navigating = false;
@@ -169,7 +165,6 @@ public partial class Navigator : INavigator
         NavigationChain old,
         NavigationChain chain,
         bool withAnimation,
-        IPageTransition? overrideTransition,
         CancellationToken cancellationToken = default)
     {
         var newUri =
@@ -177,45 +172,51 @@ public partial class Navigator : INavigator
                 cancellationToken);
         if (CurrentUri.AbsolutePath != newUri.AbsolutePath)
         {
-            await NotifyAsync(newUri, newUri, null, false, null, NavigateType.HostedItemChange, withAnimation, overrideTransition, cancellationToken);
+            await NotifyAsync(
+	            newUri,
+	            newUri,
+	            null,
+	            false,
+	            null,
+	            NavigateType.HostedItemChange,
+	            withAnimation,
+	            cancellationToken);
         }
     }
 
     public Task NavigateAsync(string path, CancellationToken cancellationToken = default) =>
-        NavigateAsync(path, null, null, false, null, true, null, cancellationToken);
+        NavigateAsync(path, null, null, false, null, true, cancellationToken);
 
     public Task NavigateAsync(string path, object? argument, CancellationToken cancellationToken = default) =>
-        NavigateAsync(path, null, argument, true, null, true, null, cancellationToken);
+        NavigateAsync(path, null, argument, true, null, true, cancellationToken);
 
     public Task NavigateAsync(
         string path,
         NavigateType? navigateType,
         CancellationToken cancellationToken = default) =>
-        NavigateAsync(path, navigateType, null, false, null, true, null, cancellationToken);
+        NavigateAsync(path, navigateType, null, false, null, true, cancellationToken);
 
     public Task NavigateAsync(
         string path,
         NavigateType? navigateType,
         object? argument,
         CancellationToken cancellationToken = default) =>
-        NavigateAsync(path, navigateType, argument, true, null, true, null, cancellationToken);
+        NavigateAsync(path, navigateType, argument, true, null, true, cancellationToken);
     public Task NavigateAsync(
         string path,
         NavigateType? navigateType,
         object? sender,
         bool withAnimation = true,
-        IPageTransition? overrideTransition = null,
         CancellationToken cancellationToken = default) =>
-        NavigateAndWaitAsync(path, navigateType, null, false, sender, withAnimation, overrideTransition, cancellationToken);
+        NavigateAndWaitAsync(path, navigateType, null, false, sender, withAnimation, cancellationToken);
     public Task NavigateAsync(
         string path,
         NavigateType? navigateType,
         object? argument,
         object? sender,
         bool withAnimation,
-        IPageTransition? overrideTransition = null,
         CancellationToken cancellationToken = default) =>
-        NavigateAndWaitAsync(path, navigateType, argument, true, sender, withAnimation, overrideTransition, cancellationToken);
+        NavigateAndWaitAsync(path, navigateType, argument, true, sender, withAnimation, cancellationToken);
 
     private async Task NavigateAsync(
         string path,
@@ -224,82 +225,92 @@ public partial class Navigator : INavigator
         bool hasArgument,
         object? sender,
         bool withAnimation,
-        IPageTransition? overrideTransition,
         CancellationToken cancellationToken = default)
     {
         var originalUri = new Uri(CurrentUri, path);
         var newUri = await _navigateStrategy.NavigateAsync(_stack.Current, CurrentUri, path, cancellationToken);
         if (CurrentUri.AbsolutePath != newUri.AbsolutePath)
-            await NotifyAsync(originalUri, newUri, argument, hasArgument, sender, navigateType, withAnimation, overrideTransition, cancellationToken);
+            await NotifyAsync(
+	            originalUri,
+	            newUri,
+	            argument,
+	            hasArgument,
+	            sender,
+	            navigateType,
+	            withAnimation,
+	            cancellationToken);
     }
 
     public Task BackAsync(CancellationToken cancellationToken = default) =>
-        BackAsync(null, false, null, true, null, cancellationToken);
+        BackAsync(null, false, null, true, cancellationToken);
     public Task BackAsync(object? argument, CancellationToken cancellationToken = default) =>
-        BackAsync(argument, true, null, true, null, cancellationToken);
+        BackAsync(argument, true, null, true, cancellationToken);
     public Task BackAsync(
         object? sender,
         bool withAnimation = true,
-        IPageTransition? overrideTransition = null,
-        CancellationToken cancellationToken = default) => BackAsync(null, false, sender, withAnimation, overrideTransition, cancellationToken);
+        CancellationToken cancellationToken = default) => BackAsync(null, false, sender, withAnimation, cancellationToken);
     public Task BackAsync(
         object? argument,
         object? sender,
         bool withAnimation,
-        IPageTransition? overrideTransition = null,
-        CancellationToken cancellationToken = default) => BackAsync(argument, true, sender, withAnimation, overrideTransition, cancellationToken);
+        CancellationToken cancellationToken = default) => BackAsync(argument, true, sender, withAnimation, cancellationToken);
 
     private async Task BackAsync(
         object? argument,
         bool hasArgument,
         object? sender,
         bool withAnimation,
-        IPageTransition? overrideTransition,
         CancellationToken cancellationToken = default)
     {
         var newUri = await _navigateStrategy.BackAsync(_stack.Current, CurrentUri, cancellationToken);
         if (newUri != null && CurrentUri.AbsolutePath != newUri.AbsolutePath)
-            await NotifyAsync(newUri, newUri, argument, hasArgument, sender, NavigateType.Pop, withAnimation, overrideTransition, cancellationToken);
+            await NotifyAsync(
+	            newUri,
+	            newUri,
+	            argument,
+	            hasArgument,
+	            sender,
+	            NavigateType.Pop,
+	            withAnimation,
+	            cancellationToken);
     }
 
     public Task<NavigateResult> NavigateAndWaitAsync(string path, CancellationToken cancellationToken = default) =>
-        NavigateAndWaitAsync(path, null, null, false, null, true, null, cancellationToken);
+        NavigateAndWaitAsync(path, null, null, false, null, true, cancellationToken);
 
     public Task<NavigateResult> NavigateAndWaitAsync(
         string path,
         object? argument,
         CancellationToken cancellationToken = default) =>
-        NavigateAndWaitAsync(path, null, argument, true, null, true, null, cancellationToken);
+        NavigateAndWaitAsync(path, null, argument, true, null, true, cancellationToken);
 
     public Task<NavigateResult> NavigateAndWaitAsync(
         string path,
         NavigateType navigateType,
         CancellationToken cancellationToken = default) =>
-        NavigateAndWaitAsync(path, navigateType, null, false, null, true, null, cancellationToken);
+        NavigateAndWaitAsync(path, navigateType, null, false, null, true, cancellationToken);
 
     public Task<NavigateResult> NavigateAndWaitAsync(
         string path,
         object? argument,
         NavigateType navigateType,
         CancellationToken cancellationToken = default) =>
-        NavigateAndWaitAsync(path, navigateType, argument, true, null, true, null, cancellationToken);
+        NavigateAndWaitAsync(path, navigateType, argument, true, null, true, cancellationToken);
     public Task<NavigateResult> NavigateAndWaitAsync(
         string path,
         object? sender,
         NavigateType navigateType,
         bool withAnimation = true,
-        IPageTransition? overrideTransition = null,
         CancellationToken cancellationToken = default) =>
-        NavigateAndWaitAsync(path, navigateType, null, false, sender, withAnimation, overrideTransition, cancellationToken);
+        NavigateAndWaitAsync(path, navigateType, null, false, sender, withAnimation, cancellationToken);
     public Task<NavigateResult> NavigateAndWaitAsync(
         string path,
         object? argument,
         object? sender,
         NavigateType navigateType,
         bool withAnimation,
-        IPageTransition? overrideTransition = null,
         CancellationToken cancellationToken = default) =>
-        NavigateAndWaitAsync(path, navigateType, argument, true, sender, withAnimation, overrideTransition, cancellationToken);
+        NavigateAndWaitAsync(path, navigateType, argument, true, sender, withAnimation, cancellationToken);
 
     private async Task<NavigateResult> NavigateAndWaitAsync(
         string path,
@@ -308,7 +319,6 @@ public partial class Navigator : INavigator
         bool hasArgument,
         object? sender,
         bool withAnimation,
-        IPageTransition? overrideTransition,
         CancellationToken cancellationToken = default)
     {
         var originalUri = new Uri(CurrentUri, path);
@@ -316,8 +326,16 @@ public partial class Navigator : INavigator
         if (CurrentUri.AbsolutePath == newUri.AbsolutePath)
             return new NavigateResult(false, null); // Or maybe we should throw exception.
 
-        await NotifyAsync(originalUri, newUri, argument, hasArgument, sender, navigateType, withAnimation, overrideTransition, cancellationToken);
-        var chain = _stack.Current;
+        await NotifyAsync(
+	        originalUri,
+	        newUri,
+	        argument,
+	        hasArgument,
+	        sender,
+	        navigateType,
+	        withAnimation,
+	        cancellationToken);
+        var chain = _stack.Current!;
 
         if (!_waitingList.TryGetValue(chain, out var tcs))
             _waitingList[chain] = tcs = new TaskCompletionSource<NavigateResult>();
@@ -349,7 +367,7 @@ public partial class Navigator : INavigator
     {
         if (e.OldChain != null && e.NewChain != e.OldChain && !_navigating)
         {
-            _ = SwitchHostedItem(e.OldChain, e.NewChain, true, null);
+            _ = SwitchHostedItem(e.OldChain, e.NewChain, true);
         }
     }
 }

@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
@@ -116,18 +115,19 @@ public class TabPage : Page, ISelectableHostItems
 		set
 		{
 			var current = _selectedItem;
-			if (SetAndRaise(SelectedItemProperty, ref _selectedItem, value))
-			{
-				SelectionChanged?.Invoke(
-					this,
-					new SelectionChangedEventArgs(
-						null,
-						current == null ? [] : new List<object> { current },
-						value == null ? [] : new List<object> { value }));
+			if (!SetAndRaise(SelectedItemProperty, ref _selectedItem, value)) return;
 
-				if (AttachedNavigationBar is { } navBar && value is NavigationChain chain)
-					navBar.UpdateView(chain.Instance);
-			}
+			SelectionChanged?.Invoke(
+				this,
+				new SelectionChangedEventArgs(
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
+					default,
+#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
+					current == null ? [] : new List<object> { current },
+					value == null ? [] : new List<object> { value }));
+
+			if (AttachedNavigationBar is { } navBar && value is NavigationChain chain)
+				navBar.UpdateView(chain.Instance);
 		}
 	}
 
@@ -230,7 +230,7 @@ public class TabPage : Page, ISelectableHostItems
 
 		if (template.Build(this) is { } templateResult)
 		{
-			var (child, nameScope) = templateResult;
+			var (child, _) = templateResult;
 			((ISetLogicalParent)child).SetParent(this);
 
 			//HACK using
@@ -243,7 +243,7 @@ public class TabPage : Page, ISelectableHostItems
 
 	static void SetPrivateDateTimePropertyValue<T>(T member, string propName, object newValue)
 	{
-		PropertyInfo propertyInfo = typeof(T).GetProperty(propName);
+		var propertyInfo = typeof(T).GetProperty(propName);
 		if (propertyInfo == null) return;
 		propertyInfo.SetValue(member, newValue);
 	}

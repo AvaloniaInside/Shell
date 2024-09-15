@@ -314,7 +314,7 @@ public partial class ShellView
 		_skipChanges = false;
 	}
 
-	private void SideMenuItemChanged(SideMenuItem item)
+	private void SideMenuItemChanged(SideMenuItem? item)
 	{
 		if (item == null || _skipChanges) return;
 		_ = Navigator.NavigateAsync(item.Path, NavigateType.HostedItemChange);

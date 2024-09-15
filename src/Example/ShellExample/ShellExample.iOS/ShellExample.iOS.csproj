@@ -11,6 +11,9 @@
         <!--<RuntimeIdentifier>ios-arm64</RuntimeIdentifier>-->
         <!--<CodesignKey></CodesignKey>-->
     </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <CodesignKey>iPhone Developer</CodesignKey>
+    </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="Avalonia.iOS" Version="$(AvaloniaVersion)" />

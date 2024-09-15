@@ -14,5 +14,5 @@ public interface INavigationRegistrar
 		NavigateType navigate,
 		string? defaultPath);
 
-	bool TryGetNode(string path, out NavigationNode node);
+	bool TryGetNode(string path, out NavigationNode? node);
 }

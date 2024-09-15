@@ -26,7 +26,7 @@ public partial class ProductCatalogFilterView : Page
 		AvaloniaXamlLoader.Load(this);
 	}
 
-	public override Task ArgumentAsync(object args, CancellationToken cancellationToken)
+	public override Task ArgumentAsync(object? args, CancellationToken cancellationToken)
 	{
 		if (args is string selectedCategory)
 			ViewModel.SetSelectedCategory(selectedCategory == string.Empty ? null : selectedCategory);

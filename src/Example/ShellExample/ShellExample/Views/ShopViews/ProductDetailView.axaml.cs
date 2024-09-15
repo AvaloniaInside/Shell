@@ -12,7 +12,7 @@ public partial class ProductDetailView : Page
         InitializeComponent();
     }
 
-    public override Task ArgumentAsync(object args, CancellationToken cancellationToken)
+    public override Task ArgumentAsync(object? args, CancellationToken cancellationToken)
     {
         if (args is not ProductDto dto) return Task.CompletedTask;
 
@@ -20,7 +20,7 @@ public partial class ProductDetailView : Page
         return Task.CompletedTask;
     }
 
-    public override async Task OnNavigatingAsync(NaviagatingEventArgs args, CancellationToken cancellationToken)
+    public override async Task OnNavigatingAsync(NavigatingEventArgs args, CancellationToken cancellationToken)
     {
         if (args.Navigate == NavigateType.Pop)
         {

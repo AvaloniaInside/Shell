@@ -6,9 +6,11 @@ namespace AvaloniaInside.Shell.Presenters;
 public class ModalPresenter : PresenterBase
 {
 
-	public override Task PresentAsync(ShellView shellView,
+	public override Task PresentAsync(
+		ShellView shellView,
         NavigationChain chain,
         NavigateType navigateType,
+        NavigateEventArgs eventArgs,
         CancellationToken cancellationToken)
 	{
 		var hostControl = GetHostControl(chain);
@@ -16,6 +18,7 @@ public class ModalPresenter : PresenterBase
 		return shellView.ModalAsync(
 			hostControl ?? chain.Instance,
             navigateType,
+            eventArgs,
             cancellationToken) ?? Task.CompletedTask;
 	}
 }

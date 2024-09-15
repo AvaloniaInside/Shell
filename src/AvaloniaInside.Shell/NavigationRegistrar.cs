@@ -56,6 +56,6 @@ public class NavigationRegistrar : INavigationRegistrar
 		Navigations[newUri.AbsolutePath] = node;
 	}
 
-	public bool TryGetNode(string path, out NavigationNode node) =>
+	public bool TryGetNode(string path, out NavigationNode? node) =>
 		Navigations.TryGetValue(path.ToLower(), out node);
 }

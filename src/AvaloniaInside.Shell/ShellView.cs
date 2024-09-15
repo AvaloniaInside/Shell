@@ -470,9 +470,10 @@ public partial class ShellView : TemplatedControl, INavigationBarProvider
     public async Task PushViewAsync(
 	    object view,
         NavigateType navigateType,
+        NavigateEventArgs eventArgs,
         CancellationToken cancellationToken = default)
     {
-        await (_contentView?.PushViewAsync(view, navigateType, cancellationToken) ?? Task.CompletedTask);
+        await (_contentView?.PushViewAsync(view, navigateType, eventArgs, cancellationToken) ?? Task.CompletedTask);
         AttachedNavigationBar?.UpdateView(Navigator.CurrentChain?.Instance);
         SelectSideMenuItem();
         UpdateBinding();
@@ -481,28 +482,23 @@ public partial class ShellView : TemplatedControl, INavigationBarProvider
 
     public async Task RemoveViewAsync(object view,
         NavigateType navigateType,
+        NavigateEventArgs eventArgs,
         CancellationToken cancellationToken = default)
     {
-        await (_contentView?.RemoveViewAsync(view, navigateType, cancellationToken) ?? Task.CompletedTask);
-        await (_modalView?.RemoveViewAsync(view, navigateType, cancellationToken) ?? Task.CompletedTask);
+        await (_contentView?.RemoveViewAsync(view, navigateType, eventArgs, cancellationToken) ?? Task.CompletedTask);
+        await (_modalView?.RemoveViewAsync(view, navigateType, eventArgs, cancellationToken) ?? Task.CompletedTask);
 
         SelectSideMenuItem();
         UpdateBinding();
         UpdateSideMenu();
     }
 
-    public async Task ClearStackAsync(CancellationToken cancellationToken)
-    {
-        await (_contentView?.ClearStackAsync(cancellationToken) ?? Task.CompletedTask);
-        await (_modalView?.ClearStackAsync(cancellationToken) ?? Task.CompletedTask);
-
-        SelectSideMenuItem();
-        UpdateBinding();
-        UpdateSideMenu();
-    }
-
-    public Task ModalAsync(object instance, NavigateType navigateType, CancellationToken cancellationToken) =>
-        _modalView?.PushViewAsync(instance, navigateType, cancellationToken) ?? Task.CompletedTask;
+    public Task ModalAsync(
+	    object instance,
+	    NavigateType navigateType,
+	    NavigateEventArgs eventArgs,
+	    CancellationToken cancellationToken) =>
+        _modalView?.PushViewAsync(instance, navigateType, eventArgs, cancellationToken) ?? Task.CompletedTask;
 
     private bool Back()
     {
