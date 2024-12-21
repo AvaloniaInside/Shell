@@ -12,7 +12,7 @@ public partial class Navigator : INavigator
     private readonly INavigateStrategy _navigateStrategy;
     private readonly INavigationUpdateStrategy _updateStrategy;
     private readonly INavigationViewLocator _viewLocator;
-    private readonly NavigationStack _stack = new();
+    private readonly NavigationStack _stack;
     private readonly Dictionary<NavigationChain, TaskCompletionSource<NavigateResult>> _waitingList = new();
 
     private bool _navigating;
@@ -21,6 +21,8 @@ public partial class Navigator : INavigator
     public ShellView ShellView => _shellView ?? throw new ArgumentNullException(nameof(ShellView));
 
     public Uri CurrentUri => _stack.Current?.Uri ?? Registrar.RootUri;
+
+    public NavigationChain? CurrentChain => _stack.Current;
 
     public INavigationRegistrar Registrar { get; }
 
@@ -34,6 +36,7 @@ public partial class Navigator : INavigator
         _navigateStrategy = navigateStrategy;
         _updateStrategy = updateStrategy;
         _viewLocator = viewLocator;
+        _stack = new(viewLocator);
 
         _updateStrategy.HostItemChanged += UpdateStrategyOnHostItemChanged;
     }
@@ -75,7 +78,6 @@ public partial class Navigator : INavigator
             return;
         }
 
-        var instances = new List<object>();
         var finalNavigateType =
             !origin.AbsolutePath.Equals(newUri.AbsolutePath) && Registrar.TryGetNode(origin.AbsolutePath, out var originalNode)
                 ? navigateType ?? originalNode.Navigate
@@ -99,7 +101,7 @@ public partial class Navigator : INavigator
             await fromPage.OnNavigatingAsync(args, cancellationToken);
             if (args.Cancel) return;
 
-            //Check for overrides 
+            //Check for overrides
 
             if (argument != args.Argument)
             {
@@ -117,19 +119,16 @@ public partial class Navigator : INavigator
         var stackChanges = _stack.Push(
             node,
             finalNavigateType,
-            newUri,
-            instanceFor =>
-            {
-                var instance = _viewLocator.GetView(instanceFor);
-                SetShellToPage(instance);
-                instances.Add(instance);
-                return instance;
-            });
+            newUri);
+
+        foreach (var newChain in stackChanges.NewNavigationChains)
+        {
+	        SetupPage(newChain);
+        }
 
         await _updateStrategy.UpdateChangesAsync(
             ShellView,
             stackChanges,
-            instances,
             finalNavigateType,
             argument,
             hasArgument,
@@ -158,10 +157,12 @@ public partial class Navigator : INavigator
         _navigating = false;
     }
 
-    private void SetShellToPage(object instance)
+    private void SetupPage(NavigationChain chain)
     {
-        if (instance is Page page)
-            page.Shell = ShellView;
+	    if (chain.Instance is not Page page) return;
+
+	    page.Shell = ShellView;
+	    page.Chain = chain;
     }
 
     private async Task SwitchHostedItem(
@@ -292,11 +293,11 @@ public partial class Navigator : INavigator
         NavigateAndWaitAsync(path, navigateType, null, false, sender, withAnimation, overrideTransition, cancellationToken);
     public Task<NavigateResult> NavigateAndWaitAsync(
         string path,
-        object? argument, 
-        object? sender, 
+        object? argument,
+        object? sender,
         NavigateType navigateType,
         bool withAnimation,
-        IPageTransition? overrideTransition = null, 
+        IPageTransition? overrideTransition = null,
         CancellationToken cancellationToken = default) =>
         NavigateAndWaitAsync(path, navigateType, argument, true, sender, withAnimation, overrideTransition, cancellationToken);
 

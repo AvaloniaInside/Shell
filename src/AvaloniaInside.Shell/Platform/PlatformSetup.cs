@@ -65,4 +65,12 @@ public class PlatformSetup
 		    return DrillInNavigationTransition.Instance;
 	    }
     }
+
+    public static NavigationBarAttachType NavigationBarAttachType
+    {
+	    get
+	    {
+		    return NavigationBarAttachType.ToFirstHostThenPage;
+	    }
+    }
 }

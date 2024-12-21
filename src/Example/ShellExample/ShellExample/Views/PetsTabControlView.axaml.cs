@@ -1,14 +1,12 @@
 using System;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
-using Avalonia.Styling;
+using AvaloniaInside.Shell;
 
 namespace ShellExample.Views;
 
-public partial class PetsTabControlView : TabControl
+public partial class PetsTabControlView : TabPage
 {
-	protected override Type StyleKeyOverride => typeof(TabControl);
-
 	public PetsTabControlView()
 	{
 		InitializeComponent();
@@ -18,7 +16,5 @@ public partial class PetsTabControlView : TabControl
 	{
 		AvaloniaXamlLoader.Load(this);
 	}
-
-	public string Icon => "fa-solid fa-paw";
 }
 

@@ -1,0 +1,60 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<ControlTheme x:Key="{x:Type ShellView}" TargetType="ShellView">
+		<Setter Property="Background" Value="{DynamicResource AppBackground}" />
+		<Setter Property="Template">
+			<ControlTemplate>
+				<Panel Background="{TemplateBinding Background}">
+					<SplitView Name="PART_SplitView" DisplayMode="Inline">
+						<SplitView.Pane>
+							<SideMenu Name="PART_SideMenu"
+							          SelectedItem="{TemplateBinding SideMenuSelectedItem, Mode=TwoWay}"
+							          Header="{TemplateBinding SideMenuHeader}"
+							          Footer="{TemplateBinding SideMenuFooter}"
+							          Contents="{TemplateBinding SideMenuContents}"
+							          ContentsTemplate="{TemplateBinding SideMenuContentsTemplate}">
+							</SideMenu>
+						</SplitView.Pane>
+
+						<Grid RowDefinitions="Auto,*,Auto">
+							<ContentPresenter Name="PART_NavigationBarPlaceHolder"></ContentPresenter>
+							<StackContentView Name="PART_ContentView"
+							                  Grid.Row="1"
+							                  PageTransition="{TemplateBinding DefaultPageTransition}">
+							</StackContentView>
+						</Grid>
+					</SplitView>
+
+					<Rectangle IsVisible="{Binding ElementName=PART_Modal, Path=HasContent}"
+					           Opacity="0.5">
+						<Rectangle.Fill>
+							<VisualBrush
+								TileMode="Tile"
+								SourceRect="0,0,8,8"
+								DestinationRect="0,0,8,8"
+								Stretch="UniformToFill">
+								<VisualBrush.Visual>
+									<Canvas Width="8" Height="8">
+										<Rectangle Fill="Black" Width="8" Height="8"></Rectangle>
+										<Line StartPoint="0,0" EndPoint="8,8" Stroke="#55555555" StrokeThickness="1" />
+										<Line StartPoint="0,8" EndPoint="8,0" Stroke="#55555555" StrokeThickness="1" />
+									</Canvas>
+								</VisualBrush.Visual>
+							</VisualBrush>
+						</Rectangle.Fill>
+					</Rectangle>
+
+					<StackContentView Name="PART_Modal"
+					                  IsVisible="{Binding ElementName=PART_Modal, Path=HasContent}"
+					                  PageTransition="{TemplateBinding ModalPageTransition}">
+					</StackContentView>
+				</Panel>
+			</ControlTemplate>
+		</Setter>
+		<Setter Property="SideMenuContentsTemplate">
+			<DataTemplate>
+				<ContentPresenter Content="{Binding .}"></ContentPresenter>
+			</DataTemplate>
+		</Setter>
+	</ControlTheme>
+</ResourceDictionary>

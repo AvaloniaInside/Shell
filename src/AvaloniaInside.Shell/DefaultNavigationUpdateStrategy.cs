@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 
 namespace AvaloniaInside.Shell;
 
@@ -21,7 +21,6 @@ public class DefaultNavigationUpdateStrategy : INavigationUpdateStrategy
 	public async Task UpdateChangesAsync(
 		ShellView shellView,
 		NavigationStackChanges changes,
-		List<object> newInstances,
 		NavigateType navigateType,
 		object? argument,
 		bool hasArgument,
@@ -29,7 +28,7 @@ public class DefaultNavigationUpdateStrategy : INavigationUpdateStrategy
 	{
 		var isSame = changes.Previous == changes.Front;
 
-		foreach (var instance in newInstances)
+		foreach (var instance in changes.NewNavigationChains.Select(s => s.Instance))
 		{
 			if (instance is INavigationLifecycle navigationLifecycle)
 				await navigationLifecycle.InitialiseAsync(cancellationToken);
@@ -52,7 +51,7 @@ public class DefaultNavigationUpdateStrategy : INavigationUpdateStrategy
 				await newInstanceLifecycle.ArgumentAsync(argument, cancellationToken);
 		}
 
-		if (!isSame && changes.Front != null)
+		if (!isSame && changes.Front != null && navigateType != NavigateType.Pop)
 			await _presenterProvider.For(navigateType).PresentAsync(shellView, changes.Front, navigateType, cancellationToken);
 	}
 
@@ -80,14 +79,15 @@ public class DefaultNavigationUpdateStrategy : INavigationUpdateStrategy
 
 	private void SubscribeForUpdateIfNeeded(object? instance)
 	{
-		if (instance is not SelectingItemsControl selectingItemsControl) return;
-		selectingItemsControl.SelectionChanged += SelectingItemsControlOnSelectionChanged;
+		if (HostedItemsHelper.GetSelectableHostedItems(instance) is {} hosted)
+			hosted.SelectionChanged += SelectingItemsControlOnSelectionChanged;
+
 	}
 
 	private void UnSubscribeForUpdateIfNeeded(object instance)
 	{
-		if (instance is not SelectingItemsControl selectingItemsControl) return;
-		selectingItemsControl.SelectionChanged -= SelectingItemsControlOnSelectionChanged;
+		if (HostedItemsHelper.GetSelectableHostedItems(instance) is {} hosted)
+			hosted.SelectionChanged -= SelectingItemsControlOnSelectionChanged;
 	}
 
 	private void SelectingItemsControlOnSelectionChanged(object? sender, SelectionChangedEventArgs e)

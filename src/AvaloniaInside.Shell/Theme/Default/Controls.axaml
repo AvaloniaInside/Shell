@@ -1,0 +1,15 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<Styles.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<MergeResourceInclude Source="avares://AvaloniaInside.Shell/Theme/Default/ShellView.axaml"></MergeResourceInclude>
+				<MergeResourceInclude Source="avares://AvaloniaInside.Shell/Theme/Default/NavigationBar.axaml"></MergeResourceInclude>
+				<MergeResourceInclude Source="avares://AvaloniaInside.Shell/Theme/Default/SideMenu.axaml"></MergeResourceInclude>
+				<MergeResourceInclude Source="avares://AvaloniaInside.Shell/Theme/Default/Page.axaml"></MergeResourceInclude>
+				<MergeResourceInclude Source="avares://AvaloniaInside.Shell/Theme/Default/TabPage.axaml"></MergeResourceInclude>
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</Styles.Resources>
+</Styles>
+

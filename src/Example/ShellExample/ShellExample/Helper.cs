@@ -1,11 +1,5 @@
 ﻿using Avalonia.Controls;
 using Avalonia.VisualTree;
-using AvaloniaInside.Shell.Platform;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ShellExample;
 public static class Helper

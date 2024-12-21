@@ -2,22 +2,22 @@
 using Avalonia.Input;
 using System;
 
-namespace AvaloniaInside.Shell
+namespace AvaloniaInside.Shell;
+
+public partial class Navigator
 {
-    public partial class Navigator
-    {
-        static Navigator()
-        {
+	static Navigator()
+	{
             ToProperty.Changed.Subscribe(HandleToChanged);
         }
 
-        #region To Property
+	#region To Property
 
-        public static readonly AttachedProperty<BindingNavigate> ToProperty =
-            AvaloniaProperty.RegisterAttached<Navigator, AvaloniaObject, BindingNavigate>("To");
+	public static readonly AttachedProperty<BindingNavigate> ToProperty =
+		AvaloniaProperty.RegisterAttached<Navigator, AvaloniaObject, BindingNavigate>("To");
 
-        private static void HandleToChanged(AvaloniaPropertyChangedEventArgs<BindingNavigate> e)
-        {
+	private static void HandleToChanged(AvaloniaPropertyChangedEventArgs<BindingNavigate> e)
+	{
             try
             {
                 if (e.Sender is ICommandSource commandSource)
@@ -32,12 +32,11 @@ namespace AvaloniaInside.Shell
             catch { /*IGNORE*/ }
         }
 
-        public static BindingNavigate GetTo(AvaloniaObject element) =>
-            element.GetValue(ToProperty);
+	public static BindingNavigate GetTo(AvaloniaObject element) =>
+		element.GetValue(ToProperty);
 
-        public static void SetTo(AvaloniaObject element, BindingNavigate parameter) =>
-            element.SetValue(ToProperty, parameter);
+	public static void SetTo(AvaloniaObject element, BindingNavigate parameter) =>
+		element.SetValue(ToProperty, parameter);
 
-        #endregion
-    }
+	#endregion
 }

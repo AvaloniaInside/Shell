@@ -39,6 +39,11 @@ public class StackContentView : Panel
 		private set => SetValue(HasContentProperty, value);
 	}
 
+	public static readonly DirectProperty<StackContentView, object?> CurrentViewProperty =
+		AvaloniaProperty.RegisterDirect<StackContentView, object?>(
+			nameof(CurrentView),
+			o => o.Children.LastOrDefault());
+
 	public object? CurrentView => Children.LastOrDefault();
 
 	public async Task PushViewAsync(object view,
@@ -60,6 +65,8 @@ public class StackContentView : Panel
 
 			await OnContentUpdateAsync(control, cancellationToken);
 			await UpdateCurrentViewAsync(current, control, navigateType, false, cancellationToken);
+
+			RaisePropertyChanged(CurrentViewProperty, current, CurrentView);
 		}
 		finally
 		{
@@ -88,6 +95,7 @@ public class StackContentView : Panel
 		{
 			if (!Children.Contains(view)) return false;
 
+			var current = CurrentView;
 			if (CurrentView == view)
 			{
 				var to = Children.Count > 1 ? Children[^2] : null;
@@ -96,6 +104,8 @@ public class StackContentView : Panel
 
 			Children.Remove(view as Control);
 			await OnContentUpdateAsync(CurrentView, cancellationToken);
+
+			RaisePropertyChanged(CurrentViewProperty, current, CurrentView);
 
 			return true;
 		}
@@ -113,8 +123,11 @@ public class StackContentView : Panel
 
 	public Task ClearStackAsync(CancellationToken cancellationToken)
 	{
+		var current = CurrentView;
 		while (Children.Count > 1)
 			Children.RemoveAt(0);
+
+		RaisePropertyChanged(CurrentViewProperty, current, CurrentView);
 
 		return Task.CompletedTask;
 	}

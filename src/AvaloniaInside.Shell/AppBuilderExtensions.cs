@@ -8,7 +8,7 @@ namespace AvaloniaInside.Shell;
 public static class AppBuilderExtensions
 {
 	public static AppBuilder UseShell(this AppBuilder builder, Func<INavigationViewLocator>? viewLocatorFactory = null) =>
-		builder.AfterPlatformServicesSetup(_ =>
+		builder.AfterPlatformServicesSetup(_ => Locator.RegisterResolverCallbackChanged(() =>
 		{
 			if (Locator.CurrentMutable is null)
 			{
@@ -37,7 +37,7 @@ public static class AppBuilderExtensions
 					viewLocator
 					);
 			});
-		});
+		}));
 
 	public static AppBuilder UseShell(this AppBuilder builder, Func<NavigationNode, object> viewFactory)
 		=> builder.UseShell(() => new DelegateNavigationViewLocator(viewFactory));

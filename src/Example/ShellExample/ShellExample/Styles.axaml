@@ -4,7 +4,7 @@
 	<Styles.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.ThemeDictionaries>
-				<ResourceDictionary x:Key='Light'>
+				<ResourceDictionary x:Key="Default">
 					<SolidColorBrush x:Key='HomePageBackground'>White</SolidColorBrush>
 					<SolidColorBrush x:Key='SubTitleForeground'>Gray</SolidColorBrush>
 					<SolidColorBrush x:Key='SemiAttentionForeground'>Blue</SolidColorBrush>
@@ -17,7 +17,7 @@
 						<GradientStop Offset="1" Color="#8ca9d1"/>
 					</LinearGradientBrush>
 				</ResourceDictionary>
-				<ResourceDictionary x:Key='Dark'>
+				<ResourceDictionary x:Key="Dark">
 					<SolidColorBrush x:Key='HomePageBackground'>#001E39</SolidColorBrush>
 					<SolidColorBrush x:Key='SubTitleForeground'>Silver</SolidColorBrush>
 					<SolidColorBrush x:Key='SemiAttentionForeground'>LightSkyBlue</SolidColorBrush>
@@ -34,15 +34,6 @@
 		</ResourceDictionary>
 	</Styles.Resources>
 
-	<Design.PreviewWith>
-		<Border Padding="20">
-			<!-- Add Controls for Previewer Here -->
-		</Border>
-	</Design.PreviewWith>
-
-	<Style Selector="NavigationBar">
-		<!--<Setter Property="Background" Value="#44000000"></Setter>-->
-	</Style>
 
 	<Style Selector="TextBlock.SubTitle">
 		<Setter Property="Foreground" Value="{DynamicResource SubTitleForeground}" />
@@ -54,73 +45,14 @@
 		<Setter Property="FontWeight" Value="DemiBold" />
 	</Style>
 
-	<!-- <Style Selector="Image.SemiAttention"> -->
-	<!-- 	<Setter Property="Foreground" Value="Red"></Setter> -->
-	<!-- 	<Setter Property="FontWeight" Value="DemiBold"></Setter> -->
-	<!-- </Style> -->
-
-	<Style Selector="TabControl">
-		<Setter Property="Padding" Value="0"></Setter>
-		<Setter Property="Background" Value="{DynamicResource HomePageBackground}"></Setter>
-		<Setter Property="Template">
-			<ControlTemplate>
-				<Border BorderBrush="{TemplateBinding BorderBrush}"
-					BorderThickness="{TemplateBinding BorderThickness}"
-					CornerRadius="{TemplateBinding CornerRadius}"
-					Background="{TemplateBinding Background}"
-					HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
-					VerticalAlignment="{TemplateBinding VerticalAlignment}">
-					<DockPanel>
-						<ItemsPresenter Name="PART_ItemsPresenter"
-										ItemsPanel="{TemplateBinding ItemsPanel}"
-										DockPanel.Dock="{TemplateBinding TabStripPlacement}" />
-						<Carousel Name="PART_SelectedContentHost_Alt"
-								  Margin="{TemplateBinding Padding}"
-								  SelectedItem="{TemplateBinding SelectedContent}"
-								  local:Helper.CarouselToTabControl="true"
-								  ItemTemplate="{TemplateBinding SelectedContentTemplate}"
-								  PageTransition="{x:Static PlatformSetup.TransitionForTab}" />
-					</DockPanel>
-				</Border>
-			</ControlTemplate>
+	<Style Selector="TabControl.HeadTab">
+		<Setter Property="ItemsPanel">
+			<ItemsPanelTemplate>
+				<StackPanel Orientation="Horizontal"
+				            HorizontalAlignment="Center"
+				            Background="#40000000"></StackPanel>
+			</ItemsPanelTemplate>
 		</Setter>
 	</Style>
 
-	<Style Selector="TabControl.MainTab /template/ Border > DockPanel > Border">
-		<Setter Property="Background" Value="#40000000" />
-	</Style>
-
-	<Style Selector="TabControl.HeadTab /template/ Border > DockPanel > Border">
-		<Setter Property="Background" Value="#40000000" />
-		<Setter Property="HorizontalAlignment" Value="Center" />
-		<Setter Property="CornerRadius" Value="5" />
-		<Setter Property="Padding" Value="8" />
-	</Style>
-
-	<Style Selector="TabControl.Center">
-		<Setter Property="Template">
-			<ControlTemplate>
-				<Border BorderBrush="{TemplateBinding BorderBrush}"
-				        BorderThickness="{TemplateBinding BorderThickness}"
-				        CornerRadius="{TemplateBinding CornerRadius}"
-				        Background="{TemplateBinding Background}"
-				        HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
-				        VerticalAlignment="{TemplateBinding VerticalAlignment}">
-					<DockPanel>
-						<Border DockPanel.Dock="{TemplateBinding TabStripPlacement}">
-							<ItemsPresenter Name="PART_ItemsPresenter"
-							                ItemsPanel="{TemplateBinding ItemsPanel}"
-							                HorizontalAlignment="Center"/>
-						</Border>
-						<Carousel Name="PART_SelectedContentHost_Alt"
-							  Margin="{TemplateBinding Padding}"
-							  SelectedItem="{TemplateBinding SelectedContent}"
-							  local:Helper.CarouselToTabControl="true"
-							  ItemTemplate="{TemplateBinding SelectedContentTemplate}"
-							  PageTransition="{x:Static PlatformSetup.TransitionForTab}" />
-					</DockPanel>
-				</Border>
-			</ControlTemplate>
-		</Setter>
-	</Style>
 </Styles>

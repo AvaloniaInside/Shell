@@ -3,8 +3,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Collections;
-using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 
 namespace AvaloniaInside.Shell.Presenters;
 
@@ -18,11 +16,12 @@ public abstract class PresenterBase : IPresenter
 		var current = chain;
 		while (current != null)
 		{
-			if (current.Back is HostNavigationChain { Instance: ItemsControl itemsControl } parent)
+			if (current.Back is HostNavigationChain parent &&
+			    HostedItemsHelper.GetHostedItems(current.Back?.Instance) is { } hostedItems)
 			{
-				if ((itemsControl.Items ?? itemsControl.ItemsSource) is not IList collection)
+				if ((hostedItems.Items ?? hostedItems.ItemsSource) is not IList collection)
 				{
-					itemsControl.ItemsSource = collection = new AvaloniaList<object>();
+					hostedItems.ItemsSource = collection = new AvaloniaList<object>();
 				}
 
 				foreach (var hostedChildChain in parent.Nodes.Where(hostedChildChain =>
@@ -31,10 +30,8 @@ public abstract class PresenterBase : IPresenter
 					collection.Add(hostedChildChain);
 				}
 
-				if (itemsControl is SelectingItemsControl selectingItemsControl)
-				{
+				if (hostedItems is ISelectableHostItems selectingItemsControl)
 					selectingItemsControl.SelectedItem = current;
-				}
 			}
 			else
 			{

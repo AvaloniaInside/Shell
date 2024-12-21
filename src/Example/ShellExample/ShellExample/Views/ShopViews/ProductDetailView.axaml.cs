@@ -1,4 +1,3 @@
-using Avalonia.Controls;
 using AvaloniaInside.Shell;
 using ShellExample.Models;
 using ShellExample.ViewModels.ShopViewModels;
