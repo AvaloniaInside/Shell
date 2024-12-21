@@ -51,7 +51,7 @@ public class DefaultNavigationUpdateStrategy : INavigationUpdateStrategy
 				await newInstanceLifecycle.ArgumentAsync(argument, cancellationToken);
 		}
 
-		if (!isSame && changes.Front != null)
+		if (!isSame && changes.Front != null && navigateType != NavigateType.Pop)
 			await _presenterProvider.For(navigateType).PresentAsync(shellView, changes.Front, navigateType, cancellationToken);
 	}
 
