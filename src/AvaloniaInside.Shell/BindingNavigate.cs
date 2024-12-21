@@ -31,37 +31,37 @@ public class BindingNavigate : AvaloniaObject, ICommand
 
 	public async Task ExecuteAsync(object? parameter, CancellationToken cancellationToken)
 	{
-            if (Sender is not Visual visual) return;
-            if (visual.FindAncestorOfType<ShellView>() is not { } shell) return;
+        if (Sender is not Visual visual) return;
+        if (visual.FindAncestorOfType<ShellView>() is not { } shell) return;
 
-            _singletonCanExecute = false;
-            _singletonCanExecuteChanged?.Invoke(this, EventArgs.Empty);
-            try
-            {
-                if (parameter != null)
-                    await shell.Navigator.NavigateAsync(
-                        Path, 
-                        Type, 
-                        parameter, 
-                        Sender, 
-                        true, 
-                        Transition, 
-                        cancellationToken);
-                else
-                    await shell.Navigator.NavigateAsync(
-                        Path, 
-                        Type, 
-                        Sender, 
-                        true, 
-                        Transition, 
-                        cancellationToken);
-            }
-            finally
-            {
-                _singletonCanExecute = true;
-                _singletonCanExecuteChanged?.Invoke(this, EventArgs.Empty);
-            }
+        _singletonCanExecute = false;
+        _singletonCanExecuteChanged?.Invoke(this, EventArgs.Empty);
+        try
+        {
+            if (parameter != null)
+                await shell.Navigator.NavigateAsync(
+                    Path,
+                    Type,
+                    parameter,
+                    Sender,
+                    true,
+                    Transition,
+                    cancellationToken);
+            else
+                await shell.Navigator.NavigateAsync(
+                    Path,
+                    Type,
+                    Sender,
+                    true,
+                    Transition,
+                    cancellationToken);
         }
+        finally
+        {
+            _singletonCanExecute = true;
+            _singletonCanExecuteChanged?.Invoke(this, EventArgs.Empty);
+        }
+    }
 
 	public static implicit operator BindingNavigate(string path) => new BindingNavigate
 	{
