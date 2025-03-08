@@ -307,6 +307,10 @@ public class Page : UserControl, INavigationLifecycle, INavigatorLifecycle, INav
 		this[!ApplyLeftSafePaddingProperty] = this[!ShellView.EnableSafeAreaForLeftProperty];
 		this[!ApplyRightSafePaddingProperty] = this[!ShellView.ApplyRightSafePaddingProperty];
 
+		// allow previewer to display page-based views
+		if (Design.IsDesignMode && Chain is null)
+			return;
+			
 		IsModal = Chain.Type == NavigateType.Modal;
 	}
 
