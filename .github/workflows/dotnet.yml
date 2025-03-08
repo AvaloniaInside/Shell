@@ -19,7 +19,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 6.0.x
+        dotnet-version: 9.0.x
     #- name: Install workloads
     #  run: dotnet workload install android ios maccatalyst tvos macos maui wasm-tools
     - name: Restore dependencies
@@ -30,3 +30,12 @@ jobs:
       working-directory: src/AvaloniaInside.Shell
     #- name: Test
     #  run: dotnet test --no-build --verbosity normal
+
+    # push nugget package to github if push to main branch
+    - name: Push NuGet package
+      if: github.ref == 'refs/heads/main'
+      uses: softprops/action-gh-release@v1
+      with:
+        files: src/AvaloniaInside.Shell/bin/Release/AvaloniaInside.Shell.*.nupkg
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

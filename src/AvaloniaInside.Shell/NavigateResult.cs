@@ -12,10 +12,8 @@ public class NavigateResult
 	public object? Argument { get; }
 
 	public T? As<T>() => HasArgument && Argument is T argument ? argument : default;
-	
-	public static NavigateResult FromResult<T>(T argument) => 	new(true, argument);
+
+	public static NavigateResult FromResult<T>(T argument) => new(true, argument);
 
 	public static readonly NavigateResult Completed = new NavigateResult(false, null);
 }
-
-
