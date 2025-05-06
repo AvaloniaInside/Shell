@@ -6,5 +6,6 @@ module.exports = {
   "onboarding": false,
   "forkProcessing": "enabled",
   "dryRun": "full",
-  "allowedCommands": [".*"]
+  "allowedCommands": [".*"],
+  "autodiscover": true,
 };
