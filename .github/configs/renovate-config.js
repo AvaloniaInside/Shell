@@ -1,4 +1,5 @@
 module.exports = {
+  "extends": ["config:base"],
   "platform": "github",
   "branchPrefix": "renovate/",
   "gitAuthor": "Renovate Bot <bot@renovateapp.com>",
@@ -6,4 +7,5 @@ module.exports = {
   "forkProcessing": "enabled",
   "allowedCommands": [".*"],
   "autodiscover": true,
+  "prCreation": "immediate"
 };
