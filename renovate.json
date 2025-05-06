@@ -1,0 +1,13 @@
+{
+  "extends": [
+    "config:base"
+  ],
+  "schedule": ["before 6am on every weekday"],
+  "automerge": false,
+  "packageRules": [
+    {
+      "matchPackagePatterns": ["*"],
+      "groupName": "all dependencies"
+    }
+  ]
+}
