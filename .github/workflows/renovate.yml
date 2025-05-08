@@ -14,4 +14,4 @@ jobs:
         uses: renovatebot/github-action@v42.0.0
         with:
           configurationFile: .github/configs/renovate-config.js
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.RENOVATE_PAT_TOKEN }}
