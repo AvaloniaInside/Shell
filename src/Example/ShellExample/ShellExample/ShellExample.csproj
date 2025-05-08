@@ -11,14 +11,14 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="$(AvaloniaVersion)" />
-        <PackageReference Include="Avalonia.Themes.Fluent" Version="$(AvaloniaVersion)" />
-        <PackageReference Include="Avalonia.ReactiveUI" Version="$(AvaloniaVersion)" />
+        <PackageReference Include="Avalonia" />
+        <PackageReference Include="Avalonia.Themes.Fluent" />
+        <PackageReference Include="Avalonia.ReactiveUI" />
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-        <PackageReference Include="Avalonia.Diagnostics" Version="$(AvaloniaVersion)" />
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
-		<PackageReference Include="Projektanker.Icons.Avalonia" Version="8.3.0" />
-		<PackageReference Include="Projektanker.Icons.Avalonia.FontAwesome" Version="8.3.0" />
+        <PackageReference Include="Avalonia.Diagnostics" />
+        <PackageReference Include="Newtonsoft.Json" />
+		<PackageReference Include="Projektanker.Icons.Avalonia" />
+		<PackageReference Include="Projektanker.Icons.Avalonia.FontAwesome" />
     </ItemGroup>
 
     <ItemGroup>
