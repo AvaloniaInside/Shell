@@ -15,4 +15,5 @@ jobs:
         with:
           configurationFile: .github/configs/renovate-config.js
           token: ${{ secrets.RENOVATE_PAT_TOKEN }}
+        env:
           LOG_LEVEL: debug
