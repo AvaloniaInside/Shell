@@ -1,5 +1,5 @@
 module.exports = {
-  "extends": ["config:recommended"],
+  "extends": ["config:recommended", ":disableDependencyDashboard"],
   "repositories": ["AvaloniaInside/Shell"],
   "platform": "github",
   "branchPrefix": "renovate/",
