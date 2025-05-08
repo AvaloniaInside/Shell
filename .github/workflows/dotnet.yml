@@ -6,6 +6,8 @@ name: CI
 on:
   push:
     branches: [ "main", "develop" ]
+    tags:
+      - 'v*.*.*'
   pull_request:
     branches: [ "main", "develop" ]
 
@@ -31,9 +33,9 @@ jobs:
     #- name: Test
     #  run: dotnet test --no-build --verbosity normal
 
-    # push nugget package to github if push to main branch
+    # push nuget package if it's a tag push
     - name: Push NuGet package
-      if: github.ref == 'refs/heads/main'
+      if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
       uses: softprops/action-gh-release@v1
       with:
         files: src/AvaloniaInside.Shell/bin/Release/AvaloniaInside.Shell.*.nupkg
