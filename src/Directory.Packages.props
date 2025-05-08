@@ -18,6 +18,6 @@
 		<PackageVersion Include="Projektanker.Icons.Avalonia" Version="8.3.0" />
 		<PackageVersion Include="Projektanker.Icons.Avalonia.FontAwesome" Version="8.3.0" />
 		<PackageVersion Include="Xamarin.AndroidX.Core.SplashScreen" Version="1.0.1.15" />
-		<PackageVersion Include="ReactiveUI" Version="20.1.63" />
+		<PackageVersion Include="ReactiveUI" Version="20.2.45" />
 	</ItemGroup>
 </Project>
