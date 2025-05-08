@@ -1,0 +1,23 @@
+<Project>
+	<PropertyGroup>
+		<CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
+		<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageVersion Include="Avalonia" Version="11.2.5"/>
+		<PackageVersion Include="Avalonia.Desktop" Version="11.2.5" />
+		<PackageVersion Include="Avalonia.Android" Version="11.2.5" />
+		<PackageVersion Include="Avalonia.iOS" Version="11.2.5" />
+		<PackageVersion Include="Avalonia.Browser" Version="11.2.5" />
+		<PackageVersion Include="Avalonia.Themes.Fluent" Version="11.2.5"/>
+		<PackageVersion Include="Avalonia.ReactiveUI" Version="11.2.5" />
+		<PackageVersion Include="Avalonia.Diagnostics" Version="11.2.5" />
+		<PackageVersion Include="Avalonia.Themes.Fluent" Version="11.2.5" />
+		<PackageVersion Include="Avalonia.Fonts.Inter" Version="11.2.5" />
+		<PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
+		<PackageVersion Include="Projektanker.Icons.Avalonia" Version="8.3.0" />
+		<PackageVersion Include="Projektanker.Icons.Avalonia.FontAwesome" Version="8.3.0" />
+		<PackageVersion Include="Xamarin.AndroidX.Core.SplashScreen" Version="1.0.1.15" />
+		<PackageVersion Include="ReactiveUI" Version="20.1.63" />
+	</ItemGroup>
+</Project>
