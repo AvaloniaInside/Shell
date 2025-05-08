@@ -26,7 +26,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Avalonia.Android" />
+        <PackageReference Include="Avalonia.Android" Version="$(AvaloniaVersion)" />
     </ItemGroup>
 
     <ItemGroup>
