@@ -61,7 +61,11 @@ public class StackContentView : Panel
 			// Bring to front if exists in collection
 			if (Children.Contains(control))
 			{
-				Children.Move(Children.IndexOf(control), Children.Count - 1);
+				var currentIndex = Children.IndexOf(control);
+				if (currentIndex != Children.Count - 1)
+				{
+					Children.Move(currentIndex, Children.Count - 1);
+				}
 			}
 			else
 			{
