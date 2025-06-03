@@ -60,8 +60,17 @@ public class StackContentView : Panel
 
 			// Bring to front if exists in collection
 			if (Children.Contains(control))
-				Children.Remove(control);
-			Children.Add(control);
+			{
+				var currentIndex = Children.IndexOf(control);
+				if (currentIndex != Children.Count - 1)
+				{
+					Children.Move(currentIndex, Children.Count - 1);
+				}
+			}
+			else
+			{
+				Children.Add(control);
+			}
 
 			await OnContentUpdateAsync(control, cancellationToken);
 			await UpdateCurrentViewAsync(current, control, navigateType, false, cancellationToken);
