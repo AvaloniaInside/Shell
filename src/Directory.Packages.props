@@ -12,7 +12,6 @@
 		<PackageVersion Include="Avalonia.Themes.Fluent" Version="11.3.1" />
 		<PackageVersion Include="Avalonia.ReactiveUI" Version="11.3.1" />
 		<PackageVersion Include="Avalonia.Diagnostics" Version="11.3.1" />
-		<PackageVersion Include="Avalonia.Themes.Fluent" Version="11.3.1" />
 		<PackageVersion Include="Avalonia.Fonts.Inter" Version="11.3.1" />
 		<PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageVersion Include="Projektanker.Icons.Avalonia" Version="9.6.2" />
