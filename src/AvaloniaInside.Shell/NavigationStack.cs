@@ -4,8 +4,15 @@ using System.Linq;
 
 namespace AvaloniaInside.Shell;
 
-public class NavigationStack(INavigationViewLocator viewLocator)
+public class NavigationStack
 {
+	private readonly INavigationViewLocator _viewLocator;
+
+	public NavigationStack(INavigationViewLocator viewLocator)
+	{
+		_viewLocator = viewLocator;
+	}
+
 	public NavigationChain? Current { get; set; }
 
 	public NavigationStackChanges Push(
@@ -260,7 +267,7 @@ public class NavigationStack(INavigationViewLocator viewLocator)
 			Back = chain.Back,
 			Node = parentNode,
 			Type = NavigateType.Normal,
-			Instance = viewLocator.GetView(parentNode),
+			Instance = _viewLocator.GetView(parentNode),
 			Uri = new Uri(chain.Uri, parentNode.Route)
 		};
 		changes.NewNavigationChains.Add(parentChain);
@@ -297,7 +304,7 @@ public class NavigationStack(INavigationViewLocator viewLocator)
 			hostChildChain.Back = parentChain;
 			hostChildChain.Node = hostChildNode;
 			hostChildChain.Type = NavigateType.Normal;
-			hostChildChain.Instance = viewLocator.GetView(hostChildNode);
+			hostChildChain.Instance = _viewLocator.GetView(hostChildNode);
 			hostChildChain.Uri = new Uri(chain.Uri, hostChildNode.Route);
 			hostChildChain.Hosted = true;
 
@@ -313,7 +320,7 @@ public class NavigationStack(INavigationViewLocator viewLocator)
 		NavigateType type,
 		NavigationChain? back)
 	{
-		var instance = viewLocator.GetView(node);
+		var instance = _viewLocator.GetView(node);
 		var chain = new NavigationChain
 		{
 			Node = node,
