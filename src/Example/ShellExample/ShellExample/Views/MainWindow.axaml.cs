@@ -27,7 +27,6 @@ public partial class MainWindow : Window
 					{
 						var header = NavigationBar.GetHeader(newValue) as string;
 						Title = header ?? "Shell Example";
-						System.Diagnostics.Debug.WriteLine($"Window title updated to: {Title}");
 					}
 				}
 			};
