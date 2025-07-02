@@ -18,6 +18,8 @@ public partial class Navigator : INavigator
     private bool _navigating;
     private ShellView? _shellView;
 
+    public event EventHandler<NaviagateEventArgs>? OnNavigate;
+
     public ShellView ShellView => _shellView ?? throw new ArgumentNullException(nameof(ShellView));
 
     public Uri CurrentUri => _stack.Current?.Uri ?? Registrar.RootUri;
@@ -153,6 +155,20 @@ public partial class Navigator : INavigator
 
             await fromPage.OnNavigateAsync(args, cancellationToken);
         }
+
+        // Fire the OnNavigate event for external subscribers
+        OnNavigate?.Invoke(this, new NaviagateEventArgs
+        {
+            Sender = sender,
+            From = fromPage,
+            To = _stack.Current?.Instance,
+            FromUri = origin,
+            ToUri = newUri,
+            Argument = argument,
+            Navigate = finalNavigateType,
+            WithAnimation = withAnimation,
+            OverrideTransition = overrideTransition
+        });
 
         _navigating = false;
     }

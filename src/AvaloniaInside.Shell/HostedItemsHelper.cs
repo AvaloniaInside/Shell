@@ -7,43 +7,30 @@ namespace AvaloniaInside.Shell;
 
 public static class HostedItemsHelper
 {
-	private class ItemsControlProxy : IHostItems
+	private class ItemsControlProxy(ItemsControl itemsControl) : IHostItems
 	{
-		private readonly ItemsControl _itemsControl;
-
-		public ItemsControlProxy(ItemsControl itemsControl)
-		{
-			_itemsControl = itemsControl;
-		}
-
 		public IEnumerable? ItemsSource
 		{
-			get => _itemsControl.ItemsSource;
-			set => _itemsControl.ItemsSource = value;
+			get => itemsControl.ItemsSource;
+			set => itemsControl.ItemsSource = value;
 		}
 
-		public ItemCollection Items => _itemsControl.Items;
+		public ItemCollection Items => itemsControl.Items;
 	}
 
-	private class SelectingItemsControlProxy : ItemsControlProxy, ISelectableHostItems
+	private class SelectingItemsControlProxy(SelectingItemsControl itemsControl)
+		: ItemsControlProxy(itemsControl), ISelectableHostItems
 	{
-		private readonly SelectingItemsControl _selectingItemsControl;
-
-		public SelectingItemsControlProxy(SelectingItemsControl itemsControl) : base(itemsControl)
-		{
-			_selectingItemsControl = itemsControl;
-		}
-
 		public event EventHandler<SelectionChangedEventArgs>? SelectionChanged
 		{
-			add => _selectingItemsControl.SelectionChanged += value;
-			remove => _selectingItemsControl.SelectionChanged -= value;
+			add => itemsControl.SelectionChanged += value;
+			remove => itemsControl.SelectionChanged -= value;
 		}
 
 		public object? SelectedItem
 		{
-			get => _selectingItemsControl.SelectedItem;
-			set => _selectingItemsControl.SelectedItem = value;
+			get => itemsControl.SelectedItem;
+			set => itemsControl.SelectedItem = value;
 		}
 	}
 

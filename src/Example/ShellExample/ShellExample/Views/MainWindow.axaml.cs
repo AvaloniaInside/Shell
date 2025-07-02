@@ -17,19 +17,30 @@ public partial class MainWindow : Window
 	{
 		base.OnLoaded(e);
 
-		if (MainView.ContentView != null)
+		// Subscribe to navigation events to update window title
+		if (MainView.Navigator != null)
 		{
-			MainView.ContentView.PropertyChanged += (sender, args) =>
-			{
-				if (args.Property == StackContentView.CurrentViewProperty)
-				{
-					if (args.NewValue is AvaloniaObject newValue)
-					{
-						var header = NavigationBar.GetHeader(newValue) as string;
-						Title = header ?? "Shell Example";
-					}
-				}
-			};
+			MainView.Navigator.OnNavigate += OnNavigate;
+		}
+	}
+
+	protected override void OnUnloaded(RoutedEventArgs e)
+	{
+		// Unsubscribe from navigation events
+		if (MainView.Navigator != null)
+		{
+			MainView.Navigator.OnNavigate -= OnNavigate;
+		}
+
+		base.OnUnloaded(e);
+	}
+
+	private void OnNavigate(object? sender, NaviagateEventArgs e)
+	{
+		if (e.To is AvaloniaObject targetView)
+		{
+			var header = NavigationBar.GetHeader(targetView) as string;
+			Title = header ?? "Shell Example";
 		}
 	}
 }
