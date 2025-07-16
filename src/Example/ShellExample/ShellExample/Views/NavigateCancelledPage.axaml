@@ -1,0 +1,39 @@
+<Page xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:i="https://github.com/projektanker/icons.avalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="ShellExample.Views.NavigateCancelledPage"
+             NavigationBar.Header="Navigate Cancelled">
+	<NavigationBar.HeaderIcon>
+		<i:Icon Value="fa-solid fa-xmark" />
+	</NavigationBar.HeaderIcon>
+	
+	<StackPanel HorizontalAlignment="Center"
+	            VerticalAlignment="Center"
+	            Spacing="20">
+		<TextBlock Text="Navigation Cancelled Example" 
+		           FontSize="24" 
+		           FontWeight="Bold" 
+		           HorizontalAlignment="Center" />
+		
+		<TextBlock Text="This page cancels its own navigation during InitializeAsync" 
+		           FontSize="14" 
+		           HorizontalAlignment="Center" 
+		           TextWrapping="Wrap" />
+		
+		<TextBlock Text="When you navigate to this page, it will immediately call Navigator.BackAsync()" 
+		           FontSize="12" 
+		           HorizontalAlignment="Center" 
+		           TextWrapping="Wrap" 
+		           Foreground="Gray" />
+		
+		<TextBlock Text="You should never see this page!" 
+		           FontSize="16" 
+		           HorizontalAlignment="Center" 
+		           Foreground="Red" 
+		           FontWeight="Bold" />
+		
+	</StackPanel>
+</Page>

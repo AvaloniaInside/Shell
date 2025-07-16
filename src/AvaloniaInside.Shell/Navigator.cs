@@ -1,5 +1,6 @@
 using Avalonia.Animation;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
@@ -17,6 +18,7 @@ public partial class Navigator : INavigator
 
     private bool _navigating;
     private ShellView? _shellView;
+    private CancellationTokenSource? _currentNavigationCancellationToken;
 
     public event EventHandler<NaviagateEventArgs>? OnNavigate;
 
@@ -115,32 +117,50 @@ public partial class Navigator : INavigator
             withAnimation = args.WithAnimation;
             overrideTransition = args.OverrideTransition;
         }
-
-        _navigating = true;
-
-        var stackChanges = _stack.Push(
-            node,
-            finalNavigateType,
-            newUri);
-
-        foreach (var newChain in stackChanges.NewNavigationChains)
+        try
         {
-	        SetupPage(newChain);
-        }
+            _navigating = true;
 
-        await _updateStrategy.UpdateChangesAsync(
-            ShellView,
-            stackChanges,
-            finalNavigateType,
-            argument,
-            hasArgument,
-            cancellationToken);
+            var stackChanges = _stack.Push(
+                node,
+                finalNavigateType,
+                newUri);
 
-        CheckWaitingList(stackChanges, argument, hasArgument);
+            foreach (var newChain in stackChanges.NewNavigationChains)
+            {
+                SetupPage(newChain);
+            }
 
-        if (fromPage != null)
-        {
-            var args = new NaviagateEventArgs
+            await _updateStrategy.UpdateChangesAsync(
+                ShellView,
+                stackChanges,
+                finalNavigateType,
+                argument,
+                hasArgument,
+                cancellationToken);
+
+            CheckWaitingList(stackChanges, argument, hasArgument);
+
+            if (fromPage != null)
+            {
+                var args = new NaviagateEventArgs
+                {
+                    Sender = sender,
+                    From = fromPage,
+                    To = _stack.Current?.Instance,
+                    FromUri = origin,
+                    ToUri = newUri,
+                    Argument = argument,
+                    Navigate = finalNavigateType,
+                    WithAnimation = withAnimation,
+                    OverrideTransition = overrideTransition
+                };
+
+                await fromPage.OnNavigateAsync(args, cancellationToken);
+            }
+            
+            // Fire the OnNavigate event for external subscribers
+            OnNavigate?.Invoke(this, new NaviagateEventArgs
             {
                 Sender = sender,
                 From = fromPage,
@@ -151,34 +171,24 @@ public partial class Navigator : INavigator
                 Navigate = finalNavigateType,
                 WithAnimation = withAnimation,
                 OverrideTransition = overrideTransition
-            };
-
-            await fromPage.OnNavigateAsync(args, cancellationToken);
+            });
         }
-
-        // Fire the OnNavigate event for external subscribers
-        OnNavigate?.Invoke(this, new NaviagateEventArgs
+        catch (OperationCanceledException)
         {
-            Sender = sender,
-            From = fromPage,
-            To = _stack.Current?.Instance,
-            FromUri = origin,
-            ToUri = newUri,
-            Argument = argument,
-            Navigate = finalNavigateType,
-            WithAnimation = withAnimation,
-            OverrideTransition = overrideTransition
-        });
 
-        _navigating = false;
+        }
+        finally
+        {
+            _navigating = false;
+        }
     }
 
     private void SetupPage(NavigationChain chain)
     {
-	    if (chain.Instance is not Page page) return;
+        if (chain.Instance is not Page page) return;
 
-	    page.Shell = ShellView;
-	    page.Chain = chain;
+        page.Shell = ShellView;
+        page.Chain = chain;
     }
 
     private async Task SwitchHostedItem(
@@ -243,10 +253,22 @@ public partial class Navigator : INavigator
         IPageTransition? overrideTransition,
         CancellationToken cancellationToken = default)
     {
-        var originalUri = new Uri(CurrentUri, path);
-        var newUri = await _navigateStrategy.NavigateAsync(_stack.Current, CurrentUri, path, cancellationToken);
-        if (CurrentUri.AbsolutePath != newUri.AbsolutePath)
-            await NotifyAsync(originalUri, newUri, argument, hasArgument, sender, navigateType, withAnimation, overrideTransition, cancellationToken);
+        using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+
+        try
+        {
+            _currentNavigationCancellationToken = cts;
+
+            var originalUri = new Uri(CurrentUri, path);
+            var newUri = await _navigateStrategy.NavigateAsync(_stack.Current, CurrentUri, path, cts.Token);
+            if (CurrentUri.AbsolutePath != newUri.AbsolutePath)
+                await NotifyAsync(originalUri, newUri, argument, hasArgument, sender, navigateType, withAnimation,
+                    overrideTransition, cts.Token);
+        }
+        finally
+        {
+            _currentNavigationCancellationToken = null;
+        }
     }
 
     public Task BackAsync(CancellationToken cancellationToken = default) =>
@@ -273,6 +295,9 @@ public partial class Navigator : INavigator
         IPageTransition? overrideTransition,
         CancellationToken cancellationToken = default)
     {
+        if (_currentNavigationCancellationToken is { } cts && !_currentNavigationCancellationToken.IsCancellationRequested)
+            await cts.CancelAsync();
+
         var newUri = await _navigateStrategy.BackAsync(_stack.Current, CurrentUri, cancellationToken);
         if (newUri != null && CurrentUri.AbsolutePath != newUri.AbsolutePath)
             await NotifyAsync(newUri, newUri, argument, hasArgument, sender, NavigateType.Pop, withAnimation, overrideTransition, cancellationToken);
@@ -327,17 +352,38 @@ public partial class Navigator : INavigator
         IPageTransition? overrideTransition,
         CancellationToken cancellationToken = default)
     {
-        var originalUri = new Uri(CurrentUri, path);
-        var newUri = await _navigateStrategy.NavigateAsync(_stack.Current, CurrentUri, path, cancellationToken);
-        if (CurrentUri.AbsolutePath == newUri.AbsolutePath)
-            return new NavigateResult(false, null); // Or maybe we should throw exception.
+        using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        
+        _currentNavigationCancellationToken = cts;
+        NavigationChain? chain = null;
+        TaskCompletionSource<NavigateResult>? tcs = null;
 
-        await NotifyAsync(originalUri, newUri, argument, hasArgument, sender, navigateType, withAnimation, overrideTransition, cancellationToken);
-        var chain = _stack.Current;
+        try
+        {
 
-        if (!_waitingList.TryGetValue(chain, out var tcs))
-            _waitingList[chain] = tcs = new TaskCompletionSource<NavigateResult>();
+            var originalUri = new Uri(CurrentUri, path);
 
+            var newUri = await _navigateStrategy.NavigateAsync(_stack.Current, CurrentUri, path, cts.Token);
+            if (CurrentUri.AbsolutePath == newUri.AbsolutePath)
+                return new NavigateResult(false, null); // Or maybe we should throw exception.
+
+            await NotifyAsync(originalUri, newUri, argument, hasArgument, sender, navigateType, withAnimation,
+                overrideTransition, cts.Token);
+            
+            chain = _stack.Current;
+
+            if (!_waitingList.TryGetValue(chain, out tcs))
+                _waitingList[chain] = tcs = new TaskCompletionSource<NavigateResult>();
+        }
+        finally
+        {
+            if (cts.IsCancellationRequested)
+                tcs?.TrySetCanceled();
+
+            _currentNavigationCancellationToken = null;
+        }
+
+        
         try
         {
             return await tcs.Task;
@@ -346,6 +392,7 @@ public partial class Navigator : INavigator
         {
             _waitingList.Remove(chain);
         }
+        
     }
 
     private void CheckWaitingList(

@@ -337,9 +337,13 @@ public partial class ShellView : TemplatedControl, INavigationBarProvider
     #region Ctor and loading
 
     public ShellView()
+    : this(Locator.Current.GetService<INavigator>())
+    {   
+    }
+
+    public ShellView(INavigator? navigator)
     {
-	    Navigator = Locator.Current
-            .GetService<INavigator>() ?? throw new ArgumentException("Cannot find INavigationService");
+        Navigator = navigator ?? throw new ArgumentException("Cannot find INavigationService");
         Navigator.RegisterShell(this);
 
         BackCommand = ReactiveCommand.CreateFromTask(BackActionAsync);

@@ -34,6 +34,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShellBottomCustomNavigator.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShellBottomCustomNavigator.Browser", "Example\ShellBottomCustomNavigator\ShellBottomCustomNavigator.Browser\ShellBottomCustomNavigator.Browser.csproj", "{58D15C4F-ADC5-4550-9224-365FFB38955D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvaloniaInside.Shell.Tests", "AvaloniaInside.Shell.Tests\AvaloniaInside.Shell.Tests.csproj", "{74162767-6EB7-84B4-F2F5-F0CB9EFAC9D2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -86,6 +88,10 @@ Global
 		{58D15C4F-ADC5-4550-9224-365FFB38955D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{58D15C4F-ADC5-4550-9224-365FFB38955D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{58D15C4F-ADC5-4550-9224-365FFB38955D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74162767-6EB7-84B4-F2F5-F0CB9EFAC9D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74162767-6EB7-84B4-F2F5-F0CB9EFAC9D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74162767-6EB7-84B4-F2F5-F0CB9EFAC9D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74162767-6EB7-84B4-F2F5-F0CB9EFAC9D2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
