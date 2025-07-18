@@ -49,6 +49,10 @@
 	</Host>
 
 	<Route Path="second" Page="views:SecondView"></Route>
+	
+	<!-- Navigation Cancellation Demo Routes -->
+	<Route Path="cancellation-demo" Page="views:NavigationCancellationDemoPage"></Route>
+	<Route Path="navigate-cancelled" Page="views:NavigateCancelledPage"></Route>
 
 	<SideMenuItem Path="/main/home" Title="Home">
 		<SideMenuItem.Icon>
@@ -78,6 +82,11 @@
 	<SideMenuItem Path="/second" Title="Second Click">
 		<SideMenuItem.Icon>
 			<views:FontIconImageSource Value="fa-solid fa-check" Brush="{DynamicResource ButtonForeground}" />
+		</SideMenuItem.Icon>
+	</SideMenuItem>
+	<SideMenuItem Path="/cancellation-demo" Title="Navigation Cancellation Demo">
+		<SideMenuItem.Icon>
+			<views:FontIconImageSource Value="fa-solid fa-flask" Brush="{DynamicResource ButtonForeground}" />
 		</SideMenuItem.Icon>
 	</SideMenuItem>
 

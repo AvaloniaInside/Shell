@@ -20,6 +20,18 @@
 				CommandParameter="Hello Parameters"></Button>
 
 		<Button HorizontalAlignment="Center" Content="Show dialog" Command="{Binding ShowDialogCommand}"></Button>
+		
+		<Button HorizontalAlignment="Center"
+				Content="Navigation Cancellation Demo"
+				Navigator.To="/cancellation-demo">
+			<ToolTip.Tip>
+				<ToolTip>
+					<TextBlock Text="Demonstrates navigation cancellation scenarios where target pages cancel their own navigation during InitializeAsync" 
+					           MaxWidth="300" 
+					           TextWrapping="Wrap" />
+				</ToolTip>
+			</ToolTip.Tip>
+		</Button>
 	</StackPanel>
 </Page>
 
