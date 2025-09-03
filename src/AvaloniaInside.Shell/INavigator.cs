@@ -9,6 +9,8 @@ public interface INavigator
 {
 	Uri CurrentUri { get; }
 
+	event EventHandler<NaviagateEventArgs>? OnNavigate;
+
 	INavigationRegistrar Registrar { get; }
 
 	NavigationChain? CurrentChain { get; }

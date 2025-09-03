@@ -8,5 +8,5 @@
         Icon="/Assets/avalonia-logo.ico"
         Title="ShellExample"
         Width="450">
-	<views:MainView />
+	<views:MainView x:Name="MainView" />
 </Window>
