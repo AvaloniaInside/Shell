@@ -13,7 +13,7 @@
 		<PackageVersion Include="Avalonia.ReactiveUI" Version="11.3.6" />
 		<PackageVersion Include="Avalonia.Diagnostics" Version="11.3.6" />
 		<PackageVersion Include="Avalonia.Fonts.Inter" Version="11.3.6" />
-		<PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
+		<PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
 		<PackageVersion Include="Projektanker.Icons.Avalonia" Version="9.6.2" />
 		<PackageVersion Include="Projektanker.Icons.Avalonia.FontAwesome" Version="9.6.2" />
 		<PackageVersion Include="Xamarin.AndroidX.Core.SplashScreen" Version="1.0.1.17" />
