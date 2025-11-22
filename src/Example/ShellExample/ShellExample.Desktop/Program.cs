@@ -1,6 +1,5 @@
 ﻿using System;
 using Avalonia;
-using Avalonia.ReactiveUI;
 using AvaloniaInside.Shell;
 
 namespace ShellExample.Desktop;
@@ -19,6 +18,5 @@ class Program
 		=> AppBuilder.Configure<App>()
 			.UsePlatformDetect()
 			.LogToTrace()
-			.UseReactiveUI()
 			.UseShell();
 }

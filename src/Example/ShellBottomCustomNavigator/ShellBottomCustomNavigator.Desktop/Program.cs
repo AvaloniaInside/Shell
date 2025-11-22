@@ -1,6 +1,5 @@
 ﻿using System;
 using Avalonia;
-using Avalonia.ReactiveUI;
 using AvaloniaInside.Shell;
 
 namespace ShellBottomCustomNavigator.Desktop;
@@ -20,6 +19,5 @@ sealed class Program
             .UsePlatformDetect()
             .WithInterFont()
             .LogToTrace()
-            .UseReactiveUI()
             .UseShell();
 }
