@@ -4,8 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using AvaloniaInside.Shell;
-using DynamicData;
-using ReactiveUI;
 using ShellExample.Models;
 
 namespace ShellExample.ViewModels.ShopViewModels;
@@ -25,10 +23,11 @@ public class ProductCatalogFilterViewModel : ViewModelBase
 			.Distinct()
 			.OrderBy(o=>o);
 		Categories = new ObservableCollection<string>();
-		Categories.AddRange(items);
+		foreach (var item in items)
+			Categories.Add(item);
 
-		CloseCommand = ReactiveCommand.CreateFromTask(CloseAsync);
-		ClearCommand = ReactiveCommand.CreateFromTask(ClearAsync);
+		CloseCommand = new SimpleAsyncCommand(CloseAsync);
+		ClearCommand = new SimpleAsyncCommand(ClearAsync);
 	}
 
 	private Task CloseAsync(CancellationToken cancellationToken)
@@ -48,7 +47,7 @@ public class ProductCatalogFilterViewModel : ViewModelBase
 		get => _selectedCategory;
 		set
 		{
-			this.RaiseAndSetIfChanged(ref _selectedCategory, value);
+			SetField(ref _selectedCategory, value);
 			_ = _navigationService.BackAsync(value);
 		}
 	}
@@ -56,6 +55,6 @@ public class ProductCatalogFilterViewModel : ViewModelBase
 	public void SetSelectedCategory(string? selected)
 	{
 		_selectedCategory = selected;
-		this.RaisePropertyChanged(nameof(SelectedCategory));
+		OnPropertyChanged(nameof(SelectedCategory));
 	}
 }

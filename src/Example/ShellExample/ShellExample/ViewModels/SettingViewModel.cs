@@ -4,7 +4,6 @@ using AvaloniaInside.Shell.Platform;
 using AvaloniaInside.Shell.Platform.Android;
 using AvaloniaInside.Shell.Platform.Ios;
 using AvaloniaInside.Shell.Platform.Windows;
-using ReactiveUI;
 using System.Linq;
 
 namespace ShellExample.ViewModels;
@@ -24,7 +23,7 @@ public class SettingViewModel : ViewModelBase
         get => _currentTransition;
         set
         {
-            this.RaiseAndSetIfChanged(ref _currentTransition, value);
+            SetField(ref _currentTransition, value);
             if (MainViewModel != null)
                 MainViewModel.CurrentTransition = value.Transition;
         }
