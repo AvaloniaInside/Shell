@@ -1,7 +1,6 @@
 using Foundation;
 using Avalonia;
 using Avalonia.iOS;
-using Avalonia.ReactiveUI;
 using AvaloniaInside.Shell;
 
 namespace ShellExample.iOS;
@@ -15,7 +14,6 @@ public partial class AppDelegate : AvaloniaAppDelegate<App>
 	protected override AppBuilder CustomizeAppBuilder(AppBuilder builder)
 	{
 		return builder
-			.UseReactiveUI()
 			.UseShell();
 	}
 }

@@ -1,36 +1,34 @@
 ﻿using Avalonia;
 using Avalonia.Input;
-using System;
 
 namespace AvaloniaInside.Shell;
 
 public partial class Navigator
 {
-	static Navigator()
-	{
-            ToProperty.Changed.Subscribe(HandleToChanged);
-        }
-
 	#region To Property
 
 	public static readonly AttachedProperty<BindingNavigate> ToProperty =
-		AvaloniaProperty.RegisterAttached<Navigator, AvaloniaObject, BindingNavigate>("To");
+		AvaloniaProperty.RegisterAttached<Navigator, AvaloniaObject, BindingNavigate>(
+			"To",
+			coerce: HandleToChanged);
 
-	private static void HandleToChanged(AvaloniaPropertyChangedEventArgs<BindingNavigate> e)
+	private static BindingNavigate HandleToChanged(AvaloniaObject obj, BindingNavigate value)
 	{
-            try
-            {
-                if (e.Sender is ICommandSource commandSource)
-                {
-                    if (e.NewValue is { HasValue: true } v)
-                    {
-                        ((dynamic)commandSource).Command = v.Value;
-                        v.Value.Sender = e.Sender;
-                    }
-                }
-            }
-            catch { /*IGNORE*/ }
-        }
+		try
+		{
+			if (obj is ICommandSource commandSource)
+			{
+				((dynamic)commandSource).Command = value;
+				value.Sender = obj;
+			}
+		}
+		catch
+		{
+			/*IGNORE*/
+		}
+
+		return value;
+	}
 
 	public static BindingNavigate GetTo(AvaloniaObject element) =>
 		element.GetValue(ToProperty);

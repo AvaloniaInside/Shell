@@ -1,6 +1,5 @@
 ﻿using Avalonia.Animation;
 using AvaloniaInside.Shell.Platform;
-using ReactiveUI;
 
 namespace ShellExample.ViewModels;
 
@@ -14,7 +13,7 @@ public class MainViewModel : ViewModelBase
         get => _currentTransition;
         set
         {
-            this.RaiseAndSetIfChanged(ref _currentTransition, value);
+            SetField(ref _currentTransition, value);
         }
     }
 }
