@@ -21,7 +21,7 @@ We welcome feedback, suggestions, and contributions from anyone who is intereste
 To use AvaloniaInside.Shell in your Avalonia project, you can install the package via NuGet using the following command in the Package Manager Console:
 
 ```bash
-dotnet add package AvaloniaInside.Shell --version 1.3.2.2
+dotnet add package AvaloniaInside.Shell --version 1.3.3
 ```
 
 Alternatively, you can also install the package through Visual Studio's NuGet Package Manager.
@@ -32,7 +32,6 @@ public static AppBuilder BuildAvaloniaApp()
 	=> AppBuilder.Configure<App>()
 		.UsePlatformDetect()
 		.LogToTrace()
-		.UseReactiveUI()
 		.UseShell();
 ```
 

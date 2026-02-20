@@ -1,5 +1,4 @@
 ﻿using AvaloniaInside.Shell;
-using ReactiveUI;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -14,7 +13,7 @@ internal class WelcomeViewModel
     public WelcomeViewModel(INavigator navigationService)
     {
         _navigationService = navigationService;
-        OpenCommand = ReactiveCommand.CreateFromTask(OpenAsync);
+        OpenCommand = new SimpleAsyncCommand(OpenAsync);
     }
 
     private Task OpenAsync(CancellationToken cancellationToken)

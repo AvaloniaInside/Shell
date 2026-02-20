@@ -12,8 +12,6 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using AvaloniaInside.Shell.Platform;
-using ReactiveUI;
-using Splat;
 
 namespace AvaloniaInside.Shell;
 
@@ -338,12 +336,12 @@ public partial class ShellView : TemplatedControl, INavigationBarProvider
 
     public ShellView()
     {
-	    Navigator = Locator.Current
+	    Navigator = AvaloniaLocator.CurrentMutable
             .GetService<INavigator>() ?? throw new ArgumentException("Cannot find INavigationService");
         Navigator.RegisterShell(this);
 
-        BackCommand = ReactiveCommand.CreateFromTask(BackActionAsync);
-        SideMenuCommand = ReactiveCommand.CreateFromTask(MenuActionAsync);
+        BackCommand = new SimpleAsyncCommand(BackActionAsync);
+        SideMenuCommand = new SimpleAsyncCommand(MenuActionAsync);
 
         var isMobile = OperatingSystem.IsAndroid() || OperatingSystem.IsIOS();
         if (!isMobile)

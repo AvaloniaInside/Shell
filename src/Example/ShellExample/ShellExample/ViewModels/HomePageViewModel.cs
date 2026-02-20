@@ -2,7 +2,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using AvaloniaInside.Shell;
-using ReactiveUI;
 
 namespace ShellExample.ViewModels;
 
@@ -16,8 +15,8 @@ public class HomePageViewModel : ViewModelBase
 	public HomePageViewModel(INavigator navigationService)
 	{
 		_navigationService = navigationService;
-		NavigateToSecondPage = ReactiveCommand.CreateFromTask(Navigate);
-		ShowDialogCommand = ReactiveCommand.CreateFromTask(ShowDialog);
+		NavigateToSecondPage = new SimpleAsyncCommand(Navigate);
+		ShowDialogCommand = new SimpleAsyncCommand(ShowDialog);
 	}
 
 	private Task ShowDialog(CancellationToken cancellationToken)

@@ -1,6 +1,5 @@
 ﻿using System.Runtime.Versioning;
 using Avalonia;
-using Avalonia.ReactiveUI;
 using ShellExample;
 using Avalonia.Browser;
 using AvaloniaInside.Shell;
@@ -10,7 +9,6 @@ using AvaloniaInside.Shell;
 internal partial class Program
 {
 	private static void Main(string[] args) => BuildAvaloniaApp()
-		.UseReactiveUI()
         .UseShell()
         .StartBrowserAppAsync("out");
 
