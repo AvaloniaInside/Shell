@@ -5,6 +5,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
+using Avalonia.Markup.Xaml.Templates;
 
 namespace AvaloniaInside.Shell;
 
@@ -327,6 +328,33 @@ public class NavigationBar : TemplatedControl
 
 	#endregion
 
+	
+    #region HeaderTemplate
+
+    public static readonly AttachedProperty<DataTemplate> HeaderTemplateProperty =
+        AvaloniaProperty.RegisterAttached<NavigationBar, AvaloniaObject, DataTemplate>("HeaderTemplate");
+
+    public static DataTemplate GetHeaderTemplate(AvaloniaObject element) =>
+        element.GetValue(HeaderTemplateProperty);
+
+    public static void SetHeaderTemplate(AvaloniaObject element, DataTemplate parameter) =>
+        element.SetValue(HeaderTemplateProperty, parameter);
+
+    #endregion
+
+    #region HeaderIconTemplate
+
+    public static readonly AttachedProperty<DataTemplate> HeaderIconTemplateProperty =
+        AvaloniaProperty.RegisterAttached<NavigationBar, AvaloniaObject, DataTemplate>("HeaderIconTemplate");
+
+    public static DataTemplate GetHeaderIconTemplate(AvaloniaObject element) =>
+        element.GetValue(HeaderIconTemplateProperty);
+
+    public static void SetHeaderIconTemplate(AvaloniaObject element, DataTemplate parameter) =>
+        element.SetValue(HeaderIconTemplateProperty, parameter);
+
+    #endregion
+
 	#region Visible
 
 	public static readonly AttachedProperty<bool> VisibleProperty =
@@ -507,6 +535,7 @@ public class NavigationBar : TemplatedControl
 		{
 			itemPresenter.DataContext = element.DataContext ?? element;
 			itemPresenter[!ContentControl.ContentProperty] = element[!HeaderProperty];
+            itemPresenter[!ContentControl.ContentTemplateProperty] = element[!HeaderTemplateProperty];
 			return;
 		}
 

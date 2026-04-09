@@ -44,14 +44,16 @@
 		<Setter Property="ItemTemplate">
 			<DataTemplate DataType="{x:Type NavigationChain}">
 				<Grid RowDefinitions="*,*" Width="70">
-					<ContentPresenter Grid.Row="0"
+					<ContentControl Grid.Row="0"
 					                  DataContext="{Binding Instance}"
-					                  Content="{Binding Path=(NavigationBar.HeaderIcon)}"></ContentPresenter>
-					<TextBlock Grid.Row="1"
+					                  Content="{Binding Path=(NavigationBar.HeaderIcon)}" 
+                                      ContentTemplate="{Binding Path=(NavigationBar.HeaderIconTemplate)}"/>
+					<ContentControl Grid.Row="1"
 					           DataContext="{Binding Instance}"
-					           Text="{Binding Path=(NavigationBar.Header)}"
+					           Content="{Binding Path=(NavigationBar.Header)}"
+                               ContentTemplate="{Binding Path=(NavigationBar.HeaderTemplate)}"
 					           FontSize="14"
-					           HorizontalAlignment="Center"></TextBlock>
+					           HorizontalAlignment="Center"></ContentControl>
 				</Grid>
 			</DataTemplate>
 		</Setter>
